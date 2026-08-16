@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Staff - UPA Bahasa POLNES</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-blue-950 text-white py-4 px-6 shadow-md flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 bg-amber-400 text-blue-950 font-bold rounded-full flex items-center justify-center">S</div>
+            <div>
+                <h1 class="font-bold text-base leading-tight">Dashboard Staff Operasional</h1>
+                <p class="text-[10px] text-slate-300">UPA Bahasa Politeknik Negeri Samarinda</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4 text-xs">
+            <span id="staff-email-display" class="text-slate-300">staff@polnes.ac.id</span>
+            <button onclick="logoutStaff()" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1.5 rounded transition">Logout</button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full px-6 py-8 flex-1 space-y-8">
+        <!-- Section 1: Upload File Excel -->
+        <section class="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 class="text-lg font-bold text-slate-900 mb-1">📁 Import Data Nilai TOEFL (.xlsx)</h2>
+            <p class="text-xs text-slate-500 mb-4">Unggah file Excel berisi data hasil tes mahasiswa (NIM, Nama, Listening, Structure, Reading).</p>
+
+            <div class="flex flex-col md:flex-row gap-4 items-center border-2 border-dashed border-slate-300 p-6 rounded-lg bg-slate-50">
+                <input type="file" id="excel-file-input" accept=".xlsx, .xls" class="text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-900 file:text-white hover:file:bg-blue-950">
+                <button onclick="prosesUploadExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-6 py-2.5 rounded-lg transition">
+                    🚀 Upload & Sinkron Database
+                </button>
+            </div>
+            <div id="upload-status" class="hidden mt-3 p-3 text-xs rounded border"></div>
+        </section>
+
+        <!-- Section 2: Kelola Tiket Keluhan -->
+        <section class="bg-white p-6 rounded-xl border shadow-sm">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <h2 class="text-lg font-bold text-slate-900">📩 Daftar Keluhan & Kendala Mahasiswa</h2>
+                <button onclick="loadTiketKeluhan()" class="text-xs text-blue-900 hover:underline font-semibold">🔄 Refresh Data</button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-left">
+                    <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b">
+                        <tr>
+                            <th class="p-3">Kode Tiket</th>
+                            <th class="p-3">NIM & Nama</th>
+                            <th class="p-3">Kategori</th>
+                            <th class="p-3">Deskripsi</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Aksi Staff</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-tiket-body" class="divide-y">
+                        <!-- Data tiket di-render via JS -->
+                        <tr>
+                            <td colspan="6" class="p-4 text-center text-slate-400">Memuat data tiket...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- JS SCRIPTS -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/excel-upload.js"></script>
+    <script src="assets/js/auth.js"></script>
+</body>
+</html>

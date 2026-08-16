@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPA Bahasa - Politeknik Negeri Samarinda</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- SheetJS (Excel Parsing) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF (Cetak Sertifikat & Nota) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Topbar Portal Internal -->
+    <div class="bg-slate-900 text-slate-300 text-xs py-2 px-6 flex justify-between items-center border-b border-slate-800">
+        <span class="font-medium">Politeknik Negeri Samarinda — UPA Bahasa</span>
+        <button onclick="toggleLoginModal(true)" class="hover:text-amber-400 font-semibold transition flex items-center gap-1">
+            🔒 Login Staff / Kepala UPA
+        </button>
+    </div>
+
+    <!-- Header & Navigasi Utama -->
+    <header class="bg-white shadow-sm border-b sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center bg-white border-b">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 bg-blue-950 rounded-full flex items-center justify-center text-white font-bold text-xl border-2 border-amber-400 shadow-sm">
+                    P
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-blue-950 tracking-tight leading-none">UPA BAHASA</h1>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mt-1">Politeknik Negeri Samarinda</p>
+                </div>
+            </div>
+
+            <nav class="flex space-x-6 text-sm font-semibold text-slate-700">
+                <button onclick="showSection('beranda')" class="hover:text-blue-900 transition">Beranda</button>
+                <button onclick="showSection('cek-skor')" class="hover:text-blue-900 transition">Cek Skor TOEFL</button>
+                <button onclick="showSection('keluhan')" class="hover:text-blue-900 transition">Layanan & Tracking</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- SECTION 1: BERANDA PUBLIK -->
+    <main id="section-beranda" class="flex-1">
+        <section class="relative h-[420px] bg-cover bg-center flex items-center justify-center text-white"
+            style="background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80');">
+            <div class="text-center max-w-3xl px-6">
+                <h2 class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">
+                    Sistem Informasi Layanan UPA Bahasa POLNES
+                </h2>
+                <p class="text-sm md:text-base text-slate-200 mb-8 font-light">
+                    Portal resmi pengujian TOEFL, validasi skor, keluhan layanan, dan pencetakan sertifikat mahasiswa Politeknik Negeri Samarinda.
+                </p>
+                <div class="flex justify-center gap-4">
+                    <button onclick="showSection('cek-skor')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-lg transition">
+                        🔍 Cek Skor TOEFL
+                    </button>
+                    <button onclick="showSection('keluhan')" class="bg-blue-800 hover:bg-blue-900 text-white font-semibold px-6 py-3 rounded-lg shadow-lg border border-blue-700 transition">
+                        📩 Layanan Keluhan
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Berita & Pengumuman -->
+        <section class="max-w-7xl mx-auto px-6 py-12">
+            <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-3">Berita & Pengumuman Terbaru</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500" class="h-44 w-full object-cover">
+                    <div class="p-5">
+                        <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">10 Ags 2026</span>
+                        <h4 class="font-bold text-base mt-2 text-slate-900">Jadwal Remedial Test TOEFL Semester Ganjil</h4>
+                        <p class="text-xs text-slate-500 mt-2">Pendaftaran peserta remedial dibuka khusus mahasiswa tingkat akhir POLNES.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" class="h-44 w-full object-cover">
+                    <div class="p-5">
+                        <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">05 Ags 2026</span>
+                        <h4 class="font-bold text-base mt-2 text-slate-900">Pengambilan Sertifikat Fisik UPA Bahasa</h4>
+                        <p class="text-xs text-slate-500 mt-2">Sertifikat TOEFL yang terbit dapat diambil langsung di loket UPA Bahasa.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500" class="h-44 w-full object-cover">
+                    <div class="p-5">
+                        <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">28 Jul 2026</span>
+                        <h4 class="font-bold text-base mt-2 text-slate-900">Pelatihan English Academic POLNES</h4>
+                        <p class="text-xs text-slate-500 mt-2">Program persiapan ujian TOEFL ITP untuk seluruh jurusan politeknik.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- SECTION 2: CEK SKOR TOEFL -->
+    <main id="section-cek-skor" class="flex-1 hidden max-w-4xl mx-auto px-6 py-12 w-full">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border">
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Cek Skor TOEFL Mahasiswa</h2>
+            <p class="text-xs text-slate-500 mb-6">Masukkan Nomor Induk Mahasiswa (NIM) untuk melihat hasil kalkulasi nilai TOEFL.</p>
+
+            <div class="flex gap-3 mb-6">
+                <input type="text" id="input-nim" placeholder="Masukkan NIM (misal: 21641001)" class="flex-1 px-4 py-2.5 border rounded-lg outline-none focus:ring-2 focus:ring-blue-900 text-sm">
+                <button onclick="cariSkor()" class="bg-blue-900 hover:bg-blue-950 text-white font-bold px-6 py-2.5 rounded-lg text-sm transition">Cari Hasil</button>
+            </div>
+
+            <!-- Card Hasil Ujian -->
+            <div id="hasil-box" class="hidden border rounded-xl overflow-hidden mt-6">
+                <div id="status-badge" class="p-3 text-white font-bold text-center text-sm"></div>
+                <div class="p-6 bg-slate-50 grid md:grid-cols-2 gap-6 text-sm">
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Nama Mahasiswa</p>
+                        <p id="res-nama" class="text-base font-bold text-slate-900"></p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase mt-3">NIM</p>
+                        <p id="res-nim" class="font-semibold text-slate-700"></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border">
+                        <h4 class="font-bold text-xs text-slate-800 border-b pb-2 mb-2">Rincian Kalkulasi Skor</h4>
+                        <div class="space-y-1 text-xs">
+                            <div class="flex justify-between"><span>Listening:</span> <span id="res-list" class="font-bold"></span></div>
+                            <div class="flex justify-between"><span>Structure:</span> <span id="res-struct" class="font-bold"></span></div>
+                            <div class="flex justify-between"><span>Reading:</span> <span id="res-read" class="font-bold"></span></div>
+                            <div class="flex justify-between border-t pt-2 font-bold text-sm text-blue-900">
+                                <span>TOTAL SKOR:</span> <span id="res-total"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 bg-white border-t flex justify-between items-center">
+                    <span class="text-xs text-slate-400">*Sertifikat asli dapat diunduh jika dinyatakan lulus.</span>
+                    <button id="btn-cetak-sertifikat" onclick="cetakSertifikat()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+                        🖨️ Cetak Sertifikat PDF
+                    </button>
+                </div>
+            </div>
+            <div id="hasil-error" class="hidden p-4 bg-red-50 text-red-700 text-sm rounded-lg mt-4">Data hasil ujian NIM tidak ditemukan.</div>
+        </div>
+    </main>
+
+    <!-- SECTION 3: LAYANAN KELUHAN & TRACKING -->
+    <main id="section-keluhan" class="flex-1 hidden max-w-5xl mx-auto px-6 py-12 w-full grid md:grid-cols-2 gap-8">
+        <!-- Form Pengajuan -->
+        <div class="bg-white p-6 rounded-2xl border shadow-sm text-sm">
+            <h3 class="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Form Pengajuan Keluhan / Kendala</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block font-semibold mb-1 text-xs">NIM & Nama</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input id="form-nim" placeholder="NIM" class="p-2 border rounded text-xs">
+                        <input id="form-nama" placeholder="Nama Lengkap" class="p-2 border rounded text-xs">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1 text-xs">Kategori Masalah</label>
+                    <select id="form-kategori" class="w-full p-2 border rounded text-xs">
+                        <option value="skor">Kesalahan Skor TOEFL</option>
+                        <option value="sertifikat">Kesalahan Nama di Sertifikat</option>
+                        <option value="jadwal">Jadwal / Sesi Ujian</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1 text-xs">Deskripsi Laporan</label>
+                    <textarea id="form-deskripsi" rows="3" placeholder="Jelaskan masalah secara detail..." class="w-full p-2 border rounded text-xs"></textarea>
+                </div>
+                <button onclick="kirimLaporan()" class="w-full bg-blue-900 text-white font-bold py-2.5 rounded-lg hover:bg-blue-950 transition">Kirim Laporan</button>
+            </div>
+            <div id="tiket-alert" class="hidden mt-4 p-3 bg-emerald-50 text-emerald-800 rounded border border-emerald-200 text-xs"></div>
+        </div>
+
+        <!-- Tracking Tiket -->
+        <div class="bg-white p-6 rounded-2xl border shadow-sm text-sm h-fit">
+            <h3 class="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Tracking Status Tiket Laporan</h3>
+            <div class="flex gap-2 mb-4">
+                <input id="input-kode-tiket" placeholder="Kode Tiket (misal TKT-123456)" class="flex-1 p-2 border rounded text-xs">
+                <button onclick="trackTiket()" class="bg-slate-900 text-white px-4 py-2 rounded font-bold text-xs">Cek Status</button>
+            </div>
+            <div id="tracking-result" class="hidden p-4 bg-slate-50 border rounded-lg text-xs space-y-1">
+                <p><b>Kategori:</b> <span id="track-kategori"></span></p>
+                <p><b>Status:</b> <span id="track-status" class="font-bold text-amber-700 uppercase"></span></p>
+                <p><b>Catatan Staff:</b> <span id="track-catatan"></span></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL LOGIN STAFF / KEPALA -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl relative">
+            <button onclick="toggleLoginModal(false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            <h3 class="text-lg font-bold text-slate-900 mb-1">Login Staff / Kepala UPA</h3>
+            <p class="text-xs text-slate-500 mb-4">Akses terbatas untuk pengelola internal POLNES.</p>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold mb-1">Email</label>
+                    <input type="email" id="login-email" placeholder="staff@polnes.ac.id" class="w-full p-2.5 border rounded outline-none">
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Password</label>
+                    <input type="password" id="login-pass" placeholder="••••••••" class="w-full p-2.5 border rounded outline-none">
+                </div>
+                <button onclick="loginStaff()" class="w-full bg-blue-950 text-white font-bold py-2.5 rounded-lg hover:bg-slate-900 transition">Masuk ke Sistem</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 text-xs py-8 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-4 text-center md:text-left">
+            <div>
+                <p class="font-bold text-white">UPA Bahasa Politeknik Negeri Samarinda</p>
+                <p class="mt-1">Jl. Gerilya, Kampus Gunung Kelua, Samarinda, Kaltim 75123</p>
+            </div>
+            <div>
+                <p>📞 WA Services: 0851-9197-4494 | ✉️ upabahasa@polnes.ac.id</p>
+                <p class="mt-1">© 2026 UPA Bahasa POLNES. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS SCRIPTS CONNECT -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/toefl.js"></script>
+    <script src="assets/js/keluhan.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+        function showSection(sectionId) {
+            ['beranda', 'cek-skor', 'keluhan'].forEach(id => {
+                document.getElementById(`section-${id}`).classList.add('hidden');
+            });
+            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
