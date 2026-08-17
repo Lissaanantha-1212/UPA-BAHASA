@@ -12,36 +12,42 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- jsPDF (Cetak Sertifikat & Nota) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        .nav-btn-active {
+            color: #1e3a8a !important;
+            border-bottom: 2px solid #f59e0b;
+            font-weight: 800;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- 1. TOPBAR INFORMASI & AKSES BAHASA (Inspirasi: UPNVJ) -->
+    <!-- 1. TOPBAR INFORMASI & AKSES BAHASA -->
     <div class="bg-blue-950 text-slate-200 text-xs py-2 px-6 flex justify-between items-center border-b border-blue-900">
         <div class="flex items-center gap-4">
             <span>📍 Jl. Gerilya, Kampus Gunung Kelua, Samarinda</span>
             <span class="hidden md:inline">✉️ upabahasa@polnes.ac.id</span>
         </div>
         <div class="flex items-center gap-4">
-            <!-- Selector Bahasa -->
             <div class="flex items-center gap-2 border-r pr-4 border-slate-700">
-                <button class="hover:text-amber-400 font-bold text-[11px] flex items-center gap-1">🇲🇨 ID</button>
+                <button class="hover:text-amber-400 font-bold text-[11px] flex items-center gap-1 transition">🇲🇨 ID</button>
                 <span class="text-slate-600">|</span>
-                <button class="hover:text-amber-400 text-[11px] text-slate-400 flex items-center gap-1">🇬🇧 EN</button>
+                <button class="hover:text-amber-400 text-[11px] text-slate-400 flex items-center gap-1 transition">🇬🇧 EN</button>
             </div>
-            <!-- Tombol Login Internal -->
-            <button onclick="toggleLoginModal(true)" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1 rounded font-bold transition flex items-center gap-1">
+            <button onclick="toggleLoginModal(true)" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-3 py-1 rounded-md font-bold transition-all shadow hover:shadow-md active:translate-y-0.5 flex items-center gap-1">
                 🔒 MASUK
             </button>
         </div>
     </div>
 
-    <!-- 2. HEADER & DROPDOWN NAVIGASI (Inspirasi: UNMUL & UNTIDAR) -->
+    <!-- 2. HEADER & DROPDOWN NAVIGASI (DENGAN EFEK TIMBUL & ACTIVE) -->
     <header class="bg-white shadow-sm border-b sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
             
-            <!-- Logo Brand POLNES -->
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="showSection('beranda')">
-                <div class="w-11 h-11 bg-blue-950 rounded-full flex items-center justify-center text-white font-bold text-xl border-2 border-amber-400 shadow-sm">
+            <!-- Logo POLNES -->
+            <div class="flex items-center space-x-3 cursor-pointer group" onclick="showSection('beranda', 'nav-beranda')">
+                <div class="w-11 h-11 bg-blue-950 rounded-full flex items-center justify-center text-white font-bold text-xl border-2 border-amber-400 shadow-md group-hover:scale-105 transition-transform">
                     P
                 </div>
                 <div>
@@ -52,152 +58,293 @@
 
             <!-- Menu Navigasi Beranting -->
             <nav class="hidden md:flex items-center space-x-6 text-xs font-bold text-slate-700 tracking-wider">
-                <button onclick="showSection('beranda')" class="hover:text-blue-900 transition uppercase">Beranda</button>
+                <button id="nav-beranda" onclick="showSection('beranda', 'nav-beranda')" class="nav-btn py-2 hover:text-blue-900 transition uppercase nav-btn-active">
+                    Beranda
+                </button>
 
                 <!-- Dropdown 1: Tentang Kami -->
                 <div class="relative group">
-                    <button class="hover:text-blue-900 transition flex items-center gap-1 py-2 uppercase">
+                    <button id="nav-tentang" class="nav-btn py-2 hover:text-blue-900 transition flex items-center gap-1 uppercase">
                         Tentang Kami <span class="text-[10px]">▾</span>
                     </button>
-                    <div class="absolute left-0 top-full hidden group-hover:block w-60 bg-white border border-slate-200 rounded-lg shadow-xl py-2 z-50">
-                        <a href="#profil" onclick="showSection('beranda')" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Struktur Organisasi UPA Bahasa</a>
-                        <a href="#profil" onclick="showSection('beranda')" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Sejarah & Profil</a>
-                        <a href="#profil" onclick="showSection('beranda')" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Visi & Misi</a>
-                        <a href="#profil" onclick="showSection('beranda')" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Tujuan dan Fungsi</a>
+                    <div class="absolute left-0 top-full hidden group-hover:block w-60 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50 transition-all transform origin-top">
+                        <button onclick="showSection('tentang-kami', 'nav-tentang')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Struktur Organisasi UPA Bahasa</button>
+                        <button onclick="showSection('tentang-kami', 'nav-tentang')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Sejarah & Profil</button>
+                        <button onclick="showSection('tentang-kami', 'nav-tentang')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Visi & Misi</button>
                     </div>
                 </div>
 
                 <!-- Dropdown 2: Layanan -->
                 <div class="relative group">
-                    <button class="hover:text-blue-900 transition flex items-center gap-1 py-2 uppercase">
+                    <button id="nav-layanan" class="nav-btn py-2 hover:text-blue-900 transition flex items-center gap-1 uppercase">
                         Layanan <span class="text-[10px]">▾</span>
                     </button>
-                    <div class="absolute left-0 top-full hidden group-hover:block w-56 bg-white border border-slate-200 rounded-lg shadow-xl py-2 z-50">
-                        <button onclick="showSection('cek-skor')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Tes TOEFL ITP / Prediction</button>
-                        <a href="#" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Kursus & Pelatihan Bahasa</a>
-                        <a href="#" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Layanan Penerjemahan Dokumen</a>
-                        <button onclick="showSection('keluhan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Pengaduan & Kendala</button>
+                    <div class="absolute left-0 top-full hidden group-hover:block w-56 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50">
+                        <button onclick="showSection('cek-skor', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Tes TOEFL ITP / Prediction</button>
+                        <button onclick="showSection('layanan-kursus', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Kursus & Pelatihan Bahasa</button>
+                        <button onclick="showSection('layanan-penerjemahan', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Penerjemahan Dokumen</button>
+                        <button onclick="showSection('keluhan', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Pengaduan & Kendala</button>
                     </div>
                 </div>
 
-                <!-- Menu Fitur Langsung (Gaya UNTIDAR: Nilai UTEP / TOEFL) -->
-                <button onclick="showSection('cek-skor')" class="hover:text-blue-900 transition uppercase text-blue-900 font-extrabold">
+                <!-- Menu Nilai TOEFL -->
+                <button id="nav-nilai" onclick="showSection('cek-skor', 'nav-nilai')" class="nav-btn py-2 hover:text-blue-900 transition uppercase">
                     Nilai TOEFL
                 </button>
 
-                <!-- Dropdown 3: PPID & Ragam Informasi -->
+                <!-- Dropdown 3: Lainnya -->
                 <div class="relative group">
-                    <button class="hover:text-blue-900 transition flex items-center gap-1 py-2 uppercase">
+                    <button id="nav-lainnya" class="nav-btn py-2 hover:text-blue-900 transition flex items-center gap-1 uppercase">
                         Lainnya <span class="text-[10px]">▾</span>
                     </button>
-                    <div class="absolute right-0 top-full hidden group-hover:block w-52 bg-white border border-slate-200 rounded-lg shadow-xl py-2 z-50">
-                        <a href="#" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Informasi PPID</a>
-                        <a href="#" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Peraturan & Kebijakan</a>
-                        <a href="#" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Galeri Kegiatan</a>
+                    <div class="absolute right-0 top-full hidden group-hover:block w-52 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50">
+                        <button onclick="showSection('ppid', 'nav-lainnya')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Informasi PPID</button>
+                        <button onclick="showSection('galeri', 'nav-lainnya')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Galeri Kegiatan</button>
                     </div>
                 </div>
 
-                <!-- Tombol Action -->
-                <button onclick="showSection('cek-skor')" class="bg-blue-900 hover:bg-blue-950 text-white font-extrabold px-4 py-2 rounded-lg text-xs transition shadow-sm">
+                <!-- Tombol Action Cek Skor (Tombol Timbul) -->
+                <button onclick="showSection('cek-skor', 'nav-nilai')" class="bg-blue-900 hover:bg-blue-950 text-white font-extrabold px-4 py-2 rounded-lg text-xs transition-all shadow-md hover:shadow-lg active:translate-y-0.5">
                     🔍 CEK SKOR
                 </button>
             </nav>
         </div>
     </header>
 
-    <!-- 3. SECTION BERANDA PUBLIK -->
+    <!-- ==================== 3. SECTION BERANDA PANJANG & LENGKAP ==================== -->
     <main id="section-beranda" class="flex-1">
-        <!-- Hero Banner Laboratorium (Inspirasi: UNTIDAR) -->
-        <section class="relative h-[440px] bg-cover bg-center flex items-center justify-center text-white"
+        <!-- Hero Banner -->
+        <section class="relative h-[480px] bg-cover bg-center flex items-center justify-center text-white"
             style="background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1600&q=80');">
-            <div class="text-center max-w-3xl px-6">
+            <div class="text-center max-w-4xl px-6">
                 <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">
                     Official Language Center POLNES
                 </span>
                 <h2 class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">
-                    Sistem Informasi & Layanan UPA Bahasa POLNES
+                    Pusat Layanan Bahasa & Standardisasi TOEFL POLNES
                 </h2>
                 <p class="text-xs md:text-sm text-slate-300 mb-8 font-light max-w-2xl mx-auto">
-                    Portal pengujian TOEFL ITP, validasi nilai, pencetakan sertifikat resmi, dan pusat layanan akademik bahasa Politeknik Negeri Samarinda.
+                    Mendukung kompetensi global civitas akademika melalui pengujian TOEFL resmi, kursus akademik, penerjemahan tersumpah, dan pencetakan sertifikat digital.
                 </p>
-                <div class="flex justify-center gap-4">
-                    <button onclick="showSection('cek-skor')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-lg transition text-xs uppercase tracking-wider">
-                        🔍 Cek Skor TOEFL
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="showSection('cek-skor', 'nav-nilai')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-md hover:shadow-xl active:translate-y-0.5 transition-all text-xs uppercase tracking-wider">
+                        🔍 Cek Hasil Skor TOEFL
                     </button>
-                    <button onclick="showSection('keluhan')" class="bg-blue-800 hover:bg-blue-900 text-white font-semibold px-6 py-3 rounded-lg shadow-lg border border-blue-700 transition text-xs uppercase tracking-wider">
-                        📩 Layanan Pengaduan
+                    <button onclick="showSection('layanan-kursus', 'nav-layanan')" class="bg-blue-800 hover:bg-blue-900 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-xl active:translate-y-0.5 border border-blue-700 transition-all text-xs uppercase tracking-wider">
+                        📚 Daftar Pelatihan & Kursus
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- Grid Pengumuman Poster Visual (Inspirasi: UPNVJ) -->
-        <section class="max-w-7xl mx-auto px-6 py-12">
-            <div class="flex justify-between items-end mb-8 border-b pb-4">
-                <div>
-                    <h3 class="text-2xl font-bold text-slate-900">Pengumuman & Informasii Terbaru</h3>
-                    <p class="text-xs text-slate-500 mt-1">Jadwal tes, pendaftaran, dan informasi resmi UPA Bahasa POLNES</p>
+        <!-- Stats Counter Section -->
+        <section class="bg-blue-950 text-white py-8 border-y border-blue-900">
+            <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div class="p-3 border-r border-blue-900 last:border-0">
+                    <p class="text-3xl font-extrabold text-amber-400">12,500+</p>
+                    <p class="text-xs text-slate-300 mt-1">Mahasiswa Teruji</p>
                 </div>
-                <a href="#" class="text-xs font-bold text-blue-900 hover:underline">Lihat Semua ➔</a>
+                <div class="p-3 border-r border-blue-900 last:border-0">
+                    <p class="text-3xl font-extrabold text-amber-400">98%</p>
+                    <p class="text-xs text-slate-300 mt-1">Tingkat Validitas Sertifikat</p>
+                </div>
+                <div class="p-3 border-r border-blue-900 last:border-0">
+                    <p class="text-3xl font-extrabold text-amber-400">15+</p>
+                    <p class="text-xs text-slate-300 mt-1">Pengajar Profesional</p>
+                </div>
+                <div class="p-3">
+                    <p class="text-3xl font-extrabold text-amber-400">24/7</p>
+                    <p class="text-xs text-slate-300 mt-1">Portal Cek Skor Mandiri</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ringkasan Layanan Utama -->
+        <section class="max-w-7xl mx-auto px-6 py-14">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <h3 class="text-2xl font-bold text-slate-900">Layanan Unggulan UPA Bahasa</h3>
+                <p class="text-xs text-slate-500 mt-2">Kami menyediakan solusi komprehensif peningkatan kemampuan bahasa asing bagi mahasiswa dan masyarakat umum.</p>
             </div>
 
-            <div class="grid md:grid-cols-4 gap-6">
-                <!-- Card Poster 1 -->
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition">
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500" class="h-48 w-full object-cover">
-                        <span class="absolute top-3 right-3 bg-emerald-600 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow">OPEN</span>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-blue-50 text-blue-900 rounded-xl flex items-center justify-center font-bold text-xl mb-4">✍️</div>
+                        <h4 class="font-bold text-base text-slate-900 mb-2">Tes TOEFL ITP & Prediction</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">Pelaksanaan tes berkala untuk syarat kelulusan/yudisium mahasiswa POLNES serta keperluan beasiswa luar negeri.</p>
                     </div>
-                    <div class="p-4">
-                        <span class="text-[10px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">10 Ags 2026</span>
-                        <h4 class="font-bold text-sm mt-2 text-slate-900 line-clamp-2">Pendaftaran TOEFL ITP Periodik Semester Ganjil</h4>
-                        <p class="text-xs text-slate-500 mt-2 line-clamp-2">Pendaftaran peserta tes TOEFL terbuka untuk seluruh mahasiswa POLNES.</p>
-                    </div>
+                    <button onclick="showSection('cek-skor', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Lihat Detail Tes ➔</button>
                 </div>
 
-                <!-- Card Poster 2 -->
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition">
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" class="h-48 w-full object-cover">
-                        <span class="absolute top-3 right-3 bg-red-600 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow">CLOSED</span>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">📖</div>
+                        <h4 class="font-bold text-base text-slate-900 mb-2">Kursus & Intensive English</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">Program pembekalan strategi menjawab TOEFL, kelas percakapan bisnis, serta persiapan tes Academic Writing.</p>
                     </div>
-                    <div class="p-4">
-                        <span class="text-[10px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">02 Ags 2026</span>
-                        <h4 class="font-bold text-sm mt-2 text-slate-900 line-clamp-2">Penutupan Sementara Sistem Pembayaran</h4>
-                        <p class="text-xs text-slate-500 mt-2 line-clamp-2">Penutupan sementara layanan loket terkait pemeliharaan sistem data.</p>
-                    </div>
+                    <button onclick="showSection('layanan-kursus', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Pelajari Kursus ➔</button>
                 </div>
 
-                <!-- Card Poster 3 -->
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition">
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500" class="h-48 w-full object-cover">
-                        <span class="absolute top-3 right-3 bg-blue-600 text-white font-bold text-[10px] px-2 py-0.5 rounded shadow">INFO</span>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">📄</div>
+                        <h4 class="font-bold text-base text-slate-900 mb-2">Penerjemahan Dokumen</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">Layanan penerjemahan resmi untuk dokumen akademik, ijazah, abstrak jurnal, dan dokumen legal institusi.</p>
                     </div>
-                    <div class="p-4">
-                        <span class="text-[10px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">28 Jul 2026</span>
-                        <h4 class="font-bold text-sm mt-2 text-slate-900 line-clamp-2">Persiapan TOEFL ITP untuk Syarat Beasiswa</h4>
-                        <p class="text-xs text-slate-500 mt-2 line-clamp-2">Pelatihan intensif persiapan ujian TOEFL ITP untuk tingkat akhir.</p>
-                    </div>
+                    <button onclick="showSection('layanan-penerjemahan', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Pesan Penerjemahan ➔</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alur Prosedur Tes TOEFL -->
+        <section class="bg-slate-100 py-14 border-y">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <h3 class="text-2xl font-bold text-slate-900">Alur Prosedur Pelaksanaan Tes</h3>
+                    <p class="text-xs text-slate-500 mt-2">Langkah mudah mengikuti pengujian hingga mendapatkan sertifikat resmi.</p>
                 </div>
 
-                <!-- Card Poster 4 -->
-                <div class="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition">
-                    <div class="relative">
-                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500" class="h-48 w-full object-cover">
-                        <span class="absolute top-3 right-3 bg-amber-500 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded shadow">JADWAL</span>
+                <div class="grid md:grid-cols-4 gap-6 text-center">
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <div class="w-8 h-8 bg-amber-500 text-slate-950 font-bold rounded-full flex items-center justify-center mx-auto mb-3 text-xs">1</div>
+                        <h5 class="font-bold text-xs text-slate-900 mb-1">Pendaftaran Online</h5>
+                        <p class="text-[11px] text-slate-500">Pilih jadwal ujian dan lakukan pengisian data peserta.</p>
                     </div>
-                    <div class="p-4">
-                        <span class="text-[10px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">15 Jul 2026</span>
-                        <h4 class="font-bold text-sm mt-2 text-slate-900 line-clamp-2">Jadwal Ujian TOEFL PBT & CBT Bulan Ini</h4>
-                        <p class="text-xs text-slate-500 mt-2 line-clamp-2">Sesi jadwal pelaksanaan tes berbasis komputer dan kertas.</p>
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <div class="w-8 h-8 bg-amber-500 text-slate-950 font-bold rounded-full flex items-center justify-center mx-auto mb-3 text-xs">2</div>
+                        <h5 class="font-bold text-xs text-slate-900 mb-1">Pelaksanaan Ujian</h5>
+                        <p class="text-[11px] text-slate-500">Hadir di Lab UPA Bahasa POLNES sesuai jadwal sesi.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <div class="w-8 h-8 bg-amber-500 text-slate-950 font-bold rounded-full flex items-center justify-center mx-auto mb-3 text-xs">3</div>
+                        <h5 class="font-bold text-xs text-slate-900 mb-1">Cek Hasil Skor</h5>
+                        <p class="text-[11px] text-slate-500">Cek skor langsung dari website ini menggunakan NIM.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border shadow-sm">
+                        <div class="w-8 h-8 bg-amber-500 text-slate-950 font-bold rounded-full flex items-center justify-center mx-auto mb-3 text-xs">4</div>
+                        <h5 class="font-bold text-xs text-slate-900 mb-1">Cetak Sertifikat</h5>
+                        <p class="text-[11px] text-slate-500">Unduh sertifikat PDF resmi untuk syarat yudisium.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grid Pengumuman Visual -->
+        <section class="max-w-7xl mx-auto px-6 py-14">
+            <div class="flex justify-between items-end mb-8 border-b pb-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900">Pengumuman & Informasi Terbaru</h3>
+                    <p class="text-xs text-slate-500 mt-1">Update terkini kegiatan UPA Bahasa POLNES</p>
+                </div>
+                <button onclick="showSection('ppid', 'nav-lainnya')" class="text-xs font-bold text-blue-900 hover:underline">Lihat Semua ➔</button>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500" class="h-44 w-full object-cover">
+                    <div class="p-5">
+                        <span class="text-[10px] font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">10 Ags 2026</span>
+                        <h4 class="font-bold text-sm mt-2 text-slate-900">Jadwal Remedial Test TOEFL Semester Ganjil</h4>
+                        <p class="text-xs text-slate-500 mt-2">Pendaftaran dibuka khusus mahasiswa tingkat akhir POLNES.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500" class="h-44 w-full object-cover">
+                    <div class="p-5">
+                        <span class="text-[10px] font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">05 Ags 2026</span>
+                        <h4 class="font-bold text-sm mt-2 text-slate-900">Pengambilan Sertifikat Fisik UPA Bahasa</h4>
+                        <p class="text-xs text-slate-500 mt-2">Sertifikat terbit dapat diambil langsung di loket gedung UPA.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=500" class="h-44 w-full object-cover">
+                    <div class="p-5">
+                        <span class="text-[10px] font-semibold text-amber-600 bg-amber-50 px-2 py-1 rounded">28 Jul 2026</span>
+                        <h4 class="font-bold text-sm mt-2 text-slate-900">Pelatihan English Academic POLNES</h4>
+                        <p class="text-xs text-slate-500 mt-2">Program persiapan ujian TOEFL ITP untuk jurusan teknik dan tata niaga.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="bg-slate-50 py-12 border-t">
+            <div class="max-w-4xl mx-auto px-6">
+                <h3 class="text-xl font-bold text-slate-900 mb-6 text-center">Pertanyaan Sering Diajukan (FAQ)</h3>
+                <div class="space-y-4 text-xs">
+                    <div class="bg-white p-4 rounded-xl border shadow-sm">
+                        <p class="font-bold text-slate-900 mb-1">Berapa skor minimal TOEFL untuk kelulusan POLNES?</p>
+                        <p class="text-slate-600">Standar skor minimal bergantung pada jurusan/prodi masing-masing, umumnya 425 hingga 450.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border shadow-sm">
+                        <p class="font-bold text-slate-900 mb-1">Berapa lama masa berlaku sertifikat TOEFL UPA Bahasa?</p>
+                        <p class="text-slate-600">Sertifikat resmi UPA Bahasa berlaku selama 2 (dua) tahun sejak tanggal diterbitkan.</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 4. SECTION CEK SKOR TOEFL -->
+    <!-- ==================== 4. SECTION TENTANG KAMI ==================== -->
+    <main id="section-tentang-kami" class="flex-1 hidden max-w-5xl mx-auto px-6 py-12 w-full">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border space-y-6">
+            <h2 class="text-2xl font-bold text-slate-900 border-b pb-3">Profil & Struktur UPA Bahasa POLNES</h2>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Unit Pelaksana Akademik (UPA) Bahasa Politeknik Negeri Samarinda merupakan unsur penunjang akademik di bidang pembelajaran, peningkatan, dan pengujian kemampuan bahasa asing.
+            </p>
+            <div class="grid md:grid-cols-2 gap-6 text-xs">
+                <div class="bg-slate-50 p-4 rounded-xl border">
+                    <h4 class="font-bold text-blue-900 mb-2">Visi</h4>
+                    <p class="text-slate-600">Menjadi pusat layanan bahasa yang unggul, akuntabel, dan berstandar internasional dalam mendukung kompetensi lulusan politeknik.</p>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border">
+                    <h4 class="font-bold text-blue-900 mb-2">Misi</h4>
+                    <p class="text-slate-600">Menyelenggarakan pengujian bahasa terstandar, menyediakan pelatihan bahasa berbasis kebutuhan industri, dan melayani penerjemahan dokumen secara akurat.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==================== 5. SECTION LAYANAN KURSUS ==================== -->
+    <main id="section-layanan-kursus" class="flex-1 hidden max-w-5xl mx-auto px-6 py-12 w-full">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Program Kursus & Pelatihan</h2>
+            <p class="text-xs text-slate-500 mb-6">Pilihan program pelatihan bahasa asing untuk mahasiswa dan umum.</p>
+
+            <div class="grid md:grid-cols-2 gap-6 text-xs">
+                <div class="border p-5 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-slate-900 text-sm mb-2">TOEFL Preparation Class</h4>
+                    <p class="text-slate-600 mb-4">Program intensif 12 pertemuan strategi menjawab trik Listening, Structure, & Reading.</p>
+                    <button onclick="showSection('keluhan', 'nav-layanan')" class="bg-blue-900 text-white font-bold px-4 py-2 rounded">Daftar via WhatsApp</button>
+                </div>
+                <div class="border p-5 rounded-xl bg-slate-50">
+                    <h4 class="font-bold text-slate-900 text-sm mb-2">English for Specific Purposes (ESP)</h4>
+                    <p class="text-slate-600 mb-4">Pelatihan Bahasa Inggris teknis untuk persiapan wawancara kerja dan industri.</p>
+                    <button onclick="showSection('keluhan', 'nav-layanan')" class="bg-blue-900 text-white font-bold px-4 py-2 rounded">Daftar via WhatsApp</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==================== 6. SECTION PENERJEMAHAN ==================== -->
+    <main id="section-layanan-penerjemahan" class="flex-1 hidden max-w-5xl mx-auto px-6 py-12 w-full">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border text-xs">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Layanan Penerjemahan Dokumen</h2>
+            <p class="text-slate-500 mb-6">Layanan terjemahan bahasa Indonesia - Inggris (PP) untuk dokumen akademik dan umum.</p>
+
+            <div class="bg-slate-50 p-4 rounded-xl border mb-6">
+                <h4 class="font-bold text-slate-800 mb-2">Tarif Layanan Standard:</h4>
+                <ul class="list-disc pl-5 space-y-1 text-slate-600">
+                    <li>Abstrak Skripsi / Tugas Akhir: Rp 50.000 / halaman</li>
+                    <li>Dokumen Transkrip / Ijazah: Rp 75.000 / halaman</li>
+                    <li>Jurnal & Artikel Ilmiah: Rp 60.000 / halaman</li>
+                </ul>
+            </div>
+            <button onclick="showSection('keluhan', 'nav-layanan')" class="bg-amber-500 text-slate-950 font-bold px-5 py-2.5 rounded-lg">Kirim Dokumen via Pengaduan/WA</button>
+        </div>
+    </main>
+
+    <!-- ==================== 7. SECTION CEK SKOR TOEFL ==================== -->
     <main id="section-cek-skor" class="flex-1 hidden max-w-4xl mx-auto px-6 py-12 w-full">
         <div class="bg-white p-8 rounded-2xl shadow-sm border">
             <h2 class="text-2xl font-bold text-slate-900 mb-1">Cek Skor TOEFL Mahasiswa</h2>
@@ -241,22 +388,21 @@
         </div>
     </main>
 
-    <!-- 5. SECTION LAYANAN KELUHAN -->
+    <!-- ==================== 8. SECTION LAYANAN KELUHAN ==================== -->
     <main id="section-keluhan" class="flex-1 hidden max-w-5xl mx-auto px-6 py-12 w-full grid md:grid-cols-2 gap-8">
-        <!-- Form Pengajuan -->
-        <div class="bg-white p-6 rounded-2xl border shadow-sm text-sm">
+        <div class="bg-white p-6 rounded-2xl border shadow-sm text-xs">
             <h3 class="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Form Pengajuan Keluhan / Kendala</h3>
             <div class="space-y-3">
                 <div>
-                    <label class="block font-semibold mb-1 text-xs">NIM & Nama</label>
+                    <label class="block font-semibold mb-1">NIM & Nama</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <input id="form-nim" placeholder="NIM" class="p-2 border rounded text-xs">
-                        <input id="form-nama" placeholder="Nama Lengkap" class="p-2 border rounded text-xs">
+                        <input id="form-nim" placeholder="NIM" class="p-2 border rounded">
+                        <input id="form-nama" placeholder="Nama Lengkap" class="p-2 border rounded">
                     </div>
                 </div>
                 <div>
-                    <label class="block font-semibold mb-1 text-xs">Kategori Masalah</label>
-                    <select id="form-kategori" class="w-full p-2 border rounded text-xs">
+                    <label class="block font-semibold mb-1">Kategori Masalah</label>
+                    <select id="form-kategori" class="w-full p-2 border rounded">
                         <option value="skor">Kesalahan Skor TOEFL</option>
                         <option value="sertifikat">Kesalahan Nama di Sertifikat</option>
                         <option value="jadwal">Jadwal / Sesi Ujian</option>
@@ -264,22 +410,21 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block font-semibold mb-1 text-xs">Deskripsi Laporan</label>
-                    <textarea id="form-deskripsi" rows="3" placeholder="Jelaskan masalah secara detail..." class="w-full p-2 border rounded text-xs"></textarea>
+                    <label class="block font-semibold mb-1">Deskripsi Laporan</label>
+                    <textarea id="form-deskripsi" rows="3" placeholder="Jelaskan masalah secara detail..." class="w-full p-2 border rounded"></textarea>
                 </div>
                 <button onclick="kirimLaporan()" class="w-full bg-blue-900 text-white font-bold py-2.5 rounded-lg hover:bg-blue-950 transition">Kirim Laporan</button>
             </div>
-            <div id="tiket-alert" class="hidden mt-4 p-3 bg-emerald-50 text-emerald-800 rounded border border-emerald-200 text-xs"></div>
+            <div id="tiket-alert" class="hidden mt-4 p-3 bg-emerald-50 text-emerald-800 rounded border border-emerald-200"></div>
         </div>
 
-        <!-- Tracking Tiket -->
-        <div class="bg-white p-6 rounded-2xl border shadow-sm text-sm h-fit">
+        <div class="bg-white p-6 rounded-2xl border shadow-sm text-xs h-fit">
             <h3 class="text-lg font-bold text-slate-900 mb-4 border-b pb-2">Tracking Status Tiket Laporan</h3>
             <div class="flex gap-2 mb-4">
-                <input id="input-kode-tiket" placeholder="Kode Tiket (misal TKT-123456)" class="flex-1 p-2 border rounded text-xs">
-                <button onclick="trackTiket()" class="bg-slate-900 text-white px-4 py-2 rounded font-bold text-xs">Cek Status</button>
+                <input id="input-kode-tiket" placeholder="Kode Tiket (misal TKT-123456)" class="flex-1 p-2 border rounded">
+                <button onclick="trackTiket()" class="bg-slate-900 text-white px-4 py-2 rounded font-bold">Cek Status</button>
             </div>
-            <div id="tracking-result" class="hidden p-4 bg-slate-50 border rounded-lg text-xs space-y-1">
+            <div id="tracking-result" class="hidden p-4 bg-slate-50 border rounded-lg space-y-1">
                 <p><b>Kategori:</b> <span id="track-kategori"></span></p>
                 <p><b>Status:</b> <span id="track-status" class="font-bold text-amber-700 uppercase"></span></p>
                 <p><b>Catatan Staff:</b> <span id="track-catatan"></span></p>
@@ -287,8 +432,35 @@
         </div>
     </main>
 
-    <!-- FLOATING WHATSAPP BUTTON (Inspirasi: UPNVJ) -->
-    <a href="https://wa.me/6285191974494" target="_blank" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 text-xs font-bold z-50 transition transform hover:scale-105">
+    <!-- ==================== 9. SECTION PPID ==================== -->
+    <main id="section-ppid" class="flex-1 hidden max-w-5xl mx-auto px-6 py-12 w-full">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border text-xs">
+            <h2 class="text-2xl font-bold text-slate-900 mb-4 border-b pb-2">Layanan Informasi PPID</h2>
+            <p class="text-slate-600 mb-4">Pusat Informasi Publik UPA Bahasa Politeknik Negeri Samarinda.</p>
+            <div class="p-4 bg-slate-50 rounded-xl border">
+                <p class="font-bold text-slate-800 mb-1">Dokumen & Regulasi Resmi:</p>
+                <ul class="list-disc pl-5 space-y-1 text-slate-600">
+                    <li>SK Direktur POLNES No. 24 Tahun 2024 tentang Standardisasi Ujian TOEFL</li>
+                    <li>SOP Permohonan Penerjemahan Dokumen</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==================== 10. SECTION GALERI ==================== -->
+    <main id="section-galeri" class="flex-1 hidden max-w-5xl mx-auto px-6 py-12 w-full">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border text-xs">
+            <h2 class="text-2xl font-bold text-slate-900 mb-4 border-b pb-2">Galeri Kegiatan UPA Bahasa</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400" class="rounded-lg shadow">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400" class="rounded-lg shadow">
+                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400" class="rounded-lg shadow">
+            </div>
+        </div>
+    </main>
+
+    <!-- FLOATING WHATSAPP BUTTON -->
+    <a href="https://wa.me/6285191974494" target="_blank" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 text-xs font-bold z-50 transition transform hover:scale-105 active:scale-95">
         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.842-1.001z"/></svg>
         <span class="hidden md:inline">Contact Us</span>
     </a>
@@ -334,11 +506,31 @@
     <script src="assets/js/keluhan.js"></script>
     <script src="assets/js/auth.js"></script>
     <script>
-        function showSection(sectionId) {
-            ['beranda', 'cek-skor', 'keluhan'].forEach(id => {
-                document.getElementById(`section-${id}`).classList.add('hidden');
+        function showSection(sectionId, activeBtnId) {
+            // Sembunyikan semua section
+            const sections = ['beranda', 'tentang-kami', 'layanan-kursus', 'layanan-penerjemahan', 'cek-skor', 'keluhan', 'ppid', 'galeri'];
+            sections.forEach(id => {
+                const el = document.getElementById(`section-${id}`);
+                if(el) el.classList.add('hidden');
             });
-            document.getElementById(`section-${sectionId}`).classList.remove('hidden');
+
+            // Tampilkan section pilihan
+            const targetSection = document.getElementById(`section-${sectionId}`);
+            if(targetSection) targetSection.classList.remove('hidden');
+
+            // Reset indikator aktif pada menu
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('nav-btn-active');
+            });
+
+            // Beri efek aktif pada menu terpilih
+            if(activeBtnId) {
+                const activeBtn = document.getElementById(activeBtnId);
+                if(activeBtn) activeBtn.classList.add('nav-btn-active');
+            }
+
+            // Scroll ke atas dengan mulus
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </body>
