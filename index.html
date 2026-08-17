@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <!-- Menu Navigasi Beranting (Setiap Sub-Menu Punya ID Tersendiri) -->
+            <!-- Menu Navigasi (Sub-Menu Dipanggil Berdasarkan ID Spesifik Masing-masing) -->
             <nav class="hidden md:flex items-center space-x-6 text-xs font-bold text-slate-700 tracking-wider">
                 <button id="nav-beranda" onclick="showPage('beranda', 'Beranda', 'nav-beranda')" class="nav-btn py-2 hover:text-blue-900 transition uppercase nav-btn-active">
                     Beranda
@@ -112,7 +112,7 @@
         </div>
     </header>
 
-    <!-- ==================== 3. PAGE: BERANDA ==================== -->
+    <!-- ==================== 3. HALAMAN BERANDA ==================== -->
     <div id="page-beranda" class="page-content flex-1">
         <!-- Hero Banner -->
         <section class="relative h-[480px] bg-cover bg-center flex items-center justify-center text-white"
@@ -198,9 +198,10 @@
         </section>
     </div>
 
-    <!-- ==================== CONTAINER LAYOUT DENGAN SIDEBAR UNTUK HALAMAN SUB-MENU ==================== -->
+    <!-- ==================== CONTAINER KONTEN HALAMAN INDEPENDEN ==================== -->
     <div id="subpage-wrapper" class="hidden flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
-        <!-- Breadcrumb & Page Title Bar -->
+        
+        <!-- Breadcrumb & Judul Halaman -->
         <div class="flex flex-col md:flex-row md:items-center justify-between border-b pb-4 mb-8 gap-2">
             <h2 id="page-title-heading" class="text-2xl font-bold text-slate-900">Judul Halaman</h2>
             <div class="text-xs text-slate-500">
@@ -209,35 +210,36 @@
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
-            <!-- LEFT COLUMN: MAIN CONTENT (Tampil Sesuai Sub-Menu yang Diklik) -->
-            <div class="md:col-col-span-2 md:col-span-2 space-y-6">
+            
+            <!-- SISI KIRI: KONTEN UTAMA HALAMAN TERPISAH -->
+            <div class="md:col-span-2 space-y-6">
 
-                <!-- 1. SUB-MENU: VISI & MISI -->
-                <div id="page-visi-misi" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm space-y-6">
-                    <h3 class="text-amber-600 font-bold text-sm tracking-wide uppercase">VISI</h3>
-                    <p class="text-lg font-bold text-slate-900 leading-snug">
-                        UPA Bahasa Universitas / Politeknik Negeri Samarinda menjadi pusat layanan pembelajaran bahasa yang berbasis sumber daya dan kearifan lokal serta berstandar internasional.
+                <!-- 1. KHUSUS VISI & MISI SAJA -->
+                <div id="page-visi-misi" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm space-y-6">
+                    <h3 class="text-amber-600 font-bold text-xs tracking-wider uppercase">VISI</h3>
+                    <p class="text-base md:text-lg font-bold text-slate-900 leading-snug">
+                        UPA Bahasa Politeknik Negeri Samarinda menjadi pusat layanan pembelajaran bahasa yang berbasis sumber daya dan kearifan lokal serta berstandar internasional.
                     </p>
 
-                    <h3 class="text-amber-600 font-bold text-sm tracking-wide uppercase pt-4 border-t">MISI</h3>
-                    <ol class="list-decimal pl-5 space-y-3 text-sm text-slate-700 leading-relaxed font-medium">
+                    <h3 class="text-amber-600 font-bold text-xs tracking-wider uppercase pt-4 border-t">MISI</h3>
+                    <ol class="list-decimal pl-5 space-y-3 text-xs md:text-sm text-slate-700 leading-relaxed font-medium">
                         <li>Mengembangkan program-program layanan kebahasaan yang mendukung Tridharma Perguruan Tinggi.</li>
                         <li>Menjalin kerjasama dengan lembaga-lembaga kebahasaan yang lain demi pengembangan UPA.</li>
                         <li>Berperan serta aktif dalam pemberdayaan masyarakat melalui program kebahasaan.</li>
                     </ol>
                 </div>
 
-                <!-- 2. SUB-MENU: SEJARAH & PROFIL -->
-                <div id="page-sejarah-profil" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm space-y-4 text-xs text-slate-700 leading-relaxed">
-                    <h3 class="text-base font-bold text-slate-900 mb-2">Sejarah & Profil Singkat</h3>
+                <!-- 2. KHUSUS SEJARAH & PROFIL SAJA -->
+                <div id="page-sejarah-profil" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm space-y-4 text-xs text-slate-700 leading-relaxed">
+                    <h3 class="text-base font-bold text-slate-900 mb-2 border-b pb-2">Sejarah & Profil UPA Bahasa</h3>
                     <p>Unit Pelaksana Akademik (UPA) Bahasa Politeknik Negeri Samarinda didirikan untuk melayani kebutuhan civitas akademika dalam meningkatkan keterampilan berbahasa asing.</p>
                     <p>Seiring pesatnya perkembangan akademik dan tuntutan dunia kerja global, UPA Bahasa terus bertransformasi dengan menyediakan fasilitas pengujian TOEFL komputerisasi, pelatihan intensif, serta penerjemahan dokumen tersumpah.</p>
                 </div>
 
-                <!-- 3. SUB-MENU: STRUKTUR ORGANISASI -->
-                <div id="page-struktur-organisasi" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs">
-                    <h3 class="text-base font-bold text-slate-900 mb-4">Struktur Organisasi UPA Bahasa</h3>
-                    <div class="space-y-3 border-l-2 border-blue-900 pl-4">
+                <!-- 3. KHUSUS STRUKTUR ORGANISASI SAJA -->
+                <div id="page-struktur-organisasi" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs">
+                    <h3 class="text-base font-bold text-slate-900 mb-4 border-b pb-2">Struktur Organisasi UPA Bahasa</h3>
+                    <div class="space-y-4 border-l-2 border-blue-900 pl-4">
                         <div>
                             <p class="font-bold text-slate-900">Kepala UPA Bahasa</p>
                             <p class="text-slate-500">Khaeruni, S.Pd., M.Hum.</p>
@@ -257,54 +259,53 @@
                     </div>
                 </div>
 
-                <!-- 4. SUB-MENU: TUJUAN DAN FUNGSI -->
-                <div id="page-tujuan-fungsi" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-3">
-                    <h3 class="text-base font-bold text-slate-900 mb-2">Tujuan dan Fungsi UPA Bahasa</h3>
-                    <ul class="list-disc pl-5 space-y-2 text-slate-700">
+                <!-- 4. KHUSUS TUJUAN DAN FUNGSI SAJA -->
+                <div id="page-tujuan-fungsi" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-3">
+                    <h3 class="text-base font-bold text-slate-900 mb-2 border-b pb-2">Tujuan dan Fungsi UPA Bahasa</h3>
+                    <ul class="list-disc pl-5 space-y-2 text-slate-700 leading-relaxed">
                         <li>Menyelenggarakan standardisasi pengujian bahasa asing bagi mahasiswa dan staf.</li>
                         <li>Menyediakan layanan kursus dan persiapan TOEFL/IELTS secara terstruktur.</li>
                         <li>Memfasilitasi penerjemahan dokumen akademik dan umum secara akurat.</li>
                     </ul>
                 </div>
 
-                <!-- 5. SUB-MENU: LAYANAN TOEFL -->
-                <div id="page-layanan-toefl" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900">Layanan Tes TOEFL ITP & Prediction</h3>
-                    <p class="text-slate-600">Tes TOEFL dilaksanakan secara berkala setiap bulan untuk memfasilitasi mahasiswa POLNES yang memerlukan syarat yudisium.</p>
+                <!-- 5. KHUSUS LAYANAN TOEFL SAJA -->
+                <div id="page-layanan-toefl" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Layanan Tes TOEFL ITP & Prediction</h3>
+                    <p class="text-slate-600 leading-relaxed">Tes TOEFL dilaksanakan secara berkala setiap bulan untuk memfasilitasi mahasiswa POLNES yang memerlukan syarat yudisium maupun kelulusan.</p>
                     <button onclick="showPage('cek-skor', 'Nilai TOEFL', 'nav-nilai')" class="bg-blue-900 text-white font-bold px-4 py-2 rounded-lg">Cek Skor TOEFL Anda ➔</button>
                 </div>
 
-                <!-- 6. SUB-MENU: KURSUS & PELATIHAN -->
-                <div id="page-layanan-kursus" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900">Kursus & Pelatihan Bahasa</h3>
-                    <p class="text-slate-600">Program intensif TOEFL Preparation, General English, dan Public Speaking dengan pengajar berpengalaman.</p>
+                <!-- 6. KHUSUS KURSUS & PELATIHAN SAJA -->
+                <div id="page-layanan-kursus" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Kursus & Pelatihan Bahasa</h3>
+                    <p class="text-slate-600 leading-relaxed">Program intensif TOEFL Preparation, General English, dan Public Speaking dengan pengajar berpengalaman untuk mahasiswa dan umum.</p>
                 </div>
 
-                <!-- 7. SUB-MENU: PENERJEMAHAN DOKUMEN -->
-                <div id="page-layanan-penerjemahan" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900">Layanan Penerjemahan Dokumen</h3>
-                    <p class="text-slate-600">Menerima penerjemahan Abstrak Skripsi, Transkrip Nilai, Ijazah, dan Jurnal Ilmiah Indonesia-Inggris.</p>
+                <!-- 7. KHUSUS PENERJEMAHAN DOKUMEN SAJA -->
+                <div id="page-layanan-penerjemahan" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Layanan Penerjemahan Dokumen</h3>
+                    <p class="text-slate-600 leading-relaxed">Menerima penerjemahan Abstrak Skripsi, Transkrip Nilai, Ijazah, dan Jurnal Ilmiah Indonesia-Inggris (PP).</p>
                 </div>
 
-                <!-- 8. SUB-MENU: PENGADUAN & KELUHAN -->
-                <div id="page-layanan-keluhan" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900">Pengaduan & Layanan Kendala</h3>
+                <!-- 8. KHUSUS PENGADUAN SAJA -->
+                <div id="page-layanan-keluhan" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Pengaduan & Layanan Kendala</h3>
                     <div class="space-y-3">
-                        <input id="form-nim" placeholder="NIM Mahasiswa" class="w-full p-2 border rounded">
-                        <input id="form-nama" placeholder="Nama Lengkap" class="w-full p-2 border rounded">
-                        <textarea id="form-deskripsi" rows="3" placeholder="Tuliskan kendala Anda..." class="w-full p-2 border rounded"></textarea>
-                        <button onclick="kirimLaporan()" class="bg-blue-900 text-white font-bold px-4 py-2 rounded">Kirim Laporan</button>
+                        <input id="form-nim" placeholder="NIM Mahasiswa" class="w-full p-2.5 border rounded-lg">
+                        <input id="form-nama" placeholder="Nama Lengkap" class="w-full p-2.5 border rounded-lg">
+                        <textarea id="form-deskripsi" rows="3" placeholder="Tuliskan kendala Anda..." class="w-full p-2.5 border rounded-lg"></textarea>
+                        <button onclick="kirimLaporan()" class="bg-blue-900 text-white font-bold px-4 py-2 rounded-lg">Kirim Laporan</button>
                     </div>
                 </div>
 
-                <!-- 9. SUB-MENU: CEK SKOR TOEFL -->
-                <div id="page-cek-skor" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900">Pencarian Nilai TOEFL</h3>
+                <!-- 9. KHUSUS CEK SKOR TOEFL SAJA -->
+                <div id="page-cek-skor" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Pencarian Nilai TOEFL Mahasiswa</h3>
                     <div class="flex gap-2">
-                        <input id="input-nim" placeholder="Masukkan NIM (misal 21641001)" class="flex-1 p-2 border rounded">
-                        <button onclick="cariSkor()" class="bg-blue-900 text-white font-bold px-4 py-2 rounded">Cari</button>
+                        <input id="input-nim" placeholder="Masukkan NIM (misal 21641001)" class="flex-1 p-2.5 border rounded-lg">
+                        <button onclick="cariSkor()" class="bg-blue-900 text-white font-bold px-5 py-2.5 rounded-lg">Cari</button>
                     </div>
-                    <!-- Box Hasil Ujian -->
                     <div id="hasil-box" class="hidden border rounded-lg p-4 bg-slate-50 space-y-2">
                         <p><b>Nama:</b> <span id="res-nama"></span></p>
                         <p><b>NIM:</b> <span id="res-nim"></span></p>
@@ -313,15 +314,15 @@
                     </div>
                 </div>
 
-                <!-- 10. SUB-MENU: PPID -->
-                <div id="page-ppid" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-3">
-                    <h3 class="text-base font-bold text-slate-900">Informasi PPID Pelaksana UPA Bahasa</h3>
+                <!-- 10. KHUSUS PPID SAJA -->
+                <div id="page-ppid" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-3">
+                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Informasi PPID Pelaksana UPA Bahasa</h3>
                     <p class="text-slate-600">Dokumen Regulasi & Informasi Publik SK Direktur Politeknik Negeri Samarinda.</p>
                 </div>
 
-                <!-- 11. SUB-MENU: GALERI -->
-                <div id="page-galeri" class="page-content hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900">Galeri Kegiatan UPA Bahasa</h3>
+                <!-- 11. KHUSUS GALERI SAJA -->
+                <div id="page-galeri" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
+                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Galeri Kegiatan UPA Bahasa</h3>
                     <div class="grid grid-cols-2 gap-4">
                         <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400" class="rounded border">
                         <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400" class="rounded border">
@@ -330,7 +331,7 @@
 
             </div>
 
-            <!-- RIGHT COLUMN: SIDEBAR RECENT POSTS (Persis Seperti Contoh UNTIDAR) -->
+            <!-- SISI KANAN: SIDEBAR RECENT POSTS (Tetap Tampil di Setiap Halaman) -->
             <div class="space-y-6">
                 <div class="bg-white p-5 rounded-xl border shadow-sm">
                     <h4 class="font-extrabold text-xs text-slate-900 tracking-wider uppercase border-b pb-3 mb-4">
@@ -365,6 +366,7 @@
                     </ul>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -407,39 +409,41 @@
     <script src="assets/js/keluhan.js"></script>
     <script src="assets/js/auth.js"></script>
 
-    <!-- JS SCRIPT UNTUK NAVIGATION SYSTEM MEMISAHKAN HALAMAN -->
+    <!-- FUNGSI JAVASCRIPT UNTUK MEMISAHKAN HALAMAN SECARA MULTI-PAGE MANDIRI -->
     <script>
         function showPage(pageId, pageTitle, activeNavId) {
-            // 1. Sembunyikan Beranda & Wrapper Subpage
+            // 1. Sembunyikan Beranda & Wrapper Sub-Halaman
             document.getElementById('page-beranda').classList.add('hidden');
             document.getElementById('subpage-wrapper').classList.add('hidden');
 
-            // 2. Sembunyikan Semua Konten Subpage
-            document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+            // 2. Sembunyikan SEMUA item sub-halaman terlebih dahulu
+            document.querySelectorAll('.page-item').forEach(el => el.classList.add('hidden'));
 
             // 3. Tampilkan Halaman Pilihan
             if (pageId === 'beranda') {
                 document.getElementById('page-beranda').classList.remove('hidden');
             } else {
                 document.getElementById('subpage-wrapper').classList.remove('hidden');
+                
+                // Tampilkan KHUSUS elemen subpage yang diklik saja
                 const targetEl = document.getElementById(`page-${pageId}`);
                 if (targetEl) {
                     targetEl.classList.remove('hidden');
                 }
                 
-                // Update Breadcrumb & Heading Title
+                // Update Judul Halaman & Breadcrumb secara dinamis
                 document.getElementById('page-title-heading').innerText = pageTitle;
                 document.getElementById('breadcrumb-current').innerText = pageTitle;
             }
 
-            // 4. Update Status Indikator Tombol Navigasi
+            // 4. Update Status Highlight Menu Navigasi
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-btn-active'));
             if (activeNavId) {
                 const activeBtn = document.getElementById(activeNavId);
                 if (activeBtn) activeBtn.classList.add('nav-btn-active');
             }
 
-            // 5. Scroll Smooth ke Atas Halaman
+            // 5. Scroll otomatis ke posisi paling atas
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
