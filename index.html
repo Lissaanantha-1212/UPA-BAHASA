@@ -6,6 +6,8 @@
     <title>UPA Bahasa - Politeknik Negeri Samarinda</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js untuk Grafik Perkembangan Skor -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- SheetJS (Excel Parsing) -->
@@ -23,7 +25,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- 1. TOPBAR INFORMASI & AKSES BAHASA -->
+    <!-- 1. TOPBAR INFORMASI -->
     <div class="bg-blue-950 text-slate-200 text-xs py-2 px-6 flex justify-between items-center border-b border-blue-900">
         <div class="flex items-center gap-4">
             <span>📍 Jl. Gerilya, Kampus Gunung Kelua, Samarinda</span>
@@ -36,12 +38,12 @@
                 <button class="hover:text-amber-400 text-[11px] text-slate-400 flex items-center gap-1 transition">🇬🇧 EN</button>
             </div>
             <button onclick="toggleLoginModal(true)" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-3 py-1 rounded-md font-bold transition-all shadow hover:shadow-md active:translate-y-0.5 flex items-center gap-1">
-                🔒 MASUK
+                🔒 MASUK STAFF
             </button>
         </div>
     </div>
 
-    <!-- 2. HEADER & NAVIGATION BAR WITH DROPDOWN -->
+    <!-- 2. HEADER & NAVIGATION BAR -->
     <header class="bg-white shadow-sm border-b sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
             
@@ -56,7 +58,7 @@
                 </div>
             </div>
 
-            <!-- Menu Navigasi (Sub-Menu Dipanggil Berdasarkan ID Spesifik Masing-masing) -->
+            <!-- Menu Navigasi (Penerjemahan Dokumen Dihapus) -->
             <nav class="hidden md:flex items-center space-x-6 text-xs font-bold text-slate-700 tracking-wider">
                 <button id="nav-beranda" onclick="showPage('beranda', 'Beranda', 'nav-beranda')" class="nav-btn py-2 hover:text-blue-900 transition uppercase nav-btn-active">
                     Beranda
@@ -75,15 +77,14 @@
                     </div>
                 </div>
 
-                <!-- Dropdown: Layanan -->
+                <!-- Dropdown: Layanan (Revisi) -->
                 <div class="relative group">
                     <button id="nav-layanan" class="nav-btn py-2 hover:text-blue-900 transition flex items-center gap-1 uppercase">
                         Layanan <span class="text-[10px]">▾</span>
                     </button>
-                    <div class="absolute left-0 top-full hidden group-hover:block w-56 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50">
-                        <button onclick="showPage('layanan-toefl', 'Layanan Tes TOEFL', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Tes TOEFL ITP / Prediction</button>
-                        <button onclick="showPage('layanan-kursus', 'Kursus & Pelatihan Bahasa', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Kursus & Pelatihan Bahasa</button>
-                        <button onclick="showPage('layanan-penerjemahan', 'Penerjemahan Dokumen', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Penerjemahan Dokumen</button>
+                    <div class="absolute left-0 top-full hidden group-hover:block w-60 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50">
+                        <button onclick="showPage('layanan-analisis', 'Analisis Skor TOEFL Jurusan & Prodi', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Analisis Skor TOEFL</button>
+                        <button onclick="showPage('layanan-kursus', 'Pendaftaran Kursus Bahasa', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Kursus & Pelatihan Bahasa</button>
                         <button onclick="showPage('layanan-keluhan', 'Pengaduan & Kendala', 'nav-layanan')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-blue-900 font-medium">Pengaduan & Kendala</button>
                     </div>
                 </div>
@@ -104,7 +105,6 @@
                     </div>
                 </div>
 
-                <!-- Tombol Action Cek Skor -->
                 <button onclick="showPage('cek-skor', 'Nilai TOEFL', 'nav-nilai')" class="bg-blue-900 hover:bg-blue-950 text-white font-extrabold px-4 py-2 rounded-lg text-xs transition-all shadow-md hover:shadow-lg active:translate-y-0.5">
                     🔍 CEK SKOR
                 </button>
@@ -125,20 +125,20 @@
                     Pusat Layanan Bahasa & Standardisasi TOEFL POLNES
                 </h2>
                 <p class="text-xs md:text-sm text-slate-300 mb-8 font-light max-w-2xl mx-auto">
-                    Mendukung kompetensi global civitas akademika melalui pengujian TOEFL resmi, kursus akademik, penerjemahan tersumpah, dan pencetakan sertifikat digital.
+                    Mendukung kompetensi global civitas akademika melalui pengujian TOEFL resmi, pendaftaran kursus Bahasa Inggris & Mandarin, serta pengaduan kendala terpadu.
                 </p>
                 <div class="flex flex-wrap justify-center gap-4">
                     <button onclick="showPage('cek-skor', 'Nilai TOEFL', 'nav-nilai')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-md hover:shadow-xl active:translate-y-0.5 transition-all text-xs uppercase tracking-wider">
                         🔍 Cek Hasil Skor TOEFL
                     </button>
-                    <button onclick="showPage('layanan-kursus', 'Kursus & Pelatihan Bahasa', 'nav-layanan')" class="bg-blue-800 hover:bg-blue-900 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-xl active:translate-y-0.5 border border-blue-700 transition-all text-xs uppercase tracking-wider">
-                        📚 Daftar Pelatihan & Kursus
+                    <button onclick="showPage('layanan-kursus', 'Pendaftaran Kursus Bahasa', 'nav-layanan')" class="bg-blue-800 hover:bg-blue-900 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-xl active:translate-y-0.5 border border-blue-700 transition-all text-xs uppercase tracking-wider">
+                        📚 Daftar Kursus Bahasa
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- Stats Counter Section -->
+        <!-- Stats Section -->
         <section class="bg-blue-950 text-white py-8 border-y border-blue-900">
             <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                 <div class="p-3 border-r border-blue-900 last:border-0">
@@ -147,15 +147,15 @@
                 </div>
                 <div class="p-3 border-r border-blue-900 last:border-0">
                     <p class="text-3xl font-extrabold text-amber-400">98%</p>
-                    <p class="text-xs text-slate-300 mt-1">Tingkat Validitas Sertifikat</p>
+                    <p class="text-xs text-slate-300 mt-1">Tingkat Kelulusan</p>
                 </div>
                 <div class="p-3 border-r border-blue-900 last:border-0">
-                    <p class="text-3xl font-extrabold text-amber-400">15+</p>
-                    <p class="text-xs text-slate-300 mt-1">Pengajar Profesional</p>
+                    <p class="text-3xl font-extrabold text-amber-400">2 Bahasa</p>
+                    <p class="text-xs text-slate-300 mt-1">Inggris & Mandarin</p>
                 </div>
                 <div class="p-3">
                     <p class="text-3xl font-extrabold text-amber-400">24/7</p>
-                    <p class="text-xs text-slate-300 mt-1">Portal Cek Skor Mandiri</p>
+                    <p class="text-xs text-slate-300 mt-1">Portal Layanan Mandiri</p>
                 </div>
             </div>
         </section>
@@ -170,35 +170,35 @@
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all border-slate-100 flex flex-col justify-between">
                     <div>
-                        <div class="w-12 h-12 bg-blue-50 text-blue-900 rounded-xl flex items-center justify-center font-bold text-xl mb-4">✍️</div>
-                        <h4 class="font-bold text-base text-slate-900 mb-2">Tes TOEFL ITP / Prediction</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">Pelaksanaan tes berkala untuk syarat kelulusan/yudisium mahasiswa POLNES serta keperluan beasiswa.</p>
+                        <div class="w-12 h-12 bg-blue-50 text-blue-900 rounded-xl flex items-center justify-center font-bold text-xl mb-4">📊</div>
+                        <h4 class="font-bold text-base text-slate-900 mb-2">Analisis Skor TOEFL</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">Visualisasi statistik perkembangan nilai rata-rata TOEFL per Jurusan dan Program Studi di lingkungan POLNES.</p>
                     </div>
-                    <button onclick="showPage('layanan-toefl', 'Layanan Tes TOEFL', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Lihat Detail Tes ➔</button>
+                    <button onclick="showPage('layanan-analisis', 'Analisis Skor TOEFL Jurusan & Prodi', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Lihat Grafik Perkembangan ➔</button>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all border-slate-100 flex flex-col justify-between">
                     <div>
-                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">📖</div>
-                        <h4 class="font-bold text-base text-slate-900 mb-2">Kursus & Intensive English</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">Program pembekalan strategi menjawab TOEFL, kelas percakapan bisnis, serta persiapan tes Academic Writing.</p>
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">✍️</div>
+                        <h4 class="font-bold text-base text-slate-900 mb-2">Pengajuan Kursus Bahasa</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">Pendaftaran kelas intensif Bahasa Inggris & Mandarin. Ajukan formulir dan dapatkan jadwal setelah disetujui staff.</p>
                     </div>
-                    <button onclick="showPage('layanan-kursus', 'Kursus & Pelatihan Bahasa', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Pelajari Kursus ➔</button>
+                    <button onclick="showPage('layanan-kursus', 'Pendaftaran Kursus Bahasa', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Isi Form Pengajuan ➔</button>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all border-slate-100 flex flex-col justify-between">
                     <div>
-                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">📄</div>
-                        <h4 class="font-bold text-base text-slate-900 mb-2">Penerjemahan Dokumen</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">Layanan penerjemahan resmi untuk dokumen akademik, ijazah, abstrak jurnal, dan dokumen legal institusi.</p>
+                        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center font-bold text-xl mb-4">🎧</div>
+                        <h4 class="font-bold text-base text-slate-900 mb-2">Pengaduan & Kendala Ujian</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">Layanan pelaporan masalah teknis komputer, nomor sesi, maupun kendala pelaksanaan ujian TOEFL.</p>
                     </div>
-                    <button onclick="showPage('layanan-penerjemahan', 'Penerjemahan Dokumen', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Pesan Penerjemahan ➔</button>
+                    <button onclick="showPage('layanan-keluhan', 'Pengaduan & Kendala', 'nav-layanan')" class="mt-6 text-xs font-bold text-blue-900 hover:underline text-left">Buat Laporan Kendala ➔</button>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- ==================== CONTAINER KONTEN HALAMAN INDEPENDEN ==================== -->
+    <!-- ==================== CONTAINER KONTEN SUBPAGE INDEPENDEN ==================== -->
     <div id="subpage-wrapper" class="hidden flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
         
         <!-- Breadcrumb & Judul Halaman -->
@@ -214,7 +214,7 @@
             <!-- SISI KIRI: KONTEN UTAMA HALAMAN TERPISAH -->
             <div class="md:col-span-2 space-y-6">
 
-                <!-- 1. KHUSUS VISI & MISI SAJA -->
+                <!-- 1. VISI & MISI -->
                 <div id="page-visi-misi" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm space-y-6">
                     <h3 class="text-amber-600 font-bold text-xs tracking-wider uppercase">VISI</h3>
                     <p class="text-base md:text-lg font-bold text-slate-900 leading-snug">
@@ -229,14 +229,14 @@
                     </ol>
                 </div>
 
-                <!-- 2. KHUSUS SEJARAH & PROFIL SAJA -->
+                <!-- 2. SEJARAH & PROFIL -->
                 <div id="page-sejarah-profil" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm space-y-4 text-xs text-slate-700 leading-relaxed">
                     <h3 class="text-base font-bold text-slate-900 mb-2 border-b pb-2">Sejarah & Profil UPA Bahasa</h3>
                     <p>Unit Pelaksana Akademik (UPA) Bahasa Politeknik Negeri Samarinda didirikan untuk melayani kebutuhan civitas akademika dalam meningkatkan keterampilan berbahasa asing.</p>
-                    <p>Seiring pesatnya perkembangan akademik dan tuntutan dunia kerja global, UPA Bahasa terus bertransformasi dengan menyediakan fasilitas pengujian TOEFL komputerisasi, pelatihan intensif, serta penerjemahan dokumen tersumpah.</p>
+                    <p>Seiring pesatnya perkembangan akademik dan tuntutan dunia kerja global, UPA Bahasa terus bertransformasi dengan menyediakan fasilitas pengujian TOEFL komputerisasi dan pendaftaran pelatihan bahasa terpadu.</p>
                 </div>
 
-                <!-- 3. KHUSUS STRUKTUR ORGANISASI SAJA -->
+                <!-- 3. STRUKTUR ORGANISASI -->
                 <div id="page-struktur-organisasi" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs">
                     <h3 class="text-base font-bold text-slate-900 mb-4 border-b pb-2">Struktur Organisasi UPA Bahasa</h3>
                     <div class="space-y-4 border-l-2 border-blue-900 pl-4">
@@ -249,7 +249,7 @@
                             <p class="text-slate-500">Ahmad Subagyo, M.Pd.</p>
                         </div>
                         <div>
-                            <p class="font-bold text-slate-900">Koordinator Pelatihan & Penerjemahan</p>
+                            <p class="font-bold text-slate-900">Koordinator Pelatihan Bahasa</p>
                             <p class="text-slate-500">Siti Nurhaliza, M.A.</p>
                         </div>
                         <div>
@@ -259,47 +259,212 @@
                     </div>
                 </div>
 
-                <!-- 4. KHUSUS TUJUAN DAN FUNGSI SAJA -->
+                <!-- 4. TUJUAN DAN FUNGSI -->
                 <div id="page-tujuan-fungsi" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-3">
                     <h3 class="text-base font-bold text-slate-900 mb-2 border-b pb-2">Tujuan dan Fungsi UPA Bahasa</h3>
                     <ul class="list-disc pl-5 space-y-2 text-slate-700 leading-relaxed">
                         <li>Menyelenggarakan standardisasi pengujian bahasa asing bagi mahasiswa dan staf.</li>
-                        <li>Menyediakan layanan kursus dan persiapan TOEFL/IELTS secara terstruktur.</li>
-                        <li>Memfasilitasi penerjemahan dokumen akademik dan umum secara akurat.</li>
+                        <li>Menyediakan layanan kursus persiapan TOEFL dan Bahasa Mandarin secara terstruktur.</li>
+                        <li>Memfasilitasi pemantauan perkembangan kemampuan bahasa per program studi.</li>
                     </ul>
                 </div>
 
-                <!-- 5. KHUSUS LAYANAN TOEFL SAJA -->
-                <div id="page-layanan-toefl" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Layanan Tes TOEFL ITP & Prediction</h3>
-                    <p class="text-slate-600 leading-relaxed">Tes TOEFL dilaksanakan secara berkala setiap bulan untuk memfasilitasi mahasiswa POLNES yang memerlukan syarat yudisium maupun kelulusan.</p>
-                    <button onclick="showPage('cek-skor', 'Nilai TOEFL', 'nav-nilai')" class="bg-blue-900 text-white font-bold px-4 py-2 rounded-lg">Cek Skor TOEFL Anda ➔</button>
-                </div>
+                <!-- 5. ANALISIS SKOR TOEFL PER JURUSAN & PRODI (REVISI GANTI GRAFIK) -->
+                <div id="page-layanan-analisis" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-6">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 border-b pb-2">Grafik Perkembangan Analisis Skor TOEFL Per Jurusan & Prodi</h3>
+                        <p class="text-slate-500 mt-1">Data statistik rata-rata skor TOEFL mahasiswa Politeknik Negeri Samarinda berdasarkan jurusan dan program studi.</p>
+                    </div>
 
-                <!-- 6. KHUSUS KURSUS & PELATIHAN SAJA -->
-                <div id="page-layanan-kursus" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Kursus & Pelatihan Bahasa</h3>
-                    <p class="text-slate-600 leading-relaxed">Program intensif TOEFL Preparation, General English, dan Public Speaking dengan pengajar berpengalaman untuk mahasiswa dan umum.</p>
-                </div>
+                    <!-- Filter Jurusan -->
+                    <div class="flex flex-wrap gap-4 items-center bg-slate-50 p-3 rounded-lg border">
+                        <label class="font-bold text-slate-700">Filter Jurusan:</label>
+                        <select id="filter-jurusan-chart" onchange="renderTOEFLChart()" class="p-2 border rounded-md bg-white text-xs font-semibold">
+                            <option value="semua">Semua Jurusan</option>
+                            <option value="Teknik Sipil">Teknik Sipil</option>
+                            <option value="Teknik Mesin">Teknik Mesin</option>
+                            <option value="Teknik Elektro">Teknik Elektro</option>
+                            <option value="Akuntansi">Akuntansi</option>
+                            <option value="Administrasi Bisnis">Administrasi Bisnis</option>
+                            <option value="Teknologi Informasi">Teknologi Informasi</option>
+                        </select>
+                    </div>
 
-                <!-- 7. KHUSUS PENERJEMAHAN DOKUMEN SAJA -->
-                <div id="page-layanan-penerjemahan" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Layanan Penerjemahan Dokumen</h3>
-                    <p class="text-slate-600 leading-relaxed">Menerima penerjemahan Abstrak Skripsi, Transkrip Nilai, Ijazah, dan Jurnal Ilmiah Indonesia-Inggris (PP).</p>
-                </div>
+                    <!-- Container Chart.js -->
+                    <div class="relative w-full h-80 bg-slate-50 p-4 rounded-xl border">
+                        <canvas id="toeflChart"></canvas>
+                    </div>
 
-                <!-- 8. KHUSUS PENGADUAN SAJA -->
-                <div id="page-layanan-keluhan" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
-                    <h3 class="text-base font-bold text-slate-900 border-b pb-2">Pengaduan & Layanan Kendala</h3>
-                    <div class="space-y-3">
-                        <input id="form-nim" placeholder="NIM Mahasiswa" class="w-full p-2.5 border rounded-lg">
-                        <input id="form-nama" placeholder="Nama Lengkap" class="w-full p-2.5 border rounded-lg">
-                        <textarea id="form-deskripsi" rows="3" placeholder="Tuliskan kendala Anda..." class="w-full p-2.5 border rounded-lg"></textarea>
-                        <button onclick="kirimLaporan()" class="bg-blue-900 text-white font-bold px-4 py-2 rounded-lg">Kirim Laporan</button>
+                    <div class="grid grid-cols-3 gap-4 text-center border-t pt-4">
+                        <div class="p-3 bg-blue-50 rounded-lg border border-blue-100">
+                            <p class="text-slate-500 text-[10px] uppercase font-bold">Rata-rata Tertinggi</p>
+                            <p class="text-base font-extrabold text-blue-900 mt-0.5">512 (D4 TRKJ)</p>
+                        </div>
+                        <div class="p-3 bg-amber-50 rounded-lg border border-amber-100">
+                            <p class="text-slate-500 text-[10px] uppercase font-bold">Rata-rata Keseluruhan</p>
+                            <p class="text-base font-extrabold text-amber-600 mt-0.5">468</p>
+                        </div>
+                        <div class="p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+                            <p class="text-slate-500 text-[10px] uppercase font-bold">Tingkat Kelulusan Standard</p>
+                            <p class="text-base font-extrabold text-emerald-700 mt-0.5">84.2%</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 9. KHUSUS CEK SKOR TOEFL SAJA -->
+                <!-- 6. PENDAFTARAN KURSUS BAHASA (REVISI FORM LENGKAP & ACC STAFF) -->
+                <div id="page-layanan-kursus" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-6">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 border-b pb-2">Formulir Pendaftaran & Pengajuan Kursus Bahasa</h3>
+                        <p class="text-slate-500 mt-1">Silakan lengkapi formulir pendaftaran di bawah ini. Pengajuan Anda akan direview oleh Staff & Kepala UPA Bahasa. Setelah disetujui (ACC), jadwal resmi akan tampil di sistem ini.</p>
+                    </div>
+
+                    <!-- Form Pengajuan -->
+                    <form id="form-kursus" onsubmit="submitPengajuanKursus(event)" class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Nama Lengkap *</label>
+                                <input type="text" id="kursus-nama" required placeholder="Masukkan nama sesuai KTM" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">NIM / NIK *</label>
+                                <input type="text" id="kursus-nim" required placeholder="Contoh: 21641001" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Jurusan *</label>
+                                <select id="kursus-jurusan" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                                    <option value="">-- Pilih Jurusan --</option>
+                                    <option value="Teknik Sipil">Teknik Sipil</option>
+                                    <option value="Teknik Mesin">Teknik Mesin</option>
+                                    <option value="Teknik Elektro">Teknik Elektro</option>
+                                    <option value="Akuntansi">Akuntansi</option>
+                                    <option value="Administrasi Bisnis">Administrasi Bisnis</option>
+                                    <option value="Teknologi Informasi">Teknologi Informasi</option>
+                                    <option value="Umum / Luar POLNES">Umum / Luar POLNES</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Program Studi *</label>
+                                <input type="text" id="kursus-prodi" required placeholder="Contoh: D4 Teknik Informatika" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Nomor WhatsApp *</label>
+                                <input type="tel" id="kursus-wa" required placeholder="Contoh: 081234567890" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Pilihan Bahasa *</label>
+                                <select id="kursus-bahasa" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none font-bold text-blue-900">
+                                    <option value="">-- Pilih Bahasa --</option>
+                                    <option value="Bahasa Inggris">🇬🇧 Bahasa Inggris (TOEFL Preparation & Speaking)</option>
+                                    <option value="Bahasa Mandarin">🇨🇳 Bahasa Mandarin (Basic & HSK Preparation)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Pilihan Waktu / Sesi Kursus *</label>
+                            <select id="kursus-sesi" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                                <option value="Sesi Reguler Sore (16.00 - 18.00 WITA)">Sesi Reguler Sore (16.00 - 18.00 WITA)</option>
+                                <option value="Sesi Malam (19.00 - 21.00 WITA)">Sesi Malam (19.00 - 21.00 WITA)</option>
+                                <option value="Sesi Weekend (Sabtu 09.00 - 12.00 WITA)">Sesi Weekend (Sabtu 09.00 - 12.00 WITA)</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="w-full bg-blue-900 hover:bg-blue-950 text-white font-bold py-3 rounded-lg shadow-md transition-all">
+                            📝 Kirim Pengajuan Pendaftaran
+                        </button>
+                    </form>
+
+                    <!-- Tampilan Status Pengajuan & Jadwal Pasca-ACC -->
+                    <div class="border-t pt-6">
+                        <h4 class="font-bold text-slate-900 mb-3 text-sm">Status Pengajuan & Jadwal Anda</h4>
+                        <div id="status-pengajuan-box" class="p-4 bg-slate-50 border rounded-xl space-y-2">
+                            <p class="text-slate-500 italic">Belum ada pengajuan aktif. Silakan isi form di atas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. PENGADUAN & KENDALA UJIAN (REVISI FORM SUPER LENGKAP) -->
+                <div id="page-layanan-keluhan" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-6">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900 border-b pb-2">Form Layanan Pengaduan & Kendala Ujian</h3>
+                        <p class="text-slate-500 mt-1">Harap isi detail identitas dan sesi ujian Anda secara akurat agar teknisi kami dapat memverifikasi log komputer ujian Anda.</p>
+                    </div>
+
+                    <form id="form-pengaduan-lengkap" onsubmit="submitPengaduanLengkap(event)" class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Nama Lengkap *</label>
+                                <input type="text" id="aduan-nama" required placeholder="Sesuai nama pendaftaran" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">NIM Mahasiswa *</label>
+                                <input type="text" id="aduan-nim" required placeholder="Contoh: 21641001" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Jurusan *</label>
+                                <select id="aduan-jurusan" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                                    <option value="">-- Pilih Jurusan --</option>
+                                    <option value="Teknik Sipil">Teknik Sipil</option>
+                                    <option value="Teknik Mesin">Teknik Mesin</option>
+                                    <option value="Teknik Elektro">Teknik Elektro</option>
+                                    <option value="Akuntansi">Akuntansi</option>
+                                    <option value="Administrasi Bisnis">Administrasi Bisnis</option>
+                                    <option value="Teknologi Informasi">Teknologi Informasi</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Program Studi *</label>
+                                <input type="text" id="aduan-prodi" required placeholder="Contoh: D3 Teknik Listrik" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">No. WhatsApp Aktif *</label>
+                                <input type="tel" id="aduan-wa" required placeholder="Contoh: 085212345678" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Sesi Ujian *</label>
+                                <select id="aduan-sesi" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                                    <option value="Sesi 1 (08.00 - 10.00 WITA)">Sesi 1 (08.00 - 10.00 WITA)</option>
+                                    <option value="Sesi 2 (10.30 - 12.30 WITA)">Sesi 2 (10.30 - 12.30 WITA)</option>
+                                    <option value="Sesi 3 (14.00 - 16.00 WITA)">Sesi 3 (14.00 - 16.00 WITA)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Tanggal, Bulan, & Tahun Ujian *</label>
+                                <input type="date" id="aduan-tgl" required class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block mb-1">Nomor Komputer Lab *</label>
+                                <input type="text" id="aduan-nokomp" required placeholder="Contoh: LAB-1 PC-12" class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Deskripsi Detail Kendala *</label>
+                            <textarea id="aduan-deskripsi" rows="3" required placeholder="Tuliskan kendala secara rinci (misal: Audio audio mati pada soal section 1, atau error sistem)..." class="w-full p-2.5 border rounded-lg focus:ring-2 focus:ring-blue-900 outline-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="bg-blue-900 hover:bg-blue-950 text-white font-bold px-6 py-2.5 rounded-lg shadow transition-all">
+                            📩 Kirim Laporan Pengaduan
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 8. NILAI TOEFL (CEK SKOR) -->
                 <div id="page-cek-skor" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
                     <h3 class="text-base font-bold text-slate-900 border-b pb-2">Pencarian Nilai TOEFL Mahasiswa</h3>
                     <div class="flex gap-2">
@@ -314,13 +479,13 @@
                     </div>
                 </div>
 
-                <!-- 10. KHUSUS PPID SAJA -->
+                <!-- 9. PPID -->
                 <div id="page-ppid" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-3">
                     <h3 class="text-base font-bold text-slate-900 border-b pb-2">Informasi PPID Pelaksana UPA Bahasa</h3>
                     <p class="text-slate-600">Dokumen Regulasi & Informasi Publik SK Direktur Politeknik Negeri Samarinda.</p>
                 </div>
 
-                <!-- 11. KHUSUS GALERI SAJA -->
+                <!-- 10. GALERI -->
                 <div id="page-galeri" class="page-item hidden bg-white p-6 rounded-xl border shadow-sm text-xs space-y-4">
                     <h3 class="text-base font-bold text-slate-900 border-b pb-2">Galeri Kegiatan UPA Bahasa</h3>
                     <div class="grid grid-cols-2 gap-4">
@@ -331,7 +496,7 @@
 
             </div>
 
-            <!-- SISI KANAN: SIDEBAR RECENT POSTS (Tetap Tampil di Setiap Halaman) -->
+            <!-- SISI KANAN: SIDEBAR RECENT POSTS -->
             <div class="space-y-6">
                 <div class="bg-white p-5 rounded-xl border shadow-sm">
                     <h4 class="font-extrabold text-xs text-slate-900 tracking-wider uppercase border-b pb-3 mb-4">
@@ -350,7 +515,7 @@
                         </li>
                         <li class="border-b pb-2">
                             <a href="#" class="text-slate-700 hover:text-blue-900 italic font-medium">
-                                English Capacity Building Sebagai Wujud Pengabdian Masyarakat UPA Bahasa POLNES
+                                English & Mandarin Capacity Building UPA Bahasa POLNES
                             </a>
                         </li>
                         <li class="border-b pb-2">
@@ -360,7 +525,7 @@
                         </li>
                         <li class="border-b pb-2">
                             <a href="#" class="text-slate-700 hover:text-blue-900 italic font-medium">
-                                PENDAFTARAN TOEFL (LIKE) PERIODE AGUSTUS 2026
+                                PENDAFTARAN KURSUS BAHASA MANDARIN & INGGRIS BATCH 3
                             </a>
                         </li>
                     </ul>
@@ -403,48 +568,111 @@
         </div>
     </footer>
 
-    <!-- JS SCRIPTS CONNECT -->
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/toefl.js"></script>
-    <script src="assets/js/keluhan.js"></script>
-    <script src="assets/js/auth.js"></script>
-
-    <!-- FUNGSI JAVASCRIPT UNTUK MEMISAHKAN HALAMAN SECARA MULTI-PAGE MANDIRI -->
+    <!-- LOGIK & JAVASCRIPT SISTEM -->
     <script>
+        let myChartInstance = null;
+
         function showPage(pageId, pageTitle, activeNavId) {
-            // 1. Sembunyikan Beranda & Wrapper Sub-Halaman
             document.getElementById('page-beranda').classList.add('hidden');
             document.getElementById('subpage-wrapper').classList.add('hidden');
-
-            // 2. Sembunyikan SEMUA item sub-halaman terlebih dahulu
             document.querySelectorAll('.page-item').forEach(el => el.classList.add('hidden'));
 
-            // 3. Tampilkan Halaman Pilihan
             if (pageId === 'beranda') {
                 document.getElementById('page-beranda').classList.remove('hidden');
             } else {
                 document.getElementById('subpage-wrapper').classList.remove('hidden');
-                
-                // Tampilkan KHUSUS elemen subpage yang diklik saja
                 const targetEl = document.getElementById(`page-${pageId}`);
-                if (targetEl) {
-                    targetEl.classList.remove('hidden');
-                }
+                if (targetEl) targetEl.classList.remove('hidden');
                 
-                // Update Judul Halaman & Breadcrumb secara dinamis
                 document.getElementById('page-title-heading').innerText = pageTitle;
                 document.getElementById('breadcrumb-current').innerText = pageTitle;
+
+                if (pageId === 'layanan-analisis') {
+                    renderTOEFLChart();
+                }
             }
 
-            // 4. Update Status Highlight Menu Navigasi
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-btn-active'));
             if (activeNavId) {
                 const activeBtn = document.getElementById(activeNavId);
                 if (activeBtn) activeBtn.classList.add('nav-btn-active');
             }
 
-            // 5. Scroll otomatis ke posisi paling atas
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render Grafik Analisis Skor TOEFL
+        function renderTOEFLChart() {
+            const ctx = document.getElementById('toeflChart').getContext('2d');
+            const filter = document.getElementById('filter-jurusan-chart').value;
+
+            let labels = ['D3 Teknik Sipil', 'D4 TRKJ', 'D3 Teknik Listrik', 'D4 Akuntansi Manajerial', 'D3 Administrasi Bisnis'];
+            let dataSkor = [450, 512, 465, 485, 460];
+
+            if (filter !== 'semua') {
+                labels = [`${filter} - Prodi A`, `${filter} - Prodi B`, `${filter} - Prodi C`];
+                dataSkor = [470, 495, 460];
+            }
+
+            if (myChartInstance) {
+                myChartInstance.destroy();
+            }
+
+            myChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Rata-rata Skor TOEFL',
+                        data: dataSkor,
+                        backgroundColor: '#1e3a8a',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: false, min: 400, max: 600 }
+                    }
+                }
+            });
+        }
+
+        // Pengajuan Kursus Bahasa (Simulasi Status ACC Staff)
+        function submitPengajuanKursus(e) {
+            e.preventDefault();
+            const nama = document.getElementById('kursus-nama').value;
+            const bahasa = document.getElementById('kursus-bahasa').value;
+            const sesi = document.getElementById('kursus-sesi').value;
+
+            const box = document.getElementById('status-pengajuan-box');
+            box.innerHTML = `
+                <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-amber-900">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold">⏳ Status Pengajuan: MENUNGGU ACC STAFF & KEPALA UPA</span>
+                        <span class="text-[10px] bg-amber-200 px-2 py-0.5 rounded font-bold">Pending</span>
+                    </div>
+                    <p class="text-xs"><b>Nama:</b> ${nama} | <b>Pilihan:</b> ${bahasa} (${sesi})</p>
+                    <p class="text-[11px] text-amber-700 mt-1">*Silakan cek berkala halaman ini. Jika di-ACC oleh Staff, jadwal resmi & link grup WhatsApp kelas akan otomatis terbit di sini.</p>
+                </div>
+            `;
+            alert("Pengajuan pendaftaran berhasil dikirim! Silakan tunggu verifikasi/ACC dari Staff.");
+        }
+
+        // Form Pengaduan Lengkap
+        function submitPengaduanLengkap(e) {
+            e.preventDefault();
+            const nama = document.getElementById('aduan-nama').value;
+            const nim = document.getElementById('aduan-nim').value;
+            const nokomp = document.getElementById('aduan-nokomp').value;
+
+            alert(`Laporan Pengaduan Berhasil Dikirim!\n\nNama: ${nama}\nNIM: ${nim}\nNo. Komputer: ${nokomp}\n\nTim teknisi UPA Bahasa akan mengecek log sistem dan menghubungi WhatsApp Anda.`);
+            document.getElementById('form-pengaduan-lengkap').reset();
+        }
+
+        function toggleLoginModal(show) {
+            document.getElementById('login-modal').classList.toggle('hidden', !show);
         }
     </script>
 </body>
