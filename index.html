@@ -78,8 +78,9 @@
                     <span class="text-emerald-700">|</span>
                     <button class="hover:text-amber-400 text-slate-300 transition">EN</button>
                 </div>
+                <!-- Tombol Masuk -->
                 <button onclick="toggleLoginModal(true)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold px-3.5 py-1 rounded-full transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 text-[11px]">
-                    Portal Staff
+                    Masuk
                 </button>
             </div>
         </div>
@@ -270,7 +271,7 @@
 
         <div class="space-y-6">
 
-            <!-- STRUKTUR ORGANISASI (DINAMIS SCRIPT) -->
+            <!-- STRUKTUR ORGANISASI -->
             <div id="page-struktur-organisasi" class="page-item hidden space-y-6">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
                     <div>
@@ -279,7 +280,6 @@
                     </div>
                 </div>
 
-                <!-- Container Anggota Tim Dinamis -->
                 <div id="staff-grid-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
                     <!-- Kartu Anggota Rendered Dynamic JS -->
                 </div>
@@ -386,46 +386,44 @@
         <span class="hidden sm:inline">Hubungi Whatsapp</span>
     </a>
 
-    <!-- MODAL PORTAL STAFF & MANAJEMEN STRUKTUR -->
+    <!-- MODAL MASUK / LOGIN (REVISI PILIH POSISI) -->
     <div id="login-modal" class="fixed inset-0 bg-brand-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl relative">
             <button onclick="toggleLoginModal(false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">&times;</button>
-            <h3 class="text-lg font-bold text-brand-950 mb-1">Portal Staff UPA Bahasa</h3>
-            <p class="text-xs text-slate-500 mb-4">Kelola Data Tim & Struktur Organisasi</p>
-
-            <!-- Form Tambah/Edit Anggota -->
-            <form id="form-staff-edit" onsubmit="handleSaveStaff(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 space-y-3 text-xs">
-                <h4 id="form-staff-title" class="font-bold text-brand-900 border-b pb-1">Tambah Anggota Baru</h4>
-                <input type="hidden" id="staff-id" value="">
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Nama Lengkap & Gelar</label>
-                        <input type="text" id="staff-nama" required placeholder="Contoh: Dudy Sofiandy, S.Pd." class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                    </div>
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Jabatan / Peran</label>
-                        <input type="text" id="staff-jabatan" required placeholder="Contoh: KEPALA UPA BAHASA" class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                    </div>
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">URL Foto Profil</label>
-                    <input type="url" id="staff-foto" required placeholder="https://..." class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                </div>
-                
-                <div class="flex gap-2 pt-1">
-                    <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg transition">Simpan Anggota</button>
-                    <button type="button" onclick="resetStaffForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2 rounded-lg transition">Batal</button>
-                </div>
-            </form>
-
-            <!-- Daftar List Staf Saat Ini -->
-            <div>
-                <h4 class="font-bold text-xs text-slate-700 mb-2">Daftar Anggota Tim Saat Ini</h4>
-                <div id="admin-staff-list" class="space-y-2 text-xs">
-                    <!-- Rendered Via JS -->
-                </div>
+            
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-bold text-brand-950">Masuk Kebahasaan</h3>
+                <p class="text-xs text-slate-500 mt-1">Silakan isi akun dan pilih posisi Anda</p>
             </div>
+
+            <form id="form-login" onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
+                <!-- Input Pengguna / Username -->
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Pengguna / Username</label>
+                    <input type="text" id="login-username" required placeholder="Masukkan nama/ID pengguna" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
+                </div>
+
+                <!-- Input Kata Sandi -->
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Kata Sandi</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
+                </div>
+
+                <!-- Pilihan Posisi (Staff / Kepala) -->
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Posisi</label>
+                    <select id="login-posisi" required class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition font-medium">
+                        <option value="" disabled selected>-- Pilih Posisi --</option>
+                        <option value="Staff">Staff</option>
+                        <option value="Kepala">Kepala</option>
+                    </select>
+                </div>
+
+                <!-- Tombol Submit Masuk -->
+                <button type="submit" class="w-full bg-brand-800 hover:bg-brand-900 text-white font-bold py-2.5 rounded-lg transition shadow-md active:scale-95 text-xs mt-2">
+                    Masuk
+                </button>
+            </form>
         </div>
     </div>
 
@@ -442,9 +440,9 @@
         </div>
     </footer>
 
-    <!-- LOGIKA JAVASCRIPT & MANAJEMEN STRUKTUR -->
+    <!-- LOGIKA JAVASCRIPT -->
     <script>
-        // State Data Staf Dinamis
+        // Data Staf untuk Struktur Organisasi
         let staffData = [
             {
                 id: 1,
@@ -474,7 +472,7 @@
 
         let myChartInstance = null;
 
-        // Render Kartu Struktur Tim di Halaman Utama
+        // Render Kartu Struktur Tim
         function renderStaffGrid() {
             const container = document.getElementById('staff-grid-container');
             if (!container) return;
@@ -492,84 +490,25 @@
             `).join('');
         }
 
-        // Render List Manajemen Staf di Modal Admin
-        function renderAdminStaffList() {
-            const listEl = document.getElementById('admin-staff-list');
-            if (!listEl) return;
-
-            listEl.innerHTML = staffData.map(item => `
-                <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
-                    <div class="flex items-center gap-3">
-                        <img src="${item.foto}" class="w-9 h-9 rounded-full object-cover">
-                        <div>
-                            <p class="font-bold text-slate-800">${item.nama}</p>
-                            <p class="text-[10px] text-brand-800 uppercase">${item.jabatan}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="editStaff(${item.id})" class="text-amber-600 hover:text-amber-800 font-bold text-[11px] px-2 py-1 bg-amber-50 rounded">Edit</button>
-                        <button onclick="deleteStaff(${item.id})" class="text-rose-600 hover:text-rose-800 font-bold text-[11px] px-2 py-1 bg-rose-50 rounded">Hapus</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Simpan / Tambah Data Staf
-        function handleSaveStaff(e) {
+        // Penanganan Submit Form Login
+        function handleLoginSubmit(e) {
             e.preventDefault();
-            const id = document.getElementById('staff-id').value;
-            const nama = document.getElementById('staff-nama').value;
-            const jabatan = document.getElementById('staff-jabatan').value;
-            const foto = document.getElementById('staff-foto').value;
-
-            if (id) {
-                // Edit mode
-                const index = staffData.findIndex(item => item.id == id);
-                if (index !== -1) {
-                    staffData[index] = { id: parseInt(id), nama, jabatan, foto };
-                }
-            } else {
-                // Tambah baru
-                const newId = Date.now();
-                staffData.push({ id: newId, nama, jabatan, foto });
-            }
-
-            resetStaffForm();
-            renderStaffGrid();
-            renderAdminStaffList();
+            const username = document.getElementById('login-username').value;
+            const posisi = document.getElementById('login-posisi').value;
+            
+            alert(`Berhasil masuk sebagai ${posisi}! Selamat datang, ${username}.`);
+            
+            document.getElementById('form-login').reset();
+            toggleLoginModal(false);
         }
 
-        // Load data staf ke form untuk di-edit
-        function editStaff(id) {
-            const item = staffData.find(s => s.id == id);
-            if (item) {
-                document.getElementById('staff-id').value = item.id;
-                document.getElementById('staff-nama').value = item.nama;
-                document.getElementById('staff-jabatan').value = item.jabatan;
-                document.getElementById('staff-foto').value = item.foto;
-                document.getElementById('form-staff-title').innerText = "Edit Data Anggota";
-            }
+        // Toggle Buka/Tutup Modal Login
+        function toggleLoginModal(show) {
+            document.getElementById('login-modal').classList.toggle('hidden', !show);
+            updateAuthUI();
         }
 
-        // Hapus Anggota
-        function deleteStaff(id) {
-            if (confirm("Apakah Anda yakin ingin menghapus anggota ini?")) {
-                staffData = staffData.filter(s => s.id != id);
-                renderStaffGrid();
-                renderAdminStaffList();
-            }
-        }
-
-        // Reset Form
-        function resetStaffForm() {
-            document.getElementById('staff-id').value = '';
-            document.getElementById('staff-nama').value = '';
-            document.getElementById('staff-jabatan').value = '';
-            document.getElementById('staff-foto').value = '';
-            document.getElementById('form-staff-title').innerText = "Tambah Anggota Baru";
-        }
-
-        // Navigasi Halaman
+        // Navigasi Single Page Application
         function showPage(pageId, pageTitle, activeNavId) {
             document.getElementById('page-beranda').classList.add('hidden');
             document.getElementById('subpage-wrapper').classList.add('hidden');
@@ -599,6 +538,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Render Grafik Analisis TOEFL
         function renderTOEFLChart() {
             const ctx = document.getElementById('toeflChart').getContext('2d');
             let labels = ['D3 Teknik Sipil', 'D4 TRKJ', 'D3 Teknik Listrik', 'D4 Akuntansi', 'D3 Admin Bisnis'];
@@ -640,15 +580,7 @@
         }
 
         function updateAuthUI() {
-            // Tempatkan logika pembaruan tampilan autentikasi di sini jika menggunakan file auth.js terpisah
-        }
-
-        function toggleLoginModal(show) {
-            document.getElementById('login-modal').classList.toggle('hidden', !show);
-            updateAuthUI();
-            if (show) {
-                renderAdminStaffList();
-            }
+            // Fungsi pembantu jika ingin mengintegrasikan file auth.js terpisah kelak
         }
 
         // Inisialisasi awal saat halaman dibuka
