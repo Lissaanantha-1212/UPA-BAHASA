@@ -112,7 +112,7 @@
                         Tentang Kami <span class="text-[9px] opacity-60">▾</span>
                     </button>
                     <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-100 rounded-2xl shadow-xl py-3 z-50 transition-all duration-200">
-                        <button onclick="showPage('struktur-organisasi', 'Struktur Organisasi', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Struktur Organisasi UPA Bahasa</button>
+                        <button onclick="showPage('struktur-organisasi', 'Struktur Tim UPA Bahasa', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Struktur Organisasi UPA Bahasa</button>
                         <button onclick="showPage('sejarah-profil', 'Sejarah & Profil', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Sejarah & Profil</button>
                         <button onclick="showPage('visi-misi', 'Visi & Misi', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Visi & Misi</button>
                         <button onclick="showPage('tujuan-fungsi', 'Tujuan dan Fungsi', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Tujuan dan Fungsi</button>
@@ -270,7 +270,7 @@
 
         <div class="space-y-6">
 
-            <!-- STRUKTUR ORGANISASI -->
+            <!-- STRUKTUR ORGANISASI (DINAMIS SCRIPT) -->
             <div id="page-struktur-organisasi" class="page-item hidden space-y-6">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
                     <div>
@@ -386,85 +386,46 @@
         <span class="hidden sm:inline">Hubungi Whatsapp</span>
     </a>
 
-    <!-- MODAL PORTAL STAFF WITH AUTHENTICATION -->
+    <!-- MODAL PORTAL STAFF & MANAJEMEN STRUKTUR -->
     <div id="login-modal" class="fixed inset-0 bg-brand-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="toggleLoginModal(false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">&times;</button>
-            
-            <!-- FORM LOGIN STAFF -->
-            <div id="login-section">
-                <div class="text-center mb-6">
-                    <div class="w-12 h-12 bg-brand-900 rounded-xl flex items-center justify-center text-white font-black text-xl border-2 border-amber-400 mx-auto mb-3">P</div>
-                    <h3 class="text-lg font-bold text-brand-950">Autentikasi Portal Staff</h3>
-                    <p class="text-xs text-slate-500 mt-1">Masukkan kredensial untuk mengelola data struktur organisasi</p>
+            <h3 class="text-lg font-bold text-brand-950 mb-1">Portal Staff UPA Bahasa</h3>
+            <p class="text-xs text-slate-500 mb-4">Kelola Data Tim & Struktur Organisasi</p>
+
+            <!-- Form Tambah/Edit Anggota -->
+            <form id="form-staff-edit" onsubmit="handleSaveStaff(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 space-y-3 text-xs">
+                <h4 id="form-staff-title" class="font-bold text-brand-900 border-b pb-1">Tambah Anggota Baru</h4>
+                <input type="hidden" id="staff-id" value="">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Nama Lengkap & Gelar</label>
+                        <input type="text" id="staff-nama" required placeholder="Contoh: Dudy Sofiandy, S.Pd." class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
+                    </div>
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Jabatan / Peran</label>
+                        <input type="text" id="staff-jabatan" required placeholder="Contoh: KEPALA UPA BAHASA" class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
+                    </div>
                 </div>
-
-                <form onsubmit="handleStaffLogin(event)" class="space-y-4 text-xs max-w-sm mx-auto">
-                    <div id="login-error" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-center font-medium">
-                        Username atau password salah!
-                    </div>
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Username / NIP</label>
-                        <input type="text" id="login-username" required placeholder="Masukkan Username" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none focus:border-brand-800">
-                    </div>
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Password</label>
-                        <input type="password" id="login-password" required placeholder="Masukkan Password" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none focus:border-brand-800">
-                    </div>
-                    <button type="submit" class="w-full bg-brand-800 hover:bg-brand-900 text-white font-bold py-2.5 rounded-lg transition shadow-md">
-                        Masuk Portal
-                    </button>
-                    <p class="text-[10px] text-center text-slate-400 mt-2">Default Demo Login: admin / polnes123</p>
-                </form>
-            </div>
-
-            <!-- PANEL DASHBOARD ADMIN STAFF (MUNCUL JIKA TERAUTENTIKASI) -->
-            <div id="admin-panel-section" class="hidden space-y-4">
-                <div class="flex justify-between items-center border-b pb-3">
-                    <div>
-                        <h3 class="text-base font-bold text-brand-950">Panel Manajemen Staf</h3>
-                        <p class="text-xs text-slate-500">Kelola Informasi Tim & Struktur UPA Bahasa</p>
-                    </div>
-                    <button onclick="handleStaffLogout()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-rose-200 transition">
-                        Logout
-                    </button>
-                </div>
-
-                <!-- Form Tambah/Edit Anggota -->
-                <form id="form-staff-edit" onsubmit="handleSaveStaff(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs">
-                    <h4 id="form-staff-title" class="font-bold text-brand-900 border-b pb-1">Tambah Anggota Baru</h4>
-                    <input type="hidden" id="staff-id" value="">
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label class="font-semibold text-slate-700 block mb-1">Nama Lengkap & Gelar</label>
-                            <input type="text" id="staff-nama" required placeholder="Contoh: Dudy Sofiandy, S.Pd." class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                        </div>
-                        <div>
-                            <label class="font-semibold text-slate-700 block mb-1">Jabatan / Peran</label>
-                            <input type="text" id="staff-jabatan" required placeholder="Contoh: KEPALA UPA BAHASA" class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">URL Foto Profil</label>
-                        <input type="url" id="staff-foto" required placeholder="https://..." class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                    </div>
-                    
-                    <div class="flex gap-2 pt-1">
-                        <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg transition">Simpan Anggota</button>
-                        <button type="button" onclick="resetStaffForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2 rounded-lg transition">Batal</button>
-                    </div>
-                </form>
-
-                <!-- Daftar List Staf Saat Ini -->
                 <div>
-                    <h4 class="font-bold text-xs text-slate-700 mb-2">Daftar Anggota Tim Saat Ini</h4>
-                    <div id="admin-staff-list" class="space-y-2 text-xs">
-                        <!-- Rendered Via JS -->
-                    </div>
+                    <label class="font-semibold text-slate-700 block mb-1">URL Foto Profil</label>
+                    <input type="url" id="staff-foto" required placeholder="https://..." class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
+                </div>
+                
+                <div class="flex gap-2 pt-1">
+                    <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg transition">Simpan Anggota</button>
+                    <button type="button" onclick="resetStaffForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2 rounded-lg transition">Batal</button>
+                </div>
+            </form>
+
+            <!-- Daftar List Staf Saat Ini -->
+            <div>
+                <h4 class="font-bold text-xs text-slate-700 mb-2">Daftar Anggota Tim Saat Ini</h4>
+                <div id="admin-staff-list" class="space-y-2 text-xs">
+                    <!-- Rendered Via JS -->
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -481,10 +442,9 @@
         </div>
     </footer>
 
-    <!-- LOGIKA JAVASCRIPT -->
+    <!-- LOGIKA JAVASCRIPT & MANAJEMEN STRUKTUR -->
     <script>
-        // State Authenticaton & Staf
-        let isLoggedIn = false;
+        // State Data Staf Dinamis
         let staffData = [
             {
                 id: 1,
@@ -513,45 +473,6 @@
         ];
 
         let myChartInstance = null;
-
-        // Login Handler
-        function handleStaffLogin(e) {
-            e.preventDefault();
-            const user = document.getElementById('login-username').value;
-            const pass = document.getElementById('login-password').value;
-
-            // Simple Auth Check (Demo Credentials)
-            if (user === 'admin' && pass === 'polnes123') {
-                isLoggedIn = true;
-                document.getElementById('login-error').classList.add('hidden');
-                updateAuthUI();
-                renderAdminStaffList();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
-
-        // Logout Handler
-        function handleStaffLogout() {
-            isLoggedIn = false;
-            document.getElementById('login-username').value = '';
-            document.getElementById('login-password').value = '';
-            updateAuthUI();
-        }
-
-        // Update Modal UI berdasarkan status login
-        function updateAuthUI() {
-            const loginSection = document.getElementById('login-section');
-            const adminSection = document.getElementById('admin-panel-section');
-
-            if (isLoggedIn) {
-                loginSection.classList.add('hidden');
-                adminSection.classList.remove('hidden');
-            } else {
-                loginSection.classList.remove('hidden');
-                adminSection.classList.add('hidden');
-            }
-        }
 
         // Render Kartu Struktur Tim di Halaman Utama
         function renderStaffGrid() {
@@ -602,11 +523,13 @@
             const foto = document.getElementById('staff-foto').value;
 
             if (id) {
+                // Edit mode
                 const index = staffData.findIndex(item => item.id == id);
                 if (index !== -1) {
                     staffData[index] = { id: parseInt(id), nama, jabatan, foto };
                 }
             } else {
+                // Tambah baru
                 const newId = Date.now();
                 staffData.push({ id: newId, nama, jabatan, foto });
             }
@@ -716,9 +639,16 @@
             alert("Laporan Pengaduan Terkirim!");
         }
 
+        function updateAuthUI() {
+            // Tempatkan logika pembaruan tampilan autentikasi di sini jika menggunakan file auth.js terpisah
+        }
+
         function toggleLoginModal(show) {
             document.getElementById('login-modal').classList.toggle('hidden', !show);
             updateAuthUI();
+            if (show) {
+                renderAdminStaffList();
+            }
         }
 
         // Inisialisasi awal saat halaman dibuka
