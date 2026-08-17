@@ -3,55 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPA Bahasa - Unit Pelayanan Akademik Bahasa</title>
+    <title>UPA BAHASA - Unit Pelayanan Akademik Bahasa</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <!-- HEADER / NAVBAR PUBLIK -->
-    <header class="bg-emerald-800 text-white shadow-lg sticky top-0 z-40">
+    <!-- HEADER / NAVBAR -->
+    <header class="bg-[#065f46] text-white shadow-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <!-- Logo & Sub-judul -->
+                <!-- Logo & Subtitle -->
                 <div class="flex items-center space-x-3">
-                    <div class="bg-white/10 p-2.5 rounded-xl border border-white/20">
-                        <i data-lucide="languages" class="w-7 h-7 text-emerald-300"></i>
+                    <div class="bg-white/10 p-2.5 rounded-2xl border border-white/10 flex items-center justify-center">
+                        <i data-lucide="languages" class="w-6 h-6 text-emerald-300"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-xl tracking-wide uppercase">UPA BAHASA</h1>
-                        <p class="text-xs text-emerald-200">Unit Pelayanan Akademik Bahasa</p>
+                        <h1 class="font-extrabold text-lg tracking-wide uppercase leading-tight">UPA BAHASA</h1>
+                        <p class="text-xs text-emerald-100/70 font-medium">Unit Pelayanan Akademik Bahasa</p>
                     </div>
                 </div>
 
-                <!-- Navigasi Menu Publik -->
-                <nav class="hidden md:flex space-x-6 text-sm font-medium">
-                    <a href="#beranda" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                <!-- Navigasi Menu -->
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-emerald-50">
+                    <a href="#beranda" class="hover:text-emerald-300 transition flex items-center gap-2">
                         <i data-lucide="home" class="w-4 h-4"></i> Beranda
                     </a>
-                    <a href="#toefl" class="hover:text-emerald-300 transition flex items-center gap-1.5">
-                        <i data-lucide="file-badge" class="w-4 h-4"></i> Cek TOEFL
+                    <a href="#toefl" class="hover:text-emerald-300 transition flex items-center gap-2">
+                        <i data-lucide="file-check" class="w-4 h-4"></i> Cek TOEFL
                     </a>
-                    <a href="#struktur" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                    <a href="#struktur" class="hover:text-emerald-300 transition flex items-center gap-2">
                         <i data-lucide="users" class="w-4 h-4"></i> Struktur Organisasi
                     </a>
-                    <a href="#kursus" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                    <a href="#kursus" class="hover:text-emerald-300 transition flex items-center gap-2">
                         <i data-lucide="book-open" class="w-4 h-4"></i> Kursus
                     </a>
-                    <a href="#pengaduan" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                    <a href="#pengaduan" class="hover:text-emerald-300 transition flex items-center gap-2">
                         <i data-lucide="message-square-plus" class="w-4 h-4"></i> Pengaduan
                     </a>
                 </nav>
 
-                <!-- Tombol Portal Staff / Login -->
+                <!-- Tombol Portal Staff / Kepala -->
                 <div>
-                    <button onclick="toggleLoginModal(true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow border border-emerald-400/30 flex items-center gap-2 transition transform hover:-translate-y-0.5">
+                    <button onclick="toggleLoginModal(true)" class="bg-[#059669] hover:bg-emerald-600 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow border border-emerald-400/20 flex items-center gap-2 transition">
                         <i data-lucide="log-in" class="w-4 h-4"></i> Portal Staff / Kepala
                     </button>
                 </div>
@@ -59,82 +59,85 @@
         </div>
     </header>
 
-    <!-- MAIN CONTENT PUBLIK -->
+    <!-- MAIN CONTENT -->
     <main class="flex-grow">
         
         <!-- HERO SECTION -->
-        <section id="beranda" class="bg-gradient-to-b from-emerald-800 to-emerald-900 text-white py-16 px-4">
-            <div class="max-w-4xl mx-auto text-center space-y-4">
-                <span class="bg-emerald-700/60 text-emerald-200 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-500/30 inline-block">
-                    Pusat Layanan & Sertifikasi Bahasa
-                </span>
-                <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
+        <section id="beranda" class="bg-[#065f46] text-white pt-10 pb-20 px-4">
+            <div class="max-w-4xl mx-auto text-center space-y-6">
+                <div>
+                    <span class="bg-emerald-700/50 text-emerald-200 text-xs font-medium px-4 py-1.5 rounded-full border border-emerald-500/30 inline-block">
+                        Pusat Layanan & Sertifikasi Bahasa
+                    </span>
+                </div>
+                <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight">
                     Meningkatkan Kemampuan Bahasa untuk Masa Depan Global
                 </h2>
-                <p class="text-emerald-100 text-sm md:text-base max-w-2xl mx-auto font-light">
+                <p class="text-emerald-100/80 text-sm md:text-base max-w-2xl mx-auto font-normal">
                     Layanan tes TOEFL, pelatihan bahasa asing, sertifikasi resmi, serta penerjemahan dokumen akademis UPA Bahasa.
                 </p>
             </div>
         </section>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+        <!-- CONTAINER CARD -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 space-y-8 pb-16">
             
-            <!-- CEK NILAI TOEFL (INFORMASI PUBLIK) -->
-            <section id="toefl" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+            <!-- CARD CEK HASIL NILAI TOEFL -->
+            <section id="toefl" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="bg-emerald-100 text-emerald-800 p-2.5 rounded-xl">
+                    <div class="bg-emerald-100/70 text-emerald-700 p-3 rounded-2xl">
                         <i data-lucide="award" class="w-6 h-6"></i>
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-slate-800">Cek Hasil Nilai TOEFL</h3>
-                        <p class="text-xs text-slate-500">Masukkan NIM atau Nama untuk memverifikasi nilai sertifikat TOEFL Anda</p>
+                        <p class="text-xs text-slate-400 font-medium">Masukkan NIM atau Nama untuk memverifikasi nilai sertifikat TOEFL Anda</p>
                     </div>
                 </div>
 
-                <div class="flex flex-col md:flex-row gap-3 mb-6">
-                    <input type="text" id="search-toefl-input" placeholder="Masukkan NIM atau Nama Peserta..." class="flex-1 border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600">
-                    <button onclick="searchToeflPublic()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition flex items-center justify-center gap-2">
+                <div class="flex flex-col md:flex-row gap-3">
+                    <input type="text" id="search-toefl-input" placeholder="Masukkan NIM atau Nama Peserta..." class="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-600 transition">
+                    <button onclick="searchToeflPublic()" class="bg-[#059669] hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-xl text-sm transition flex items-center justify-center gap-2">
                         <i data-lucide="search" class="w-4 h-4"></i> Cari Hasil
                     </button>
                 </div>
 
-                <div id="toefl-public-results" class="hidden overflow-x-auto border border-slate-200 rounded-xl">
+                <div id="toefl-public-results" class="hidden mt-6 overflow-x-auto border border-slate-100 rounded-2xl">
                     <table class="w-full text-left text-xs text-slate-700">
-                        <thead class="bg-slate-100 text-slate-800 font-semibold border-b border-slate-200">
+                        <thead class="bg-slate-50 text-slate-800 font-semibold border-b border-slate-100">
                             <tr>
-                                <th class="p-3">NIM</th>
-                                <th class="p-3">Nama Peserta</th>
-                                <th class="p-3">Tanggal Tes</th>
-                                <th class="p-3">Nilai Total</th>
-                                <th class="p-3">Status Sertifikat</th>
+                                <th class="p-3.5">NIM</th>
+                                <th class="p-3.5">Nama Peserta</th>
+                                <th class="p-3.5">Tanggal Tes</th>
+                                <th class="p-3.5">Nilai Total</th>
+                                <th class="p-3.5">Status Sertifikat</th>
                             </tr>
                         </thead>
                         <tbody id="toefl-public-table-body">
-                            <!-- Hasil Pencarian Dipopulasi via JS (toefl.js) -->
+                            <!-- Hasil Pencarian -->
                         </tbody>
                     </table>
                 </div>
             </section>
 
-            <!-- STRUKTUR ORGANISASI PUBLIK -->
-            <section id="struktur" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
-                <div class="text-center max-w-xl mx-auto mb-10 space-y-2">
-                    <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest">Tim Personel</span>
+            <!-- STRUKTUR ORGANISASI -->
+            <section id="struktur" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
+                <div class="text-center max-w-xl mx-auto mb-8 space-y-1">
+                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Tim Personel</span>
                     <h3 class="text-2xl font-bold text-slate-800">Struktur Organisasi UPA Bahasa</h3>
-                    <p class="text-xs text-slate-500">Pimpinan dan Staff Pengelola Unit Pelayanan Akademik Bahasa</p>
+                    <p class="text-xs text-slate-400">Pimpinan dan Staff Pengelola Unit Pelayanan Akademik Bahasa</p>
                 </div>
 
                 <div id="staff-public-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    <!-- Data Grid Staff Dipopulasi Dinamis oleh JS -->
+                    <!-- Dipopulasi Dinamis oleh JS -->
                 </div>
             </section>
 
-            <!-- PENDAFTARAN KURSUS & PELATIHANS -->
-            <section id="kursus" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+            <!-- FORM PENDAFTARAN KURSUS -->
+            <section id="kursus" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
                 <div class="max-w-2xl mx-auto">
                     <div class="text-center mb-6">
                         <h3 class="text-xl font-bold text-slate-800">Pengajuan Kursus & Pelatihan Bahasa</h3>
-                        <p class="text-xs text-slate-500 mt-1">Daftar program kursus persiapan TOEFL / Bahasa Inggris umum</p>
+                        <p class="text-xs text-slate-400 mt-1">Daftar program kursus persiapan TOEFL / Bahasa Inggris umum</p>
                     </div>
 
                     <form onsubmit="submitPengajuanKursus(event)" class="space-y-4 text-xs">
@@ -163,19 +166,19 @@
                                 <input type="tel" required placeholder="08xxxxxxxxxx" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
                             </div>
                         </div>
-                        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition shadow">
+                        <button type="submit" class="w-full bg-[#059669] hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow-sm">
                             Kirim Pendaftaran Kursus
                         </button>
                     </form>
                 </div>
             </section>
 
-            <!-- FORM PENGADUAN & LAYANAN PUBLIK -->
-            <section id="pengaduan" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+            <!-- FORM PENGADUAN -->
+            <section id="pengaduan" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100">
                 <div class="max-w-2xl mx-auto">
                     <div class="text-center mb-6">
-                        <h3 class="text-xl font-bold text-slate-800">Layanan Layanan & Pengaduan</h3>
-                        <p class="text-xs text-slate-500 mt-1">Kirimkan kendala sertifikat, keluhan, atau pertanyaan layanan</p>
+                        <h3 class="text-xl font-bold text-slate-800">Layanan & Pengaduan Informasi</h3>
+                        <p class="text-xs text-slate-400 mt-1">Kirimkan masukan, kendala sertifikat, atau pertanyaan seputar tes TOEFL</p>
                     </div>
 
                     <form onsubmit="submitPengaduanLengkap(event)" class="space-y-4 text-xs">
@@ -185,8 +188,8 @@
                                 <input type="text" required placeholder="Nama Anda" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
                             </div>
                             <div>
-                                <label class="font-semibold text-slate-700 block mb-1">Email / Kontak</label>
-                                <input type="text" required placeholder="Email atau WA Anda" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
+                                <label class="font-semibold text-slate-700 block mb-1">Email / WhatsApp</label>
+                                <input type="text" required placeholder="Nomor Kontak atau Email" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
                             </div>
                         </div>
                         <div>
@@ -197,7 +200,7 @@
                             <label class="font-semibold text-slate-700 block mb-1">Rincian Keluhan / Pesan</label>
                             <textarea rows="4" required placeholder="Tuliskan rincian keluhan atau masukan Anda di sini..." class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition shadow">
+                        <button type="submit" class="w-full bg-[#059669] hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow-sm">
                             Kirim Laporan Pengaduan
                         </button>
                     </form>
@@ -207,7 +210,7 @@
         </div>
     </main>
 
-    <!-- FOOTER PUBLIK -->
+    <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
             <p>&copy; 2026 UPA BAHASA - Unit Pelayanan Akademik Bahasa. All Rights Reserved.</p>
@@ -217,46 +220,43 @@
 
     <!-- MODAL POP-UP LOGIN (PORTAL STAFF & KEPALA) -->
     <div id="login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-slate-100">
-            <!-- Tombol Close Modal -->
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative border border-slate-100">
             <button onclick="toggleLoginModal(false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold p-1">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             
             <div class="text-center mb-6">
-                <div class="bg-emerald-100 text-emerald-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div class="bg-emerald-100/70 text-emerald-700 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3">
                     <i data-lucide="shield-check" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg font-bold text-slate-800">Login Portal Internal</h3>
-                <p class="text-xs text-slate-500 mt-1">Masuk untuk mengelola Dashboard Staff / Kepala</p>
+                <h3 class="text-lg font-bold text-slate-800">Login Portal Staff & Kepala</h3>
+                <p class="text-xs text-slate-400 mt-1">Masukkan kredensial untuk mengakses Dashboard</p>
             </div>
 
-            <!-- Form Autentikasi Login -->
             <form onsubmit="handleStaffLogin(event)" class="space-y-4 text-xs">
-                <div id="login-error" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-center font-medium"></div>
+                <div id="login-error" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-center font-medium"></div>
                 <div>
                     <label class="font-semibold text-slate-700 block mb-1">Username</label>
-                    <input type="text" id="login-username" required placeholder="Masukkan Username..." class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600 transition">
+                    <input type="text" id="login-username" required placeholder="Contoh: staff / kepala" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
                 </div>
                 <div>
                     <label class="font-semibold text-slate-700 block mb-1">Password</label>
-                    <input type="password" id="login-password" required placeholder="Masukkan Password..." class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600 transition">
+                    <input type="password" id="login-password" required placeholder="Masukkan Password" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
                 </div>
-                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-[#059669] hover:bg-emerald-700 text-white font-bold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
                     <i data-lucide="log-in" class="w-4 h-4"></i> Masuk Dashboard
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- PANGGIL SKRIP TERPISAH (JS FOLDER) -->
+    <!-- SKRIP JS TERPISAH -->
     <script src="assets/js/config.js"></script>
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/toefl.js"></script>
     <script src="assets/js/keluhan.js"></script>
 
     <script>
-        // Render ikon lucide setelah DOM dimuat
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
