@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Staff - UPA Bahasa POLNES</title>
+    <title>Dashboard Operasional Staff - UPA Bahasa POLNES</title>
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
@@ -29,167 +29,317 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- NAV BAR DASHBOARD STAFF -->
-    <header class="bg-brand-950 text-white py-4 px-6 border-b border-emerald-900 shadow-md">
+    <!-- HEADER / NAVBAR STAFF -->
+    <header class="bg-brand-950 text-white py-3.5 px-6 border-b border-emerald-900 shadow-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <div class="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-slate-950 font-black">
                     S
                 </div>
                 <div>
-                    <h1 class="text-base font-bold tracking-wide leading-tight">PORTAL STAFF INTERNAL</h1>
+                    <h1 class="text-base font-bold tracking-wide leading-tight">PANEL OPERASIONAL STAFF</h1>
                     <p class="text-[10px] text-emerald-300 font-medium">UPA Bahasa Politeknik Negeri Samarinda</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-4 text-xs">
-                <span class="text-slate-200">Halo, <strong id="user-display-name" class="text-amber-400">Staff</strong></span>
+                <span class="text-slate-200">Petugas: <strong id="user-display-name" class="text-amber-400">Staff</strong></span>
+                <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-semibold transition text-[11px]">
+                    Lihat Web Utama ↗
+                </a>
                 <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-lg font-bold transition">
-                    Keluar / Logout
+                    Logout
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- CONTENT DASHBOARD STAFF -->
-    <main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
+    <!-- KONTEN UTAMA DASHBOARD STAFF -->
+    <main class="max-w-7xl mx-auto px-6 py-6 flex-1 w-full space-y-6">
 
-        <!-- Welcome Banner -->
-        <div class="bg-gradient-to-r from-brand-900 to-brand-800 text-white p-6 rounded-2xl shadow-md flex justify-between items-center">
-            <div>
-                <span class="bg-amber-400 text-slate-950 font-black text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">MODUL MANAJEMEN STAFF</span>
-                <h2 class="text-2xl font-bold mt-2">Selamat Datang di Tampilan Staff</h2>
-                <p class="text-xs text-emerald-100 mt-1">Anda dapat mengelola daftar tim struktur organisasi dan tugas operasional di sini.</p>
-            </div>
-            <a href="index.html" class="hidden sm:inline-block bg-white/10 hover:bg-white/20 text-white font-semibold text-xs px-4 py-2 rounded-xl border border-white/20 transition">
-                Lihat Web Utama ↗
-            </a>
+        <!-- TAB NAVIGASI MODUL STAFF -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+            <button onclick="switchTab('tab-excel')" id="btn-tab-excel" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-800 text-white transition">
+                📊 Upload Excel Hasil Ujian
+            </button>
+            <button onclick="switchTab('tab-pendaftaran')" id="btn-tab-pendaftaran" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                📝 ACC & Jadwal Ujian/Kursus
+            </button>
+            <button onclick="switchTab('tab-keluhan')" id="btn-tab-keluhan" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                🛠️ Keluhan & Tracking Status
+            </button>
+            <button onclick="switchTab('tab-berita')" id="btn-tab-berita" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                📰 Kelola Berita & Galeri
+            </button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 1. MODUL UPLOAD EXCEL HASIL TES TOEFL -->
+        <div id="tab-excel" class="tab-content space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">Upload & Kalkulasi Hasil Tes TOEFL (File Excel)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Sistem akan menghitung kalkulasi skor dan kelulusan secara otomatis berdasarkan jumlah jawaban benar per bagian.</p>
+                </div>
 
-            <!-- Form Tambah / Edit Staff -->
-            <div class="lg:col-span-1 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <h3 id="form-staff-title" class="font-bold text-sm text-brand-950 border-b pb-2">Tambah Anggota Tim Baru</h3>
-                <form id="form-staff-edit" onsubmit="handleSaveStaff(event)" class="space-y-3 text-xs">
-                    <input type="hidden" id="staff-id" value="">
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Nama Lengkap & Gelar</label>
-                        <input type="text" id="staff-nama" required placeholder="Contoh: Dudy Sofiandy, S.Pd." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
-                    </div>
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Jabatan / Peran</label>
-                        <input type="text" id="staff-jabatan" required placeholder="Contoh: KEPALA UPA BAHASA" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
-                    </div>
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">URL Foto Profil</label>
-                        <input type="url" id="staff-foto" required placeholder="https://..." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
-                    </div>
-                    <div class="flex gap-2 pt-2">
-                        <button type="submit" class="flex-1 bg-brand-800 hover:bg-brand-900 text-white font-bold py-2.5 rounded-lg transition text-xs">Simpan</button>
-                        <button type="button" onclick="resetStaffForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2.5 rounded-lg transition text-xs">Batal</button>
-                    </div>
-                </form>
-            </div>
+                <div class="border-2 border-dashed border-emerald-300 bg-emerald-50/50 p-6 rounded-xl text-center space-y-3">
+                    <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" class="hidden" onchange="previewExcelData(event)">
+                    <label for="excel-file-input" class="cursor-pointer inline-flex items-center gap-2 bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition">
+                        📁 Pilih File Excel Hasil Tes
+                    </label>
+                    <p class="text-[11px] text-slate-500">Format yang didukung: .xlsx, .xls (Berisi: NIM, Nama, No. Komputer, Benar Listening, Benar Structure, Benar Reading)</p>
+                </div>
 
-            <!-- List Anggota Tim Saat Ini -->
-            <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <h3 class="font-bold text-sm text-slate-800 border-b pb-2">Kelola Daftar Anggota Tim Struktur Organisasi</h3>
-                <div id="admin-staff-list" class="space-y-3 text-xs">
-                    <!-- Dynamic Data JS -->
+                <!-- Preview Data Excel -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-3 border-b">NIM</th>
+                                <th class="p-3 border-b">Nama Mahasiswa</th>
+                                <th class="p-3 border-b">No. Komputer</th>
+                                <th class="p-3 border-b text-center">Jawaban Benar</th>
+                                <th class="p-3 border-b text-center">Kalkulasi Skor</th>
+                                <th class="p-3 border-b text-center">Status Kelulusan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="excel-preview-body">
+                            <tr>
+                                <td class="p-3 border-b text-slate-600">2107026001</td>
+                                <td class="p-3 border-b font-semibold">Budi Santoso</td>
+                                <td class="p-3 border-b">PC-12</td>
+                                <td class="p-3 border-b text-center text-slate-500">L: 35 | S: 28 | R: 40</td>
+                                <td class="p-3 border-b text-center font-bold text-brand-900">520</td>
+                                <td class="p-3 border-b text-center">
+                                    <span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]">LULUS (Hijau)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border-b text-slate-600">2107026044</td>
+                                <td class="p-3 border-b font-semibold">Siti Aminah</td>
+                                <td class="p-3 border-b">PC-08</td>
+                                <td class="p-3 border-b text-center text-slate-500">L: 20 | S: 15 | R: 22</td>
+                                <td class="p-3 border-b text-center font-bold text-rose-700">410</td>
+                                <td class="p-3 border-b text-center">
+                                    <span class="bg-rose-100 text-rose-800 font-bold px-2.5 py-1 rounded-full text-[10px]">REMEDIAL</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button onclick="alert('Hasil skor TOEFL berhasil diterbitkan ke web umum!')" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-md">
+                        Publish Skor ke Web Umum
+                    </button>
                 </div>
             </div>
+        </div>
 
+        <!-- 2. MODUL ACC PENDAFTARAN & JADWAL + WA OTOMATIS -->
+        <div id="tab-pendaftaran" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">ACC Pendaftaran & Penjadwalan Ujian / Remedial / Kursus</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Verifikasi pengajuan mahasiswa, tentukan lokasi dan nomor meja, lalu kirim info sesi ujian via WhatsApp.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-3 border-b">NIM & Nama</th>
+                                <th class="p-3 border-b">No. WhatsApp</th>
+                                <th class="p-3 border-b">Pengajuan</th>
+                                <th class="p-3 border-b">Atur Jadwal & Meja</th>
+                                <th class="p-3 border-b text-center">Aksi ACC</th>
+                                <th class="p-3 border-b text-center">Notifikasi WA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-3">
+                                    <p class="font-bold text-slate-800">Rian Hidayat</p>
+                                    <p class="text-[10px] text-slate-500">NIM: 20611012</p>
+                                </td>
+                                <td class="p-3 text-slate-600">081255554321</td>
+                                <td class="p-3">
+                                    <span class="bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded text-[10px]">TOEFL Remedial</span>
+                                </td>
+                                <td class="p-3 space-y-1">
+                                    <input type="text" id="jadwal-1" value="Kamis, 20 Ags 2026 - Sesi 1 (08.00 WITA)" class="w-full p-1.5 border rounded text-[11px]">
+                                    <input type="text" id="meja-1" value="Lab Komputer 2 (Meja #14)" class="w-full p-1.5 border rounded text-[11px]">
+                                </td>
+                                <td class="p-3 text-center">
+                                    <button onclick="accPendaftaran(1)" class="bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-800 text-[11px]">
+                                        ACC Jadwal
+                                    </button>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <button onclick="sendWAJadwal('Rian Hidayat', '081255554321', 1)" class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-700 text-[11px] flex items-center justify-center gap-1 mx-auto">
+                                        📲 Kirim WA Sesi
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. MODUL PENERIMAAN KELUAHAN & TRACKING STATUS STATUS + WA -->
+        <div id="tab-keluhan" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">Penerimaan & Penanganan Laporan Kendala</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Ubah status laporan untuk fitur tracking publik. Rincian dan detail penyelesaian dikirim via WA Otomatis.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-3 border-b">Pelapor & Kendala</th>
+                                <th class="p-3 border-b">Rincian Laporan</th>
+                                <th class="p-3 border-b">Status Tracking Web Publik</th>
+                                <th class="p-3 border-b text-center">Update Status</th>
+                                <th class="p-3 border-b text-center">Kirim Detail via WA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-3">
+                                    <p class="font-bold text-slate-800">Andi Pratama</p>
+                                    <p class="text-[10px] text-slate-500">NIM: 2107026099 | WA: 082199887766</p>
+                                </td>
+                                <td class="p-3 text-slate-600 max-w-xs">
+                                    <span class="font-semibold text-rose-700">[Kesalahan Sertifikat]</span> Penulisan nama pada sertifikat TOEFL kurang gelar S.Tr.T.
+                                </td>
+                                <td class="p-3">
+                                    <span id="status-tag-1" class="bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-[10px]">Sedang Diproses</span>
+                                </td>
+                                <td class="p-3 text-center space-y-1">
+                                    <button onclick="updateStatusLaporan(1, 'Sedang Diproses')" class="block w-full bg-amber-500 text-white font-bold px-2 py-1 rounded text-[10px]">Set Diproses</button>
+                                    <button onclick="updateStatusLaporan(1, 'Selesai')" class="block w-full bg-emerald-700 text-white font-bold px-2 py-1 rounded text-[10px]">Set Selesai</button>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <button onclick="sendWALaporan('Andi Pratama', '082199887766', 1)" class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-700 text-[11px] flex items-center justify-center gap-1 mx-auto">
+                                        📲 Kirim WA Detail
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. MODUL KELOLA BERITA, NARRATIVE & FOTO KEGIATAN -->
+        <div id="tab-berita" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">Publikasi Berita & Foto Kegiatan</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Tulis narasi berita pengumuman dan upload foto kegiatan untuk halaman utama publik.</p>
+                </div>
+
+                <form onsubmit="publishBerita(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Judul Berita / Pengumuman</label>
+                        <input type="text" id="berita-judul" required placeholder="Contoh: Jadwal Pelaksanaan Tes TOEFL Remedial Semester Ganjil" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
+                    </div>
+
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Narasi Berita / Kata-Kata</label>
+                        <textarea id="berita-isi" rows="4" required placeholder="Tuliskan kata-kata rilis berita atau detail pengumuman di sini..." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Upload / URL Foto Kegiatan</label>
+                        <input type="url" id="berita-foto" required placeholder="https://..." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
+                    </div>
+
+                    <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-xl transition text-xs shadow-md">
+                        Terbitkan Berita ke Web Utama
+                    </button>
+                </form>
+            </div>
         </div>
 
     </main>
 
-    <!-- SCRIPT AUTH CHECKER & DASHBOARD CONTROL -->
+    <!-- SCRIPT LOGIKA DASHBOARD STAFF -->
     <script src="assets/js/auth.js"></script>
     <script>
-        // Data Staf In-Memory
-        let staffData = [
-            { id: 1, nama: "Dudy Sofiandy, S.Pd.", jabatan: "KEPALA UPA BAHASA", foto: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=80" },
-            { id: 2, nama: "Bram Sahadewa, M.Hum.", jabatan: "KOORDINATOR TOEFL", foto: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&auto=format&fit=crop&q=80" },
-            { id: 3, nama: "Ilyas Ghifari, MA", jabatan: "INSTRUKTUR BAHASA INGGRIS", foto: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80" },
-            { id: 4, nama: "Dr. Azhar Nurbahri, MH", jabatan: "DIVISI KERJASAMA", foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80" }
-        ];
-
-        // Jalankan Pengecekan Akses Otomatis saat Halaman Dimuat
+        // Verifikasi Hak Akses Staff
         document.addEventListener('DOMContentLoaded', () => {
-            const user = checkAuth('Staff'); // Proteksi role khusus 'Staff'
+            const user = checkAuth('Staff');
             if (user) {
                 document.getElementById('user-display-name').innerText = user.username;
-                renderAdminStaffList();
             }
         });
 
-        // Render List Staf
-        function renderAdminStaffList() {
-            const listEl = document.getElementById('admin-staff-list');
-            if (!listEl) return;
+        // Tab Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-800', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            });
 
-            listEl.innerHTML = staffData.map(item => `
-                <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
-                    <div class="flex items-center gap-3">
-                        <img src="${item.foto}" class="w-10 h-10 rounded-full object-cover">
-                        <div>
-                            <p class="font-bold text-slate-800 text-xs">${item.nama}</p>
-                            <p class="text-[10px] text-brand-800 font-semibold uppercase">${item.jabatan}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="editStaff(${item.id})" class="text-amber-800 font-bold text-[11px] px-3 py-1 bg-amber-100 rounded-lg hover:bg-amber-200 transition">Edit</button>
-                        <button onclick="deleteStaff(${item.id})" class="text-rose-800 font-bold text-[11px] px-3 py-1 bg-rose-100 rounded-lg hover:bg-rose-200 transition">Hapus</button>
-                    </div>
-                </div>
-            `).join('');
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            activeBtn.classList.add('bg-brand-800', 'text-white');
         }
 
-        function handleSaveStaff(e) {
-            e.preventDefault();
-            const id = document.getElementById('staff-id').value;
-            const nama = document.getElementById('staff-nama').value;
-            const jabatan = document.getElementById('staff-jabatan').value;
-            const foto = document.getElementById('staff-foto').value;
+        // Simulasi Pembacaan Excel
+        function previewExcelData(e) {
+            alert('File Excel berhasil dibaca! Skor TOEFL & kelulusan dihitung otomatis.');
+        }
 
-            if (id) {
-                const index = staffData.findIndex(item => item.id == id);
-                if (index !== -1) {
-                    staffData[index] = { id: parseInt(id), nama, jabatan, foto };
-                }
+        // ACC Pendaftaran
+        function accPendaftaran(id) {
+            alert('Pendaftaran disetujui dan jadwal berhasil dikunci!');
+        }
+
+        // WhatsApp Otomatis: Info Sesi Ujian & Meja
+        function sendWAJadwal(nama, phone, id) {
+            const jadwal = document.getElementById(`jadwal-${id}`).value;
+            const meja = document.getElementById(`meja-${id}`).value;
+            
+            const message = `Halo ${nama},\n\nPengajuan tes TOEFL/Kursus Anda telah di-ACC oleh UPA Bahasa POLNES.\n\n*Info Sesi & Lokasi Ujian:*\n🗓️ Jadwal: ${jadwal}\n🖥️ Lokasi & Meja: ${meja}\n\nHarap hadir 15 menit sebelum sesi dimulai. Terima kasih.`;
+            
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        // Update Status Laporan (Untuk Tracking Web Publik)
+        function updateStatusLaporan(id, status) {
+            const tag = document.getElementById(`status-tag-${id}`);
+            if (status === 'Selesai') {
+                tag.className = 'bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]';
+                tag.innerText = 'Selesai Ditangani';
             } else {
-                staffData.push({ id: Date.now(), nama, jabatan, foto });
+                tag.className = 'bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-[10px]';
+                tag.innerText = 'Sedang Diproses';
             }
-
-            resetStaffForm();
-            renderAdminStaffList();
+            alert(`Status laporan publik diperbarui menjadi: ${status}`);
         }
 
-        function editStaff(id) {
-            const item = staffData.find(s => s.id == id);
-            if (item) {
-                document.getElementById('staff-id').value = item.id;
-                document.getElementById('staff-nama').value = item.nama;
-                document.getElementById('staff-jabatan').value = item.jabatan;
-                document.getElementById('staff-foto').value = item.foto;
-                document.getElementById('form-staff-title').innerText = "Edit Data Anggota Tim";
-            }
+        // WhatsApp Otomatis: Rincian & Detail Laporan
+        function sendWALaporan(nama, phone, id) {
+            const statusTag = document.getElementById(`status-tag-${id}`).innerText;
+            
+            const message = `Halo ${nama},\n\nMemberitahukan perkembangan penanganan kendala Anda di UPA Bahasa POLNES.\n\n*Status Terbaru:* ${statusTag}\n*Rincian Tindakan:* Laporan kesalahan sertifikat telah dikoreksi dan dicetak ulang. Sertifikat fisik sudah dapat diambil di gedung UPA Bahasa.\n\nTerima kasih.`;
+            
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        function deleteStaff(id) {
-            if (confirm("Apakah Anda yakin ingin menghapus anggota ini?")) {
-                staffData = staffData.filter(s => s.id != id);
-                renderAdminStaffList();
-            }
-        }
-
-        function resetStaffForm() {
-            document.getElementById('staff-id').value = '';
-            document.getElementById('staff-nama').value = '';
-            document.getElementById('staff-jabatan').value = '';
-            document.getElementById('staff-foto').value = '';
-            document.getElementById('form-staff-title').innerText = "Tambah Anggota Tim Baru";
+        // Form Berita
+        function publishBerita(e) {
+            e.preventDefault();
+            alert('Berita dan foto kegiatan berhasil dipublikasikan ke Web Utama!');
+            document.getElementById('berita-judul').value = '';
+            document.getElementById('berita-isi').value = '';
+            document.getElementById('berita-foto').value = '';
         }
     </script>
 </body>
