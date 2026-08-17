@@ -1,654 +1,266 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPA Bahasa - Politeknik Negeri Samarinda</title>
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>UPA Bahasa - Unit Pelayanan Akademik Bahasa</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                            950: '#052e16',
-                        },
-                        accent: {
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                            600: '#d97706',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .nav-btn-active {
-            color: #15803d !important;
-            font-weight: 800;
-            position: relative;
-        }
-        .nav-btn-active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: #f59e0b;
-            border-radius: 9999px;
-        }
-        .hero-bg {
-            background-image: linear-gradient(to bottom, rgba(5, 46, 22, 0.70), rgba(20, 83, 45, 0.80)), url('https://images.unsplash.com/photo-1562774053-701939374585?w=1600&auto=format&fit=crop&q=80');
-            background-size: cover;
-            background-position: center;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-amber-400 selection:text-slate-900">
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <!-- TOPBAR INFORMASI TERPADU -->
-    <div class="bg-brand-950 text-slate-200 text-xs py-2.5 px-6 border-b border-emerald-900">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-            <div class="flex items-center gap-6 text-[11px] font-medium tracking-wide">
-                <span>Kampus Gunung Kelua, Samarinda</span>
-                <span class="hidden md:inline">upabahasa@polnes.ac.id</span>
-                <span class="hidden lg:inline">(0541) 743584</span>
-            </div>
-            <div class="flex items-center gap-4 text-[11px]">
-                <div class="flex items-center gap-2 bg-emerald-900/60 px-2.5 py-1 rounded-full border border-emerald-800">
-                    <button class="hover:text-amber-400 font-bold text-white transition">ID</button>
-                    <span class="text-emerald-700">|</span>
-                    <button class="hover:text-amber-400 text-slate-300 transition">EN</button>
+    <!-- HEADER / NAVBAR PUBLIK -->
+    <header class="bg-emerald-800 text-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Sub-judul -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white/10 p-2.5 rounded-xl border border-white/20">
+                        <i data-lucide="languages" class="w-7 h-7 text-emerald-300"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-xl tracking-wide uppercase">UPA BAHASA</h1>
+                        <p class="text-xs text-emerald-200">Unit Pelayanan Akademik Bahasa</p>
+                    </div>
                 </div>
-                <button onclick="toggleLoginModal(true)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold px-3.5 py-1 rounded-full transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 text-[11px]">
-                    Portal Staff
-                </button>
-            </div>
-        </div>
-    </div>
 
-    <!-- HEADER & NAVIGATION BAR -->
-    <header class="bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/80 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
-            
-            <!-- Logo Brand POLNES -->
-            <div class="flex items-center space-x-3.5 cursor-pointer group" onclick="showPage('beranda', 'Beranda', 'nav-beranda')">
-                <div class="w-11 h-11 bg-gradient-to-br from-brand-900 to-brand-700 rounded-xl flex items-center justify-center text-white font-black text-xl border-2 border-amber-400/80 shadow-md group-hover:scale-105 transition-transform duration-300">
-                    P
-                </div>
+                <!-- Navigasi Menu Publik -->
+                <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                    <a href="#beranda" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                        <i data-lucide="home" class="w-4 h-4"></i> Beranda
+                    </a>
+                    <a href="#toefl" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                        <i data-lucide="file-badge" class="w-4 h-4"></i> Cek TOEFL
+                    </a>
+                    <a href="#struktur" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                        <i data-lucide="users" class="w-4 h-4"></i> Struktur Organisasi
+                    </a>
+                    <a href="#kursus" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                        <i data-lucide="book-open" class="w-4 h-4"></i> Kursus
+                    </a>
+                    <a href="#pengaduan" class="hover:text-emerald-300 transition flex items-center gap-1.5">
+                        <i data-lucide="message-square-plus" class="w-4 h-4"></i> Pengaduan
+                    </a>
+                </nav>
+
+                <!-- Tombol Portal Staff / Login -->
                 <div>
-                    <h1 class="text-xl font-black text-brand-950 tracking-tight leading-none group-hover:text-brand-800 transition">UPA BAHASA</h1>
-                    <p class="text-[10px] text-brand-700 font-extrabold uppercase tracking-widest mt-1">Politeknik Negeri Samarinda</p>
+                    <button onclick="toggleLoginModal(true)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow border border-emerald-400/30 flex items-center gap-2 transition transform hover:-translate-y-0.5">
+                        <i data-lucide="log-in" class="w-4 h-4"></i> Portal Staff / Kepala
+                    </button>
                 </div>
             </div>
-
-            <!-- Menu Navigasi -->
-            <nav class="hidden md:flex items-center space-x-7 text-xs font-bold text-slate-700">
-                <button id="nav-beranda" onclick="showPage('beranda', 'Beranda', 'nav-beranda')" class="nav-btn py-2 hover:text-brand-800 transition uppercase tracking-wider nav-btn-active">
-                    Beranda
-                </button>
-
-                <!-- Dropdown: Tentang Kami -->
-                <div class="relative group">
-                    <button id="nav-tentang" class="nav-btn py-2 hover:text-brand-800 transition flex items-center gap-1 uppercase tracking-wider">
-                        Tentang Kami <span class="text-[9px] opacity-60">▾</span>
-                    </button>
-                    <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-100 rounded-2xl shadow-xl py-3 z-50 transition-all duration-200">
-                        <button onclick="showPage('struktur-organisasi', 'Struktur Organisasi', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Struktur Organisasi UPA Bahasa</button>
-                        <button onclick="showPage('sejarah-profil', 'Sejarah & Profil', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Sejarah & Profil</button>
-                        <button onclick="showPage('visi-misi', 'Visi & Misi', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Visi & Misi</button>
-                        <button onclick="showPage('tujuan-fungsi', 'Tujuan dan Fungsi', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Tujuan dan Fungsi</button>
-                    </div>
-                </div>
-
-                <!-- Dropdown: Layanan Akademik -->
-                <div class="relative group">
-                    <button id="nav-layanan" class="nav-btn py-2 hover:text-brand-800 transition flex items-center gap-1 uppercase tracking-wider">
-                        Layanan Akademik <span class="text-[9px] opacity-60">▾</span>
-                    </button>
-                    <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-100 rounded-2xl shadow-xl py-3 z-50 transition-all duration-200">
-                        <button onclick="showPage('layanan-analisis', 'Analisis Skor TOEFL Jurusan & Prodi', 'nav-layanan')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Analisis Skor TOEFL</button>
-                        <button onclick="showPage('layanan-kursus', 'Pendaftaran Kursus Bahasa', 'nav-layanan')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Kursus Bahasa (Inggris & Mandarin)</button>
-                        <button onclick="showPage('layanan-keluhan', 'Pengaduan & Kendala Ujian', 'nav-layanan')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Pengaduan & Kendala Ujian</button>
-                    </div>
-                </div>
-
-                <!-- Menu Nilai TOEFL -->
-                <button id="nav-nilai" onclick="showPage('cek-skor', 'Nilai TOEFL Mahasiswa', 'nav-nilai')" class="nav-btn py-2 hover:text-brand-800 transition uppercase tracking-wider">
-                    Nilai TOEFL
-                </button>
-
-                <!-- Dropdown: Lainnya -->
-                <div class="relative group">
-                    <button id="nav-lainnya" class="nav-btn py-2 hover:text-brand-800 transition flex items-center gap-1 uppercase tracking-wider">
-                        Lainnya <span class="text-[9px] opacity-60">▾</span>
-                    </button>
-                    <div class="absolute right-0 top-full hidden group-hover:block w-56 bg-white border border-slate-100 rounded-2xl shadow-xl py-3 z-50 transition-all duration-200">
-                        <button onclick="showPage('ppid', 'Informasi PPID Pelaksana', 'nav-lainnya')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Informasi PPID</button>
-                        <button onclick="showPage('galeri', 'Galeri Kegiatan', 'nav-lainnya')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Galeri Kegiatan</button>
-                    </div>
-                </div>
-
-                <button onclick="showPage('cek-skor', 'Nilai TOEFL Mahasiswa', 'nav-nilai')" class="bg-brand-800 hover:bg-brand-900 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs transition-all shadow-md hover:shadow-lg active:scale-95 border border-emerald-700">
-                    CEK SKOR
-                </button>
-            </nav>
         </div>
     </header>
 
-    <!-- HALAMAN BERANDA -->
-    <div id="page-beranda" class="page-content flex-1">
-        <section class="relative hero-bg text-white flex items-center justify-center py-16 sm:py-20">
-            <div class="relative max-w-3xl mx-auto px-6 text-center z-10">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3 leading-snug">
-                    Layanan Bahasa & Tes TOEFL <br><span class="text-amber-400">Politeknik Negeri Samarinda</span>
+    <!-- MAIN CONTENT PUBLIK -->
+    <main class="flex-grow">
+        
+        <!-- HERO SECTION -->
+        <section id="beranda" class="bg-gradient-to-b from-emerald-800 to-emerald-900 text-white py-16 px-4">
+            <div class="max-w-4xl mx-auto text-center space-y-4">
+                <span class="bg-emerald-700/60 text-emerald-200 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-500/30 inline-block">
+                    Pusat Layanan & Sertifikasi Bahasa
+                </span>
+                <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight">
+                    Meningkatkan Kemampuan Bahasa untuk Masa Depan Global
                 </h2>
-                <p class="text-xs sm:text-sm text-emerald-100/90 mb-8 max-w-xl mx-auto font-normal leading-relaxed">
-                    Sertifikasi TOEFL ITP, pelatihan bahasa asing, dan pemantauan nilai akademik mahasiswa.
+                <p class="text-emerald-100 text-sm md:text-base max-w-2xl mx-auto font-light">
+                    Layanan tes TOEFL, pelatihan bahasa asing, sertifikasi resmi, serta penerjemahan dokumen akademis UPA Bahasa.
                 </p>
-                <div class="flex flex-wrap justify-center gap-3">
-                    <button onclick="showPage('cek-skor', 'Nilai TOEFL Mahasiswa', 'nav-nilai')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded-lg shadow-md active:scale-95 transition-all text-xs">
-                        Cek Skor TOEFL
-                    </button>
-                    <button onclick="showPage('layanan-kursus', 'Pendaftaran Kursus Bahasa', 'nav-layanan')" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-2.5 rounded-lg border border-white/20 backdrop-blur-md active:scale-95 transition-all text-xs">
-                        Ajukan Kursus
-                    </button>
-                </div>
             </div>
         </section>
 
-        <!-- Stat Banner -->
-        <section class="bg-white border-b border-slate-200 py-6 shadow-sm relative z-20">
-            <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-center px-6">
-                <div class="p-2 border-r border-slate-100 last:border-0">
-                    <p class="text-2xl md:text-3xl font-black text-brand-900">12,500+</p>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Mahasiswa Teruji</p>
-                </div>
-                <div class="p-2 border-r border-slate-100 last:border-0">
-                    <p class="text-2xl md:text-3xl font-black text-brand-900">98.4%</p>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Kelulusan</p>
-                </div>
-                <div class="p-2 border-r border-slate-100 last:border-0">
-                    <p class="text-2xl md:text-3xl font-black text-amber-600">2 Bahasa</p>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Inggris & Mandarin</p>
-                </div>
-                <div class="p-2">
-                    <p class="text-2xl md:text-3xl font-black text-brand-900">24/7</p>
-                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">Layanan Online</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Berita Pilihan -->
-        <section class="max-w-7xl mx-auto px-6 py-14">
-            <div class="text-center max-w-xl mx-auto mb-10">
-                <h3 class="text-xl sm:text-2xl font-bold text-brand-950">Berita Pilihan</h3>
-                <p class="text-xs text-slate-500 mt-1">Dokumentasi dan informasi terbaru kegiatan UPA Bahasa.</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between group">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
+            
+            <!-- CEK NILAI TOEFL (INFORMASI PUBLIK) -->
+            <section id="toefl" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-emerald-100 text-emerald-800 p-2.5 rounded-xl">
+                        <i data-lucide="award" class="w-6 h-6"></i>
+                    </div>
                     <div>
-                        <div class="h-44 overflow-hidden relative">
-                            <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&auto=format&fit=crop&q=80" alt="Kirab Budaya" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-xs text-brand-950 mb-2 leading-snug group-hover:text-brand-700 transition uppercase">
-                                Kirab Budaya POLNES: Memperkuat Kultur & Persatuan Kampus
-                            </h4>
-                            <div class="flex items-center text-[10px] text-slate-400 gap-3 font-medium">
-                                <span>26-SEP-2026</span>
-                                <span>Administrator</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between group">
-                    <div>
-                        <div class="h-44 overflow-hidden relative">
-                            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=80" alt="Expo POLNES" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-xs text-brand-950 mb-2 leading-snug group-hover:text-brand-700 transition uppercase">
-                                Partisipasi UPA Bahasa dalam Expo POLNES 2026
-                            </h4>
-                            <div class="flex items-center text-[10px] text-slate-400 gap-3 font-medium">
-                                <span>25-SEP-2026</span>
-                                <span>Abdi Bahasa</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between group">
-                    <div>
-                        <div class="h-44 overflow-hidden relative">
-                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&auto=format&fit=crop&q=80" alt="English Day" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        </div>
-                        <div class="p-5">
-                            <h4 class="font-bold text-xs text-brand-950 mb-2 leading-snug group-hover:text-brand-700 transition uppercase">
-                                Program Interaktif English Day 2026
-                            </h4>
-                            <div class="flex items-center text-[10px] text-slate-400 gap-3 font-medium">
-                                <span>28-MAY-2026</span>
-                                <span>Abdi Bahasa</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- CONTAINER SUBPAGE INDEPENDEN -->
-    <div id="subpage-wrapper" class="hidden flex-1 max-w-7xl mx-auto px-6 py-8 w-full">
-        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 pb-4 mb-6 gap-2">
-            <div>
-                <h2 id="page-title-heading" class="text-xl sm:text-2xl font-bold text-brand-950">Judul Halaman</h2>
-                <p class="text-[11px] text-slate-500 mt-0.5">UPA Bahasa - Politeknik Negeri Samarinda</p>
-            </div>
-            <div class="text-[11px] font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-md border border-slate-200">
-                Beranda / <span id="breadcrumb-current" class="text-brand-800 font-bold">Judul Halaman</span>
-            </div>
-        </div>
-
-        <div class="space-y-6">
-
-            <!-- STRUKTUR ORGANISASI (DINAMIS SCRIPT) -->
-            <div id="page-struktur-organisasi" class="page-item hidden space-y-6">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center">
-                    <div>
-                        <h3 class="text-base font-bold text-brand-950 mb-0.5">Struktur Tim UPA Bahasa</h3>
-                        <p class="text-xs text-slate-500">Daftar staf pengajar dan teknisi kebahasaan POLNES.</p>
+                        <h3 class="text-lg font-bold text-slate-800">Cek Hasil Nilai TOEFL</h3>
+                        <p class="text-xs text-slate-500">Masukkan NIM atau Nama untuk memverifikasi nilai sertifikat TOEFL Anda</p>
                     </div>
                 </div>
 
-                <!-- Container Anggota Tim Dinamis -->
-                <div id="staff-grid-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-                    <!-- Kartu Anggota Rendered Dynamic JS -->
-                </div>
-            </div>
-
-            <!-- VISI & MISI -->
-            <div id="page-visi-misi" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 text-xs">
-                <div>
-                    <span class="text-amber-700 font-bold text-[10px] tracking-wider uppercase bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200">VISI</span>
-                    <p class="text-base font-bold text-brand-950 mt-2">
-                        "Menjadi pusat layanan kebahasaan yang unggul, berstandar internasional, dan mendukung daya saing lulusan POLNES."
-                    </p>
-                </div>
-                <div class="pt-4 border-t border-slate-100">
-                    <span class="text-brand-800 font-bold text-[10px] tracking-wider uppercase bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">MISI</span>
-                    <ol class="list-decimal pl-4 space-y-2 text-slate-700 font-medium mt-2">
-                        <li>Mengembangkan layanan kebahasaan berkualitas.</li>
-                        <li>Menjalin kemitraan pengujian bahasa nasional dan internasional.</li>
-                        <li>Meningkatkan standardisasi tes TOEFL bagi mahasiswa.</li>
-                    </ol>
-                </div>
-            </div>
-
-            <!-- SEJARAH & PROFIL -->
-            <div id="page-sejarah-profil" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs text-slate-700">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Sejarah & Profil</h3>
-                <p>UPA Bahasa POLNES didirikan untuk mendukung keterampilan kebahasaan civitas akademika melalui pengujian TOEFL dan pelatihan bahasa asing.</p>
-            </div>
-
-            <!-- TUJUAN DAN FUNGSI -->
-            <div id="page-tujuan-fungsi" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-3">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Tujuan dan Fungsi</h3>
-                <ul class="list-disc pl-4 space-y-2 text-slate-700 font-medium">
-                    <li>Penyelenggaraan tes TOEFL ITP terstandar.</li>
-                    <li>Pelatihan Bahasa Inggris dan Mandarin.</li>
-                </ul>
-            </div>
-
-            <!-- ANALISIS SKOR TOEFL -->
-            <div id="page-layanan-analisis" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Analisis Skor TOEFL</h3>
-                <div class="relative w-full h-72 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                    <canvas id="toeflChart"></canvas>
-                </div>
-            </div>
-
-            <!-- PENDAFTARAN KURSUS BAHASA -->
-            <div id="page-layanan-kursus" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Pendaftaran Kursus Bahasa</h3>
-                <form id="form-kursus" onsubmit="submitPengajuanKursus(event)" class="space-y-3">
-                    <div class="grid md:grid-cols-2 gap-3">
-                        <input type="text" id="kursus-nama" required placeholder="Nama Lengkap" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none">
-                        <input type="text" id="kursus-nim" required placeholder="NIM" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none">
-                    </div>
-                    <button type="submit" class="w-full bg-brand-800 hover:bg-brand-900 text-white font-bold py-2.5 rounded-lg transition text-xs">
-                        Kirim Pendaftaran
+                <div class="flex flex-col md:flex-row gap-3 mb-6">
+                    <input type="text" id="search-toefl-input" placeholder="Masukkan NIM atau Nama Peserta..." class="flex-1 border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600">
+                    <button onclick="searchToeflPublic()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-medium px-6 py-3 rounded-xl text-sm transition flex items-center justify-center gap-2">
+                        <i data-lucide="search" class="w-4 h-4"></i> Cari Hasil
                     </button>
-                </form>
-            </div>
-
-            <!-- PENGADUAN & KENDALA UJIAN -->
-            <div id="page-layanan-keluhan" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Laporan Kendala Ujian</h3>
-                <form id="form-pengaduan-lengkap" onsubmit="submitPengaduanLengkap(event)" class="space-y-3">
-                    <input type="text" id="aduan-nama" required placeholder="Nama Lengkap" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none">
-                    <textarea id="aduan-deskripsi" rows="3" required placeholder="Deskripsi Kendala..." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none"></textarea>
-                    <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-lg transition text-xs">
-                        Kirim
-                    </button>
-                </form>
-            </div>
-
-            <!-- CEK SKOR TOEFL -->
-            <div id="page-cek-skor" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Cek Skor TOEFL</h3>
-                <div class="flex gap-2">
-                    <input id="input-nim" placeholder="Masukkan NIM" class="flex-1 p-2.5 border border-slate-200 rounded-lg outline-none">
-                    <button onclick="alert('Mencari NIM: ' + document.getElementById('input-nim').value)" class="bg-brand-800 text-white font-bold px-4 py-2.5 rounded-lg hover:bg-brand-900 transition">Cari</button>
                 </div>
-            </div>
 
-            <!-- PPID -->
-            <div id="page-ppid" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-2">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Informasi PPID</h3>
-                <p class="text-slate-600">Layanan Keterbukaan Informasi Publik UPA Bahasa POLNES.</p>
-            </div>
-
-            <!-- GALERI KEGIATAN -->
-            <div id="page-galeri" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-3">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Galeri Kegiatan</h3>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&auto=format&fit=crop&q=80" class="rounded-lg border shadow-sm h-36 w-full object-cover">
-                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&auto=format&fit=crop&q=80" class="rounded-lg border shadow-sm h-36 w-full object-cover">
-                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80" class="rounded-lg border shadow-sm h-36 w-full object-cover">
+                <div id="toefl-public-results" class="hidden overflow-x-auto border border-slate-200 rounded-xl">
+                    <table class="w-full text-left text-xs text-slate-700">
+                        <thead class="bg-slate-100 text-slate-800 font-semibold border-b border-slate-200">
+                            <tr>
+                                <th class="p-3">NIM</th>
+                                <th class="p-3">Nama Peserta</th>
+                                <th class="p-3">Tanggal Tes</th>
+                                <th class="p-3">Nilai Total</th>
+                                <th class="p-3">Status Sertifikat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="toefl-public-table-body">
+                            <!-- Hasil Pencarian Dipopulasi via JS (toefl.js) -->
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </section>
+
+            <!-- STRUKTUR ORGANISASI PUBLIK -->
+            <section id="struktur" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="text-center max-w-xl mx-auto mb-10 space-y-2">
+                    <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest">Tim Personel</span>
+                    <h3 class="text-2xl font-bold text-slate-800">Struktur Organisasi UPA Bahasa</h3>
+                    <p class="text-xs text-slate-500">Pimpinan dan Staff Pengelola Unit Pelayanan Akademik Bahasa</p>
+                </div>
+
+                <div id="staff-public-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Data Grid Staff Dipopulasi Dinamis oleh JS -->
+                </div>
+            </section>
+
+            <!-- PENDAFTARAN KURSUS & PELATIHANS -->
+            <section id="kursus" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-center mb-6">
+                        <h3 class="text-xl font-bold text-slate-800">Pengajuan Kursus & Pelatihan Bahasa</h3>
+                        <p class="text-xs text-slate-500 mt-1">Daftar program kursus persiapan TOEFL / Bahasa Inggris umum</p>
+                    </div>
+
+                    <form onsubmit="submitPengajuanKursus(event)" class="space-y-4 text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-semibold text-slate-700 block mb-1">Nama Lengkap</label>
+                                <input type="text" required placeholder="Nama Peserta" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
+                            </div>
+                            <div>
+                                <label class="font-semibold text-slate-700 block mb-1">NIM / NIK</label>
+                                <input type="text" required placeholder="NIM atau NIK Identitas" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-semibold text-slate-700 block mb-1">Program Kursus</label>
+                                <select required class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
+                                    <option value="">-- Pilih Program --</option>
+                                    <option value="toefl-prep">Persiapan TOEFL (TOEFL Preparation)</option>
+                                    <option value="english-basic">Basic English Conversation</option>
+                                    <option value="academic-writing">Academic Writing Class</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="font-semibold text-slate-700 block mb-1">Nomor WhatsApp</label>
+                                <input type="tel" required placeholder="08xxxxxxxxxx" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition shadow">
+                            Kirim Pendaftaran Kursus
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- FORM PENGADUAN & LAYANAN PUBLIK -->
+            <section id="pengaduan" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-center mb-6">
+                        <h3 class="text-xl font-bold text-slate-800">Layanan Layanan & Pengaduan</h3>
+                        <p class="text-xs text-slate-500 mt-1">Kirimkan kendala sertifikat, keluhan, atau pertanyaan layanan</p>
+                    </div>
+
+                    <form onsubmit="submitPengaduanLengkap(event)" class="space-y-4 text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-semibold text-slate-700 block mb-1">Nama Lengkap</label>
+                                <input type="text" required placeholder="Nama Anda" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
+                            </div>
+                            <div>
+                                <label class="font-semibold text-slate-700 block mb-1">Email / Kontak</label>
+                                <input type="text" required placeholder="Email atau WA Anda" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-semibold text-slate-700 block mb-1">Subjek Pengaduan</label>
+                            <input type="text" required placeholder="Contoh: Perbaikan Ejaan Sertifikat TOEFL" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600">
+                        </div>
+                        <div>
+                            <label class="font-semibold text-slate-700 block mb-1">Rincian Keluhan / Pesan</label>
+                            <textarea rows="4" required placeholder="Tuliskan rincian keluhan atau masukan Anda di sini..." class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition shadow">
+                            Kirim Laporan Pengaduan
+                        </button>
+                    </form>
+                </div>
+            </section>
 
         </div>
-    </div>
+    </main>
 
-    <!-- FLOATING WHATSAPP -->
-    <a href="https://wa.me/6285191974494" target="_blank" class="fixed bottom-6 right-6 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-full shadow-lg flex items-center gap-2 text-xs font-bold z-50 transition transform hover:scale-105">
-        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.842-1.001z"/></svg>
-        <span class="hidden sm:inline">Hubungi Whatsapp</span>
-    </a>
-
-    <!-- MODAL PORTAL STAFF & MANAJEMEN STRUKTUR -->
-    <div id="login-modal" class="fixed inset-0 bg-brand-950/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="toggleLoginModal(false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold">&times;</button>
-            <h3 class="text-lg font-bold text-brand-950 mb-1">Portal Staff UPA Bahasa</h3>
-            <p class="text-xs text-slate-500 mb-4">Kelola Data Tim & Struktur Organisasi</p>
-
-            <!-- Form Tambah/Edit Anggota -->
-            <form id="form-staff-edit" onsubmit="handleSaveStaff(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6 space-y-3 text-xs">
-                <h4 id="form-staff-title" class="font-bold text-brand-900 border-b pb-1">Tambah Anggota Baru</h4>
-                <input type="hidden" id="staff-id" value="">
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Nama Lengkap & Gelar</label>
-                        <input type="text" id="staff-nama" required placeholder="Contoh: Dudy Sofiandy, S.Pd." class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                    </div>
-                    <div>
-                        <label class="font-semibold text-slate-700 block mb-1">Jabatan / Peran</label>
-                        <input type="text" id="staff-jabatan" required placeholder="Contoh: KEPALA UPA BAHASA" class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                    </div>
-                </div>
-                <div>
-                    <label class="font-semibold text-slate-700 block mb-1">URL Foto Profil</label>
-                    <input type="url" id="staff-foto" required placeholder="https://..." class="w-full p-2 border border-slate-200 rounded-lg outline-none bg-white">
-                </div>
-                
-                <div class="flex gap-2 pt-1">
-                    <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg transition">Simpan Anggota</button>
-                    <button type="button" onclick="resetStaffForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2 rounded-lg transition">Batal</button>
-                </div>
-            </form>
-
-            <!-- Daftar List Staf Saat Ini -->
-            <div>
-                <h4 class="font-bold text-xs text-slate-700 mb-2">Daftar Anggota Tim Saat Ini</h4>
-                <div id="admin-staff-list" class="space-y-2 text-xs">
-                    <!-- Rendered Via JS -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="bg-brand-950 text-emerald-200 text-xs py-8 border-t border-emerald-900 mt-auto">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-4">
-            <div>
-                <p class="font-bold text-white">UPA Bahasa Politeknik Negeri Samarinda</p>
-                <p class="mt-1 text-emerald-300">Jl. Gerilya, Kampus Gunung Kelua, Samarinda</p>
-            </div>
-            <div class="text-left md:text-right text-[11px]">
-                <p class="text-emerald-400">&copy; 2026 UPA Bahasa POLNES. All rights reserved.</p>
-            </div>
+    <!-- FOOTER PUBLIK -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-8 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p>&copy; 2026 UPA BAHASA - Unit Pelayanan Akademik Bahasa. All Rights Reserved.</p>
+            <p class="text-slate-500">Sistem Informasi Manajemen Pelayanan Bahasa & Sertifikasi</p>
         </div>
     </footer>
 
-    <!-- LOGIKA JAVASCRIPT & MANAJEMEN STRUKTUR -->
-    <script>
-        // State Data Staf Dinamis
-        let staffData = [
-            {
-                id: 1,
-                nama: "Dudy Sofiandy, S.Pd.",
-                jabatan: "KEPALA UPA BAHASA",
-                foto: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=80"
-            },
-            {
-                id: 2,
-                nama: "Bram Sahadewa, M.Hum.",
-                jabatan: "KOORDINATOR TOEFL",
-                foto: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&auto=format&fit=crop&q=80"
-            },
-            {
-                id: 3,
-                nama: "Ilyas Ghifari, MA",
-                jabatan: "INSTRUKTUR BAHASA INGGRIS",
-                foto: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80"
-            },
-            {
-                id: 4,
-                nama: "Dr. Azhar Nurbahri, MH",
-                jabatan: "DIVISI KERJASAMA",
-                foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80"
-            }
-        ];
-
-        let myChartInstance = null;
-
-        // Render Kartu Struktur Tim di Halaman Utama
-        function renderStaffGrid() {
-            const container = document.getElementById('staff-grid-container');
-            if (!container) return;
+    <!-- MODAL POP-UP LOGIN (PORTAL STAFF & KEPALA) -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-slate-100">
+            <!-- Tombol Close Modal -->
+            <button onclick="toggleLoginModal(false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold p-1">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
             
-            container.innerHTML = staffData.map(item => `
-                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm group">
-                    <div class="h-56 bg-slate-200 overflow-hidden relative">
-                        <img src="${item.foto}" alt="${item.nama}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-300">
-                    </div>
-                    <div class="bg-brand-950 text-white p-2.5 text-center">
-                        <h4 class="font-bold text-xs">${item.nama}</h4>
-                        <p class="text-[10px] text-emerald-300 mt-0.5 uppercase tracking-wider">${item.jabatan}</p>
-                    </div>
+            <div class="text-center mb-6">
+                <div class="bg-emerald-100 text-emerald-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
                 </div>
-            `).join('');
-        }
+                <h3 class="text-lg font-bold text-slate-800">Login Portal Internal</h3>
+                <p class="text-xs text-slate-500 mt-1">Masuk untuk mengelola Dashboard Staff / Kepala</p>
+            </div>
 
-        // Render List Manajemen Staf di Modal Admin
-        function renderAdminStaffList() {
-            const listEl = document.getElementById('admin-staff-list');
-            if (!listEl) return;
-
-            listEl.innerHTML = staffData.map(item => `
-                <div class="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg">
-                    <div class="flex items-center gap-3">
-                        <img src="${item.foto}" class="w-9 h-9 rounded-full object-cover">
-                        <div>
-                            <p class="font-bold text-slate-800">${item.nama}</p>
-                            <p class="text-[10px] text-brand-800 uppercase">${item.jabatan}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="editStaff(${item.id})" class="text-amber-600 hover:text-amber-800 font-bold text-[11px] px-2 py-1 bg-amber-50 rounded">Edit</button>
-                        <button onclick="deleteStaff(${item.id})" class="text-rose-600 hover:text-rose-800 font-bold text-[11px] px-2 py-1 bg-rose-50 rounded">Hapus</button>
-                    </div>
+            <!-- Form Autentikasi Login -->
+            <form onsubmit="handleStaffLogin(event)" class="space-y-4 text-xs">
+                <div id="login-error" class="hidden p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-center font-medium"></div>
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Username</label>
+                    <input type="text" id="login-username" required placeholder="Masukkan Username..." class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600 transition">
                 </div>
-            `).join('');
-        }
+                <div>
+                    <label class="font-semibold text-slate-700 block mb-1">Password</label>
+                    <input type="password" id="login-password" required placeholder="Masukkan Password..." class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-emerald-600 transition">
+                </div>
+                <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                    <i data-lucide="log-in" class="w-4 h-4"></i> Masuk Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
 
-        // Simpan / Tambah Data Staf
-        function handleSaveStaff(e) {
-            e.preventDefault();
-            const id = document.getElementById('staff-id').value;
-            const nama = document.getElementById('staff-nama').value;
-            const jabatan = document.getElementById('staff-jabatan').value;
-            const foto = document.getElementById('staff-foto').value;
+    <!-- PANGGIL SKRIP TERPISAH (JS FOLDER) -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/toefl.js"></script>
+    <script src="assets/js/keluhan.js"></script>
 
-            if (id) {
-                // Edit mode
-                const index = staffData.findIndex(item => item.id == id);
-                if (index !== -1) {
-                    staffData[index] = { id: parseInt(id), nama, jabatan, foto };
-                }
-            } else {
-                // Tambah baru
-                const newId = Date.now();
-                staffData.push({ id: newId, nama, jabatan, foto });
+    <script>
+        // Render ikon lucide setelah DOM dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
             }
-
-            resetStaffForm();
-            renderStaffGrid();
-            renderAdminStaffList();
-        }
-
-        // Load data staf ke form untuk di-edit
-        function editStaff(id) {
-            const item = staffData.find(s => s.id == id);
-            if (item) {
-                document.getElementById('staff-id').value = item.id;
-                document.getElementById('staff-nama').value = item.nama;
-                document.getElementById('staff-jabatan').value = item.jabatan;
-                document.getElementById('staff-foto').value = item.foto;
-                document.getElementById('form-staff-title').innerText = "Edit Data Anggota";
-            }
-        }
-
-        // Hapus Anggota
-        function deleteStaff(id) {
-            if (confirm("Apakah Anda yakin ingin menghapus anggota ini?")) {
-                staffData = staffData.filter(s => s.id != id);
-                renderStaffGrid();
-                renderAdminStaffList();
-            }
-        }
-
-        // Reset Form
-        function resetStaffForm() {
-            document.getElementById('staff-id').value = '';
-            document.getElementById('staff-nama').value = '';
-            document.getElementById('staff-jabatan').value = '';
-            document.getElementById('staff-foto').value = '';
-            document.getElementById('form-staff-title').innerText = "Tambah Anggota Baru";
-        }
-
-        // Navigasi Halaman
-        function showPage(pageId, pageTitle, activeNavId) {
-            document.getElementById('page-beranda').classList.add('hidden');
-            document.getElementById('subpage-wrapper').classList.add('hidden');
-            document.querySelectorAll('.page-item').forEach(el => el.classList.add('hidden'));
-
-            if (pageId === 'beranda') {
-                document.getElementById('page-beranda').classList.remove('hidden');
-            } else {
-                document.getElementById('subpage-wrapper').classList.remove('hidden');
-                const targetEl = document.getElementById(`page-${pageId}`);
-                if (targetEl) targetEl.classList.remove('hidden');
-                
-                document.getElementById('page-title-heading').innerText = pageTitle;
-                document.getElementById('breadcrumb-current').innerText = pageTitle;
-
-                if (pageId === 'layanan-analisis') {
-                    renderTOEFLChart();
-                }
-            }
-
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-btn-active'));
-            if (activeNavId) {
-                const activeBtn = document.getElementById(activeNavId);
-                if (activeBtn) activeBtn.classList.add('nav-btn-active');
-            }
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function renderTOEFLChart() {
-            const ctx = document.getElementById('toeflChart').getContext('2d');
-            let labels = ['D3 Teknik Sipil', 'D4 TRKJ', 'D3 Teknik Listrik', 'D4 Akuntansi', 'D3 Admin Bisnis'];
-            let dataSkor = [450, 512, 465, 485, 460];
-
-            if (myChartInstance) {
-                myChartInstance.destroy();
-            }
-
-            myChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Rata-rata Skor TOEFL',
-                        data: dataSkor,
-                        backgroundColor: '#166534',
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: false, min: 400, max: 600 }
-                    }
-                }
-            });
-        }
-
-        function submitPengajuanKursus(e) {
-            e.preventDefault();
-            alert("Pengajuan berhasil terkirim!");
-        }
-
-        function submitPengaduanLengkap(e) {
-            e.preventDefault();
-            alert("Laporan Pengaduan Terkirim!");
-        }
-
-        function toggleLoginModal(show) {
-            document.getElementById('login-modal').classList.toggle('hidden', !show);
-            if (show) {
-                renderAdminStaffList();
-            }
-        }
-
-        // Inisialisasi awal saat halaman dibuka
-        window.addEventListener('DOMContentLoaded', () => {
-            renderStaffGrid();
         });
     </script>
 </body>
