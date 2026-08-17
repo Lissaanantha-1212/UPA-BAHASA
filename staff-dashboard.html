@@ -4,76 +4,193 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Staff - UPA Bahasa POLNES</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- Header Navigation -->
-    <header class="bg-blue-950 text-white py-4 px-6 shadow-md flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 bg-amber-400 text-blue-950 font-bold rounded-full flex items-center justify-center">S</div>
-            <div>
-                <h1 class="font-bold text-base leading-tight">Dashboard Staff Operasional</h1>
-                <p class="text-[10px] text-slate-300">UPA Bahasa Politeknik Negeri Samarinda</p>
+    <!-- NAV BAR DASHBOARD STAFF -->
+    <header class="bg-brand-950 text-white py-4 px-6 border-b border-emerald-900 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-slate-950 font-black">
+                    S
+                </div>
+                <div>
+                    <h1 class="text-base font-bold tracking-wide leading-tight">PORTAL STAFF INTERNAL</h1>
+                    <p class="text-[10px] text-emerald-300 font-medium">UPA Bahasa Politeknik Negeri Samarinda</p>
+                </div>
             </div>
-        </div>
-        <div class="flex items-center gap-4 text-xs">
-            <span id="staff-email-display" class="text-slate-300">staff@polnes.ac.id</span>
-            <button onclick="logoutStaff()" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 py-1.5 rounded transition">Logout</button>
+
+            <div class="flex items-center gap-4 text-xs">
+                <span class="text-slate-200">Halo, <strong id="user-display-name" class="text-amber-400">Staff</strong></span>
+                <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-lg font-bold transition">
+                    Keluar / Logout
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto w-full px-6 py-8 flex-1 space-y-8">
-        <!-- Section 1: Upload File Excel -->
-        <section class="bg-white p-6 rounded-xl border shadow-sm">
-            <h2 class="text-lg font-bold text-slate-900 mb-1">📁 Import Data Nilai TOEFL (.xlsx)</h2>
-            <p class="text-xs text-slate-500 mb-4">Unggah file Excel berisi data hasil tes mahasiswa (NIM, Nama, Listening, Structure, Reading).</p>
+    <!-- CONTENT DASHBOARD STAFF -->
+    <main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full space-y-6">
 
-            <div class="flex flex-col md:flex-row gap-4 items-center border-2 border-dashed border-slate-300 p-6 rounded-lg bg-slate-50">
-                <input type="file" id="excel-file-input" accept=".xlsx, .xls" class="text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-900 file:text-white hover:file:bg-blue-950">
-                <button onclick="prosesUploadExcel()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-6 py-2.5 rounded-lg transition">
-                    🚀 Upload & Sinkron Database
-                </button>
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-brand-900 to-brand-800 text-white p-6 rounded-2xl shadow-md flex justify-between items-center">
+            <div>
+                <span class="bg-amber-400 text-slate-950 font-black text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">MODUL MANAJEMEN STAFF</span>
+                <h2 class="text-2xl font-bold mt-2">Selamat Datang di Tampilan Staff</h2>
+                <p class="text-xs text-emerald-100 mt-1">Anda dapat mengelola daftar tim struktur organisasi dan tugas operasional di sini.</p>
             </div>
-            <div id="upload-status" class="hidden mt-3 p-3 text-xs rounded border"></div>
-        </section>
+            <a href="index.html" class="hidden sm:inline-block bg-white/10 hover:bg-white/20 text-white font-semibold text-xs px-4 py-2 rounded-xl border border-white/20 transition">
+                Lihat Web Utama ↗
+            </a>
+        </div>
 
-        <!-- Section 2: Kelola Tiket Keluhan -->
-        <section class="bg-white p-6 rounded-xl border shadow-sm">
-            <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h2 class="text-lg font-bold text-slate-900">📩 Daftar Keluhan & Kendala Mahasiswa</h2>
-                <button onclick="loadTiketKeluhan()" class="text-xs text-blue-900 hover:underline font-semibold">🔄 Refresh Data</button>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Form Tambah / Edit Staff -->
+            <div class="lg:col-span-1 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h3 id="form-staff-title" class="font-bold text-sm text-brand-950 border-b pb-2">Tambah Anggota Tim Baru</h3>
+                <form id="form-staff-edit" onsubmit="handleSaveStaff(event)" class="space-y-3 text-xs">
+                    <input type="hidden" id="staff-id" value="">
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Nama Lengkap & Gelar</label>
+                        <input type="text" id="staff-nama" required placeholder="Contoh: Dudy Sofiandy, S.Pd." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
+                    </div>
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Jabatan / Peran</label>
+                        <input type="text" id="staff-jabatan" required placeholder="Contoh: KEPALA UPA BAHASA" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
+                    </div>
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">URL Foto Profil</label>
+                        <input type="url" id="staff-foto" required placeholder="https://..." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
+                    </div>
+                    <div class="flex gap-2 pt-2">
+                        <button type="submit" class="flex-1 bg-brand-800 hover:bg-brand-900 text-white font-bold py-2.5 rounded-lg transition text-xs">Simpan</button>
+                        <button type="button" onclick="resetStaffForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2.5 rounded-lg transition text-xs">Batal</button>
+                    </div>
+                </form>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-xs text-left">
-                    <thead class="bg-slate-100 text-slate-700 font-bold uppercase border-b">
-                        <tr>
-                            <th class="p-3">Kode Tiket</th>
-                            <th class="p-3">NIM & Nama</th>
-                            <th class="p-3">Kategori</th>
-                            <th class="p-3">Deskripsi</th>
-                            <th class="p-3">Status</th>
-                            <th class="p-3">Aksi Staff</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-tiket-body" class="divide-y">
-                        <!-- Data tiket di-render via JS -->
-                        <tr>
-                            <td colspan="6" class="p-4 text-center text-slate-400">Memuat data tiket...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- List Anggota Tim Saat Ini -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="font-bold text-sm text-slate-800 border-b pb-2">Kelola Daftar Anggota Tim Struktur Organisasi</h3>
+                <div id="admin-staff-list" class="space-y-3 text-xs">
+                    <!-- Dynamic Data JS -->
+                </div>
             </div>
-        </section>
+
+        </div>
+
     </main>
 
-    <!-- JS SCRIPTS -->
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/excel-upload.js"></script>
+    <!-- SCRIPT AUTH CHECKER & DASHBOARD CONTROL -->
     <script src="assets/js/auth.js"></script>
+    <script>
+        // Data Staf In-Memory
+        let staffData = [
+            { id: 1, nama: "Dudy Sofiandy, S.Pd.", jabatan: "KEPALA UPA BAHASA", foto: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=80" },
+            { id: 2, nama: "Bram Sahadewa, M.Hum.", jabatan: "KOORDINATOR TOEFL", foto: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&auto=format&fit=crop&q=80" },
+            { id: 3, nama: "Ilyas Ghifari, MA", jabatan: "INSTRUKTUR BAHASA INGGRIS", foto: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80" },
+            { id: 4, nama: "Dr. Azhar Nurbahri, MH", jabatan: "DIVISI KERJASAMA", foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80" }
+        ];
+
+        // Jalankan Pengecekan Akses Otomatis saat Halaman Dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = checkAuth('Staff'); // Proteksi role khusus 'Staff'
+            if (user) {
+                document.getElementById('user-display-name').innerText = user.username;
+                renderAdminStaffList();
+            }
+        });
+
+        // Render List Staf
+        function renderAdminStaffList() {
+            const listEl = document.getElementById('admin-staff-list');
+            if (!listEl) return;
+
+            listEl.innerHTML = staffData.map(item => `
+                <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.foto}" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="font-bold text-slate-800 text-xs">${item.nama}</p>
+                            <p class="text-[10px] text-brand-800 font-semibold uppercase">${item.jabatan}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="editStaff(${item.id})" class="text-amber-800 font-bold text-[11px] px-3 py-1 bg-amber-100 rounded-lg hover:bg-amber-200 transition">Edit</button>
+                        <button onclick="deleteStaff(${item.id})" class="text-rose-800 font-bold text-[11px] px-3 py-1 bg-rose-100 rounded-lg hover:bg-rose-200 transition">Hapus</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleSaveStaff(e) {
+            e.preventDefault();
+            const id = document.getElementById('staff-id').value;
+            const nama = document.getElementById('staff-nama').value;
+            const jabatan = document.getElementById('staff-jabatan').value;
+            const foto = document.getElementById('staff-foto').value;
+
+            if (id) {
+                const index = staffData.findIndex(item => item.id == id);
+                if (index !== -1) {
+                    staffData[index] = { id: parseInt(id), nama, jabatan, foto };
+                }
+            } else {
+                staffData.push({ id: Date.now(), nama, jabatan, foto });
+            }
+
+            resetStaffForm();
+            renderAdminStaffList();
+        }
+
+        function editStaff(id) {
+            const item = staffData.find(s => s.id == id);
+            if (item) {
+                document.getElementById('staff-id').value = item.id;
+                document.getElementById('staff-nama').value = item.nama;
+                document.getElementById('staff-jabatan').value = item.jabatan;
+                document.getElementById('staff-foto').value = item.foto;
+                document.getElementById('form-staff-title').innerText = "Edit Data Anggota Tim";
+            }
+        }
+
+        function deleteStaff(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus anggota ini?")) {
+                staffData = staffData.filter(s => s.id != id);
+                renderAdminStaffList();
+            }
+        }
+
+        function resetStaffForm() {
+            document.getElementById('staff-id').value = '';
+            document.getElementById('staff-nama').value = '';
+            document.getElementById('staff-jabatan').value = '';
+            document.getElementById('staff-foto').value = '';
+            document.getElementById('form-staff-title').innerText = "Tambah Anggota Tim Baru";
+        }
+    </script>
 </body>
 </html>
