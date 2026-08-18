@@ -388,16 +388,11 @@
             return Math.round(((scaledL + scaledS + scaledR) * 10) / 3);
         }
 
-        // Database Default
+        // Database Default (Semua Prodi Kosong / 0 Sesi)
         function getDefaultFolderDB() {
             return {
                 "Teknologi Informasi": {
-                    "TI": {
-                        "5 B": [
-                            { nim: '2107026001', nama: 'Budi Santoso', pc: 'PC-12', l: 35, s: 28, r: 40, score: 557, status: 'LULUS', certNo: 'UPA-POLNES/2026/CERT-001' },
-                            { nim: '2107026044', nama: 'Siti Aminah', pc: 'PC-08', l: 20, s: 15, r: 22, score: 440, status: 'REMEDIAL', certNo: '' }
-                        ]
-                    },
+                    "TI": {},
                     "TRK": {},
                     "TIM": {},
                     "TK": {}
@@ -454,7 +449,7 @@
                 const kelases = Object.keys(prodiData);
 
                 if (kelases.length === 0) {
-                    area.innerHTML = `<p class="text-xs text-slate-400 italic py-8 text-center">Belum ada file/kelas yang diupload di Prodi ${currentFolder.prodi}. Silakan upload file Excel.</p>`;
+                    area.innerHTML = `<p class="text-xs text-slate-400 italic py-8 text-center">Belum ada file/kelas yang diupload di Prodi ${currentFolder.prodi}. Silakan upload file Excel/CSV.</p>`;
                     return;
                 }
 
@@ -594,12 +589,12 @@
 
                     const nim = cols[0] ? cols[0].toString().trim() : '';
                     const nama = cols[1] ? cols[1].toString().trim() : '';
-                    const pc = cols[2] ? cols[2].toString().trim() : 'PC-01';
+                    const pc = cols[5] ? cols[5].toString().trim() : (cols[2] ? cols[2].toString().trim() : 'PC-01');
                     const prodi = cols[3] ? cols[3].toString().trim().toUpperCase() : 'TI';
                     const kelas = cols[4] ? cols[4].toString().trim().toUpperCase() : '1 A';
-                    const l = parseInt(cols[5]) || 0;
-                    const s = parseInt(cols[6]) || 0;
-                    const r = parseInt(cols[7]) || 0;
+                    const l = parseInt(cols[6]) || parseInt(cols[3]) || 0;
+                    const s = parseInt(cols[7]) || parseInt(cols[4]) || 0;
+                    const r = parseInt(cols[8]) || parseInt(cols[5]) || 0;
 
                     if (nim && nama) {
                         const totalScore = convertToTOEFLScore(l, s, r);
