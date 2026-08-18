@@ -409,7 +409,7 @@
                 </div>
             </div>
 
-            <!-- HALAMAN ANALISIS SKOR & PREDIKSI (Dinamis dari Data Staff) -->
+            <!-- HALAMAN ANALISIS SKOR & PREDIKSI -->
             <div id="page-layanan-analisis" class="page-item hidden space-y-6">
                 <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3">
@@ -830,11 +830,9 @@
 
         // FUNGSI ANALISIS & PREDIKSI BERDASARKAN DATA PUBLIK / UPLOAD STAFF
         function renderAnalisisData() {
-            // Mengambil data publik yang di-publish staff (fallback data dummy jika kosong)
             let publishedData = JSON.parse(localStorage.getItem('pub_toefl_results') || '[]');
             
             if (publishedData.length === 0) {
-                // Dummy default jika belum ada data staff yang di-publish agar grafik tetap interaktif
                 publishedData = [
                     { jurusan: 'Teknik Informatika (TI)', totalSkor: 485, semester: 6 },
                     { jurusan: 'Teknik Informatika (TI)', totalSkor: 510, semester: 6 },
@@ -846,7 +844,6 @@
                 ];
             }
 
-            // Kelompokkan skor berdasarkan prodi (TI, TIM, TK, TRK, dll)
             const prodiMap = {};
             publishedData.forEach(item => {
                 let prodi = item.jurusan || item.prodi || 'Lainnya';
@@ -861,7 +858,6 @@
             const labels = Object.keys(prodiMap);
             const avgScores = labels.map(p => Math.round(prodiMap[p].total / prodiMap[p].count));
 
-            // Tentukan prodi unggulan
             let maxScore = -1;
             let bestProdi = '-';
             labels.forEach((p, idx) => {
@@ -874,12 +870,10 @@
             document.getElementById('txt-prodi-unggul').innerText = bestProdi;
             document.getElementById('txt-prodi-unggul-desc').innerText = `Rata-rata tertinggi mencapai ${maxScore} poin.`;
 
-            // Hitung Prediksi Skor Tahun Depan (Simple Linear Trend Simulation)
             const globalAvg = avgScores.length > 0 ? Math.round(avgScores.reduce((a, b) => a + b, 0) / avgScores.length) : 470;
-            const predictedNextYearScore = globalAvg + 12; // Proyeksi kenaikan 12 poin tahun depan
+            const predictedNextYearScore = globalAvg + 12;
             document.getElementById('txt-prediksi-skor').innerText = `${predictedNextYearScore} Poin`;
 
-            // RENDER GRAFIK 1: Rata-rata per Prodi
             const ctxProdi = document.getElementById('chartProdi').getContext('2d');
             if (chartProdiInstance) chartProdiInstance.destroy();
             
@@ -902,7 +896,6 @@
                 }
             });
 
-            // RENDER GRAFIK 2: Prediksi Tren 3 Tahun
             const ctxPrediksi = document.getElementById('chartPrediksi').getContext('2d');
             if (chartPrediksiInstance) chartPrediksiInstance.destroy();
 
@@ -1018,7 +1011,7 @@
                         <div class="flex justify-between items-start border-b pb-2 border-emerald-200">
                             <div>
                                 <h4 class="font-bold text-sm text-brand-950">${mhs.nama}</h4>
-                                <p class="text-slate-600 text-[11px]">NIM: ${mhl.nim || mhs.nim} | Jurusan: ${mhs.jurusan || 'POLNES'} | Semester: ${mhs.semester}</p>
+                                <p class="text-slate-600 text-[11px]">NIM: ${mhs.nim} | Jurusan: ${mhs.jurusan || 'POLNES'} | Semester: ${mhs.semester}</p>
                             </div>
                             <span class="bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded text-[10px]">Sertifikat Valid</span>
                         </div>
