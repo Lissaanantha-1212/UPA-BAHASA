@@ -138,31 +138,15 @@
                             </tr>
                         </thead>
                         <tbody id="excel-preview-body">
-                            <tr class="border-b" data-nim="2107026001" data-nama="Budi Santoso" data-score="520">
-                                <td class="p-3 text-slate-600 font-mono">2107026001</td>
-                                <td class="p-3 font-semibold">Budi Santoso</td>
-                                <td class="p-3">PC-12</td>
-                                <td class="p-3 text-center text-slate-500">L: 35 | S: 28 | R: 40</td>
-                                <td class="p-3 text-center font-bold text-brand-900">520</td>
-                                <td class="p-3 text-center">
-                                    <span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]">LULUS (Hijau)</span>
-                                </td>
-                            </tr>
-                            <tr class="border-b" data-nim="2107026044" data-nama="Siti Aminah" data-score="410">
-                                <td class="p-3 text-slate-600 font-mono">2107026044</td>
-                                <td class="p-3 font-semibold">Siti Aminah</td>
-                                <td class="p-3">PC-08</td>
-                                <td class="p-3 text-center text-slate-500">L: 20 | S: 15 | R: 22</td>
-                                <td class="p-3 text-center font-bold text-rose-700">410</td>
-                                <td class="p-3 text-center">
-                                    <span class="bg-rose-100 text-rose-800 font-bold px-2.5 py-1 rounded-full text-[10px]">REMEDIAL</span>
-                                </td>
-                            </tr>
+                            <!-- Populated Dynamically via LocalStorage -->
                         </tbody>
                     </table>
                 </div>
 
-                <div class="flex justify-end pt-2">
+                <div class="flex justify-between items-center pt-2">
+                    <button onclick="resetDataToDefault()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-3 py-2 rounded-xl text-xs transition">
+                        🔄 Reset Data Awal
+                    </button>
                     <button onclick="publishToWeb()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-md flex items-center gap-2">
                         🚀 Publish Skor ke Web Umum
                     </button>
@@ -190,28 +174,7 @@
                             </tr>
                         </thead>
                         <tbody id="sertifikat-table-body">
-                            <tr class="border-b">
-                                <td class="p-3 text-slate-600 font-mono">2107026001</td>
-                                <td class="p-3 font-semibold text-slate-900">Budi Santoso</td>
-                                <td class="p-3 text-center font-bold text-emerald-800">520</td>
-                                <td class="p-3 text-slate-500 font-mono">UPA-POLNES/2026/CERT-001</td>
-                                <td class="p-3 text-center">
-                                    <button onclick="generateSertifikat('2107026001', 'Budi Santoso', '520', 'UPA-POLNES/2026/CERT-001', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
-                                        📜 Lihat & Cetak Sertifikat
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="p-3 text-slate-600 font-mono">20611012</td>
-                                <td class="p-3 font-semibold text-slate-900">Rian Hidayat</td>
-                                <td class="p-3 text-center font-bold text-emerald-800">485</td>
-                                <td class="p-3 text-slate-500 font-mono">UPA-POLNES/2026/CERT-002</td>
-                                <td class="p-3 text-center">
-                                    <button onclick="generateSertifikat('20611012', 'Rian Hidayat', '485', 'UPA-POLNES/2026/CERT-002', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
-                                        📜 Lihat & Cetak Sertifikat
-                                    </button>
-                                </td>
-                            </tr>
+                            <!-- Populated Dynamically via LocalStorage -->
                         </tbody>
                     </table>
                 </div>
@@ -421,25 +384,87 @@
         </div>
     </div>
 
-    <!-- SCRIPT LOGIKA WORKFLOW STAFF -->
+    <!-- SCRIPT LOGIKA WORKFLOW STAFF & PERMANENT STORAGE -->
     <script>
-        // Switch Modul Tab
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-800', 'text-white');
-                btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-            });
+        // Array memori utama data skor
+        let currentScores = [];
 
-            document.getElementById(tabId).classList.remove('hidden');
-            const activeBtn = document.getElementById(`btn-${tabId}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-                activeBtn.classList.add('bg-brand-800', 'text-white');
-            }
+        // 1. Dapatkan Data Bawaan Default
+        function getDefaultScores() {
+            return [
+                { nim: '2107026001', nama: 'Budi Santoso', pc: 'PC-12', detail: 'L: 35 | S: 28 | R: 40', score: 520, status: 'LULUS', certNo: 'UPA-POLNES/2026/CERT-001' },
+                { nim: '2107026044', nama: 'Siti Aminah', pc: 'PC-08', detail: 'L: 20 | S: 15 | R: 22', score: 410, status: 'REMEDIAL', certNo: '' }
+            ];
         }
 
-        // Processing Upload Excel/CSV
+        // 2. Load Data Permanen dari LocalStorage saat Halaman Dibuka
+        function initStaffData() {
+            const savedData = localStorage.getItem('upa_published_scores');
+            if (savedData) {
+                try {
+                    currentScores = JSON.parse(savedData);
+                } catch (e) {
+                    currentScores = getDefaultScores();
+                }
+            } else {
+                currentScores = getDefaultScores();
+            }
+            renderStaffTables();
+        }
+
+        // 3. Render Tabel Upload Excel & Sertifikat secara Dinamis
+        function renderStaffTables() {
+            const tbody = document.getElementById('excel-preview-body');
+            const certBody = document.getElementById('sertifikat-table-body');
+            
+            tbody.innerHTML = '';
+            if (certBody) certBody.innerHTML = '';
+
+            currentScores.forEach((item, index) => {
+                const isLulus = item.status === 'LULUS' || item.score >= 450;
+                const detailText = item.detail || 'L: - | S: - | R: -';
+                const pcText = item.pc || 'PC-01';
+
+                // Tampilkan di Tabel Upload Excel Hasil Ujian
+                const rowHtml = `
+                    <tr class="border-b" data-nim="${item.nim}" data-nama="${item.nama}" data-score="${item.score}">
+                        <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
+                        <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
+                        <td class="p-3">${pcText}</td>
+                        <td class="p-3 text-center text-slate-500">${detailText}</td>
+                        <td class="p-3 text-center font-bold ${isLulus ? 'text-brand-900' : 'text-rose-700'}">${item.score}</td>
+                        <td class="p-3 text-center">
+                            <span class="${isLulus ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} font-bold px-2.5 py-1 rounded-full text-[10px]">
+                                ${isLulus ? 'LULUS (Hijau)' : 'REMEDIAL'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', rowHtml);
+
+                // Tampilkan di Tabel Sertifikat jika Mahasiswa LULUS
+                if (isLulus && certBody) {
+                    const certNo = item.certNo || `UPA-POLNES/2026/CERT-${100 + index}`;
+                    item.certNo = certNo; // Pastikan nomor sertifikat disimpan
+                    const certRow = `
+                        <tr class="border-b">
+                            <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
+                            <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
+                            <td class="p-3 text-center font-bold text-emerald-800">${item.score}</td>
+                            <td class="p-3 text-slate-500 font-mono">${certNo}</td>
+                            <td class="p-3 text-center">
+                                <button onclick="generateSertifikat('${item.nim}', '${item.nama}', '${item.score}', '${certNo}', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                    📜 Lihat & Cetak Sertifikat
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    certBody.insertAdjacentHTML('beforeend', certRow);
+                }
+            });
+        }
+
+        // 4. Processing Upload File Excel / CSV & Simpan Permanen ke LocalStorage
         function processExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -466,8 +491,6 @@
                     });
                 }
 
-                const tbody = document.getElementById('excel-preview-body');
-                const certBody = document.getElementById('sertifikat-table-body');
                 let addedCount = 0;
 
                 rows.forEach((cols, idx) => {
@@ -484,46 +507,35 @@
                     if (nim && nama) {
                         const totalScore = Math.round(((l + s + r) / 120) * 490 + 210);
                         const isLulus = totalScore >= 450;
+                        const statusStr = isLulus ? 'LULUS' : 'REMEDIAL';
 
-                        const rowHtml = `
-                            <tr class="border-b bg-emerald-50/30 transition" data-nim="${nim}" data-nama="${nama}" data-score="${totalScore}">
-                                <td class="p-3 text-slate-600 font-mono">${nim}</td>
-                                <td class="p-3 font-semibold text-slate-900">${nama}</td>
-                                <td class="p-3">${pc}</td>
-                                <td class="p-3 text-center text-slate-500">L: ${l} | S: ${s} | R: ${r}</td>
-                                <td class="p-3 text-center font-bold ${isLulus ? 'text-brand-900' : 'text-rose-700'}">${totalScore}</td>
-                                <td class="p-3 text-center">
-                                    <span class="${isLulus ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} font-bold px-2.5 py-1 rounded-full text-[10px]">
-                                        ${isLulus ? 'LULUS (Hijau)' : 'REMEDIAL'}
-                                    </span>
-                                </td>
-                            </tr>
-                        `;
-                        tbody.insertAdjacentHTML('beforeend', rowHtml);
+                        const newData = {
+                            nim,
+                            nama,
+                            pc,
+                            detail: `L: ${l} | S: ${s} | R: ${r}`,
+                            score: totalScore,
+                            status: statusStr,
+                            certNo: isLulus ? `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}` : ''
+                        };
 
-                        if (isLulus) {
-                            const certNo = `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}`;
-                            const certRow = `
-                                <tr class="border-b">
-                                    <td class="p-3 text-slate-600 font-mono">${nim}</td>
-                                    <td class="p-3 font-semibold text-slate-900">${nama}</td>
-                                    <td class="p-3 text-center font-bold text-emerald-800">${totalScore}</td>
-                                    <td class="p-3 text-slate-500 font-mono">${certNo}</td>
-                                    <td class="p-3 text-center">
-                                        <button onclick="generateSertifikat('${nim}', '${nama}', '${totalScore}', '${certNo}', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
-                                            📜 Lihat & Cetak Sertifikat
-                                        </button>
-                                    </td>
-                                </tr>
-                            `;
-                            certBody.insertAdjacentHTML('beforeend', certRow);
+                        // Perbarui jika NIM sudah ada, atau tambahkan jika data baru
+                        const existingIndex = currentScores.findIndex(item => item.nim === nim);
+                        if (existingIndex >= 0) {
+                            currentScores[existingIndex] = newData;
+                        } else {
+                            currentScores.push(newData);
                         }
 
                         addedCount++;
                     }
                 });
 
-                alert(`Berhasil mengimpor ${addedCount} data mahasiswa dari file!`);
+                // SIMPAN PERMANEN KE LOCALSTORAGE
+                localStorage.setItem('upa_published_scores', JSON.stringify(currentScores));
+                renderStaffTables();
+
+                alert(`Berhasil mengimpor & menyimpan ${addedCount} data mahasiswa! Data tersimpan permanen.`);
             };
 
             if (isBinary) {
@@ -533,27 +545,39 @@
             }
         }
 
-        // Synchronize and Publish Score Data to Web Utama (LocalStorage)
+        // 5. Publish / Re-Sync Manual ke Web Utama
         function publishToWeb() {
-            const rows = document.querySelectorAll('#excel-preview-body tr');
-            const dataToPublish = [];
-
-            rows.forEach(row => {
-                const nim = row.getAttribute('data-nim') || row.children[0]?.innerText.trim();
-                const nama = row.getAttribute('data-nama') || row.children[1]?.innerText.trim();
-                const score = row.getAttribute('data-score') || row.children[4]?.innerText.trim();
-                const status = parseInt(score) >= 450 ? 'LULUS' : 'REMEDIAL';
-
-                if (nim && nama) {
-                    dataToPublish.push({ nim, nama, score: parseInt(score), status });
-                }
-            });
-
-            localStorage.setItem('upa_published_scores', JSON.stringify(dataToPublish));
-            alert('✅ Berhasil mempublikasikan ' + dataToPublish.length + ' data skor ke Web Utama!');
+            localStorage.setItem('upa_published_scores', JSON.stringify(currentScores));
+            alert('✅ Berhasil mempublikasikan ' + currentScores.length + ' data skor ke Web Utama!');
         }
 
-        // Generate Certificate with Dynamic QR Code
+        // 6. Reset Data ke Default Awal (Jika dibutuhkan)
+        function resetDataToDefault() {
+            if (confirm("Apakah Anda yakin ingin mengembalikan data ke tampilan default?")) {
+                currentScores = getDefaultScores();
+                localStorage.setItem('upa_published_scores', JSON.stringify(currentScores));
+                renderStaffTables();
+                alert("Data berhasil direset!");
+            }
+        }
+
+        // Switch Modul Tab
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-800', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+                activeBtn.classList.add('bg-brand-800', 'text-white');
+            }
+        }
+
+        // Generator Sertifikat Resmi dengan QR Code
         function generateSertifikat(nim, nama, score, certNo, dateStr) {
             document.getElementById('cert-nim').innerText = nim;
             document.getElementById('cert-nama').innerText = nama.toUpperCase();
@@ -582,7 +606,7 @@
             document.getElementById('modal-sertifikat').classList.add('hidden');
         }
 
-        // ACC Registration
+        // ACC Pendaftaran
         function accPendaftaran(id) {
             const badge = document.getElementById(`badge-acc-${id}`);
             const btn = document.getElementById(`btn-acc-${id}`);
@@ -603,7 +627,7 @@
             const jadwal = document.getElementById(`jadwal-${id}`)?.value || '';
             const meja = document.getElementById(`meja-${id}`)?.value || '';
             
-            const message = `Halo ${nama},\n\nPengajuan ujian/kursus Anda di UPA Bahasa POLNES telah DISETUJUIR.\n\n📅 Jadwal: ${jadwal}\n📍 Lokasi/Meja: ${meja}\n\nHarap hadir 15 menit sebelum sesi dimulai. Terima kasih!`;
+            const message = `Halo ${nama},\n\nPengajuan ujian/kursus Anda di UPA Bahasa POLNES telah DISETUJUI.\n\n📅 Jadwal: ${jadwal}\n📍 Lokasi/Meja: ${meja}\n\nHarap hadir 15 menit sebelum sesi dimulai. Terima kasih!`;
             
             window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
         }
@@ -630,7 +654,7 @@
             window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // Preview News Image
+        // Preview Image Berita
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -644,7 +668,7 @@
             }
         }
 
-        // Publish News
+        // Publish Berita
         function publishBerita(e) {
             e.preventDefault();
             const judul = document.getElementById('berita-judul').value;
@@ -652,6 +676,9 @@
             e.target.reset();
             document.getElementById('preview-container').classList.add('hidden');
         }
+
+        // Jalankan Inisialisasi Data Otomatis Saat Halaman Selesai Dimuat
+        window.addEventListener('DOMContentLoaded', initStaffData);
     </script>
 </body>
 </html>
