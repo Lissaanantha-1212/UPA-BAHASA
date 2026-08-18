@@ -148,7 +148,7 @@
                     Cek Sertifikat
                 </button>
 
-                <!-- Dropdown: Lainnya (PPID diganti menjadi Berita) -->
+                <!-- Dropdown: Lainnya (Berita & Galeri) -->
                 <div class="relative group">
                     <button id="nav-lainnya" class="nav-btn py-2 hover:text-brand-800 transition flex items-center gap-1 uppercase tracking-wider">
                         Lainnya <span class="text-[9px] opacity-60">▾</span>
@@ -232,7 +232,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 pt-2">
-                    <!-- KARTU 1 -->
                     <div class="card-academic bg-white rounded-xl border border-slate-200/80 p-3.5 flex flex-col justify-between group">
                         <div class="aspect-[4/5] rounded-lg overflow-hidden bg-slate-100 relative mb-3">
                             <img src="assets/img/1.png" alt="Instruktur" class="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 transition-all duration-300">
@@ -244,7 +243,6 @@
                         </div>
                     </div>
 
-                    <!-- KARTU 2 -->
                     <div class="card-academic bg-white rounded-xl border border-slate-200/80 p-3.5 flex flex-col justify-between group">
                         <div class="aspect-[4/5] rounded-lg overflow-hidden bg-slate-100 relative mb-3">
                             <img src="assets/img/2.png" alt="Instruktur" class="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 transition-all duration-300">
@@ -256,7 +254,6 @@
                         </div>
                     </div>
 
-                    <!-- KARTU 3 -->
                     <div class="card-academic bg-white rounded-xl border border-slate-200/80 p-3.5 flex flex-col justify-between group">
                         <div class="aspect-[4/5] rounded-lg overflow-hidden bg-slate-100 relative mb-3">
                             <img src="assets/img/3.png" alt="Instruktur" class="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 transition-all duration-300">
@@ -268,7 +265,6 @@
                         </div>
                     </div>
 
-                    <!-- KARTU 4 -->
                     <div class="card-academic bg-white rounded-xl border border-slate-200/80 p-3.5 flex flex-col justify-between group">
                         <div class="aspect-[4/5] rounded-lg overflow-hidden bg-slate-100 relative mb-3">
                             <img src="assets/img/4.png" alt="Instruktur" class="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 transition-all duration-300">
@@ -280,7 +276,6 @@
                         </div>
                     </div>
 
-                    <!-- KARTU 5 -->
                     <div class="card-academic bg-white rounded-xl border border-slate-200/80 p-3.5 flex flex-col justify-between group">
                         <div class="aspect-[4/5] rounded-lg overflow-hidden bg-slate-100 relative mb-3">
                             <img src="assets/img/5.png" alt="Instruktur" class="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 transition-all duration-300">
@@ -591,7 +586,7 @@
                 <div id="hasil-sertifikat-container" class="hidden mt-4 pt-4 border-t border-slate-100"></div>
             </div>
 
-            <!-- HALAMAN BERITA (Pengganti PPID) -->
+            <!-- HALAMAN BERITA (Dengan Gambar / Thumbnail) -->
             <div id="page-berita" class="page-item hidden space-y-6">
                 <div class="border-b pb-2">
                     <h3 class="text-base font-bold text-brand-950">Berita & Informasi Terbaru</h3>
@@ -599,18 +594,38 @@
                 </div>
                 
                 <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-sm">
-                        <span class="bg-emerald-100 text-brand-800 text-[10px] font-bold px-2.5 py-1 rounded-md">NEWS</span>
-                        <h4 class="font-bold text-sm text-slate-900 leading-snug">Kunjungan Team UPA BAHASA dalam rangka Placement Test</h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">Dalam rangka meningkatkan kemampuan bahasa Inggris semua karyawan, tim UPA Bahasa melakukan kunjungan dan uji penempatan kemampuan bahasa Inggris secara profesional...</p>
-                        <span class="text-[10px] text-slate-400 block pt-1">10 Juni 2026</span>
+                    <!-- Berita 1 -->
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="h-44 w-full overflow-hidden bg-slate-100 relative">
+                                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80" alt="Placement Test" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                                <span class="absolute top-3 left-3 bg-emerald-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow">NEWS</span>
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <h4 class="font-bold text-sm text-slate-900 leading-snug">Kunjungan Team UPA BAHASA dalam rangka Placement Test</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">Dalam rangka meningkatkan kemampuan bahasa Inggris semua karyawan, tim UPA Bahasa melakukan kunjungan dan uji penempatan kemampuan bahasa Inggris secara profesional...</p>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 pt-0">
+                            <span class="text-[10px] text-slate-400 block border-t border-slate-100 pt-2">10 Juni 2026</span>
+                        </div>
                     </div>
                     
-                    <div class="bg-white rounded-xl border border-slate-200 p-4 space-y-3 shadow-sm">
-                        <span class="bg-emerald-100 text-brand-800 text-[10px] font-bold px-2.5 py-1 rounded-md">NEWS</span>
-                        <h4 class="font-bold text-sm text-slate-900 leading-snug">Kunjungan Ke Balai Bahasa Surabaya</h4>
-                        <p class="text-xs text-slate-600 leading-relaxed">UPA Bahasa melakukan kunjungan dan menjalin kerjasama strategis dengan Balai Bahasa Provinsi Jawa Timur guna memperkuat kualitas layanan kebahasaan...</p>
-                        <span class="text-[10px] text-slate-400 block pt-1">12 Juni 2026</span>
+                    <!-- Berita 2 -->
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="h-44 w-full overflow-hidden bg-slate-100 relative">
+                                <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=80" alt="Balai Bahasa" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                                <span class="absolute top-3 left-3 bg-emerald-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow">NEWS</span>
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <h4 class="font-bold text-sm text-slate-900 leading-snug">Kunjungan Ke Balai Bahasa Surabaya</h4>
+                                <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">UPA Bahasa melakukan kunjungan dan menjalin kerjasama strategis dengan Balai Bahasa Provinsi Jawa Timur guna memperkuat kualitas layanan kebahasaan...</p>
+                            </div>
+                        </div>
+                        <div class="px-4 pb-4 pt-0">
+                            <span class="text-[10px] text-slate-400 block border-t border-slate-100 pt-2">12 Juni 2026</span>
+                        </div>
                     </div>
                 </div>
             </div>
