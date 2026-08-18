@@ -138,8 +138,8 @@
                             </tr>
                         </thead>
                         <tbody id="excel-preview-body">
-                            <tr class="border-b">
-                                <td class="p-3 text-slate-600">2107026001</td>
+                            <tr class="border-b" data-nim="2107026001" data-nama="Budi Santoso" data-score="520">
+                                <td class="p-3 text-slate-600 font-mono">2107026001</td>
                                 <td class="p-3 font-semibold">Budi Santoso</td>
                                 <td class="p-3">PC-12</td>
                                 <td class="p-3 text-center text-slate-500">L: 35 | S: 28 | R: 40</td>
@@ -148,8 +148,8 @@
                                     <span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]">LULUS (Hijau)</span>
                                 </td>
                             </tr>
-                            <tr class="border-b">
-                                <td class="p-3 text-slate-600">2107026044</td>
+                            <tr class="border-b" data-nim="2107026044" data-nama="Siti Aminah" data-score="410">
+                                <td class="p-3 text-slate-600 font-mono">2107026044</td>
                                 <td class="p-3 font-semibold">Siti Aminah</td>
                                 <td class="p-3">PC-08</td>
                                 <td class="p-3 text-center text-slate-500">L: 20 | S: 15 | R: 22</td>
@@ -163,14 +163,14 @@
                 </div>
 
                 <div class="flex justify-end pt-2">
-                    <button onclick="publishToWeb()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-md">
-                        Publish Skor ke Web Umum
+                    <button onclick="publishToWeb()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-md flex items-center gap-2">
+                        🚀 Publish Skor ke Web Umum
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- 2. MODUL GENERATOR & CETAK SERTIFIKAT (FITUR BARU) -->
+        <!-- 2. MODUL GENERATOR & CETAK SERTIFIKAT -->
         <div id="tab-sertifikat" class="tab-content hidden space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                 <div>
@@ -244,7 +244,7 @@
                                     <p class="font-bold text-slate-800">Rian Hidayat</p>
                                     <p class="text-[10px] text-slate-500">NIM: 20611012</p>
                                 </td>
-                                <td class="p-3 text-slate-600">081255554321</td>
+                                <td class="p-3 text-slate-600 font-mono">081255554321</td>
                                 <td class="p-3">
                                     <span id="badge-acc-1" class="bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded text-[10px]">Menunggu ACC</span>
                                 </td>
@@ -269,7 +269,7 @@
             </div>
         </div>
 
-        <!-- 4. MODUL KELUAHAN -->
+        <!-- 4. MODUL KELUHAN -->
         <div id="tab-keluhan" class="tab-content hidden space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                 <div>
@@ -423,7 +423,7 @@
 
     <!-- SCRIPT LOGIKA WORKFLOW STAFF -->
     <script>
-        // Tab Switcher
+        // Switch Modul Tab
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -433,11 +433,13 @@
 
             document.getElementById(tabId).classList.remove('hidden');
             const activeBtn = document.getElementById(`btn-${tabId}`);
-            activeBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-            activeBtn.classList.add('bg-brand-800', 'text-white');
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+                activeBtn.classList.add('bg-brand-800', 'text-white');
+            }
         }
 
-        // Upload Excel/CSV Fleksibel
+        // Processing Upload Excel/CSV
         function processExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -483,10 +485,9 @@
                         const totalScore = Math.round(((l + s + r) / 120) * 490 + 210);
                         const isLulus = totalScore >= 450;
 
-                        // Tambah ke tabel Excel Preview
                         const rowHtml = `
-                            <tr class="border-b bg-emerald-50/30 transition">
-                                <td class="p-3 text-slate-600">${nim}</td>
+                            <tr class="border-b bg-emerald-50/30 transition" data-nim="${nim}" data-nama="${nama}" data-score="${totalScore}">
+                                <td class="p-3 text-slate-600 font-mono">${nim}</td>
                                 <td class="p-3 font-semibold text-slate-900">${nama}</td>
                                 <td class="p-3">${pc}</td>
                                 <td class="p-3 text-center text-slate-500">L: ${l} | S: ${s} | R: ${r}</td>
@@ -500,7 +501,6 @@
                         `;
                         tbody.insertAdjacentHTML('beforeend', rowHtml);
 
-                        // Jika lulus, otomatis tambahkan juga ke modul Cetak Sertifikat
                         if (isLulus) {
                             const certNo = `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}`;
                             const certRow = `
@@ -533,29 +533,48 @@
             }
         }
 
-        // GENERATOR SERTIFIKAT + GENERATE QR CODE DINAMIS
-        function generateSertifikat(nim, nama, score, noCert, dateStr) {
+        // Synchronize and Publish Score Data to Web Utama (LocalStorage)
+        function publishToWeb() {
+            const rows = document.querySelectorAll('#excel-preview-body tr');
+            const dataToPublish = [];
+
+            rows.forEach(row => {
+                const nim = row.getAttribute('data-nim') || row.children[0]?.innerText.trim();
+                const nama = row.getAttribute('data-nama') || row.children[1]?.innerText.trim();
+                const score = row.getAttribute('data-score') || row.children[4]?.innerText.trim();
+                const status = parseInt(score) >= 450 ? 'LULUS' : 'REMEDIAL';
+
+                if (nim && nama) {
+                    dataToPublish.push({ nim, nama, score: parseInt(score), status });
+                }
+            });
+
+            localStorage.setItem('upa_published_scores', JSON.stringify(dataToPublish));
+            alert('✅ Berhasil mempublikasikan ' + dataToPublish.length + ' data skor ke Web Utama!');
+        }
+
+        // Generate Certificate with Dynamic QR Code
+        function generateSertifikat(nim, nama, score, certNo, dateStr) {
             document.getElementById('cert-nim').innerText = nim;
             document.getElementById('cert-nama').innerText = nama.toUpperCase();
             document.getElementById('cert-score').innerText = score;
-            document.getElementById('cert-number').innerText = `No: ${noCert}`;
+            document.getElementById('cert-number').innerText = `No: ${certNo}`;
             document.getElementById('cert-date').innerText = dateStr;
 
-            // Generate QR Code mengarah ke URL Validasi
             const qrContainer = document.getElementById('qrcode');
-            qrContainer.innerHTML = ''; // Bersihkan QR lama
-            const verifyUrl = `https://upa-bahasa.vercel.app/verify.html?nim=${nim}`;
+            qrContainer.innerHTML = '';
+
+            const verifyUrl = `${window.location.origin}/verify.html?cert=${encodeURIComponent(certNo)}&nim=${encodeURIComponent(nim)}`;
             
             new QRCode(qrContainer, {
                 text: verifyUrl,
-                width: 90,
-                height: 90,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                width: 80,
+                height: 80,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
 
-            // Tampilkan Modal Sertifikat
             document.getElementById('modal-sertifikat').classList.remove('hidden');
         }
 
@@ -563,69 +582,74 @@
             document.getElementById('modal-sertifikat').classList.add('hidden');
         }
 
-        function publishToWeb() {
-            alert('Seluruh data hasil kalkulasi TOEFL berhasil diterbitkan ke Halaman Web Publik!');
-        }
-
+        // ACC Registration
         function accPendaftaran(id) {
             const badge = document.getElementById(`badge-acc-${id}`);
             const btn = document.getElementById(`btn-acc-${id}`);
-            document.getElementById(`jadwal-${id}`).disabled = true;
-            document.getElementById(`meja-${id}`).disabled = true;
-
-            badge.className = 'bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]';
-            badge.innerText = 'TERJADWAL (ACC)';
-            
-            btn.className = 'bg-slate-300 text-slate-600 font-bold px-3 py-1.5 rounded-lg text-[11px] cursor-not-allowed';
-            btn.innerText = 'Disetujui';
-            btn.disabled = true;
-
-            alert('Jadwal berhasil disetujui (ACC) dan dikunci!');
+            if (badge) {
+                badge.className = "bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]";
+                badge.innerText = "ACC / Terjadwal";
+            }
+            if (btn) {
+                btn.className = "bg-slate-400 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] cursor-not-allowed";
+                btn.innerText = "Sudah ACC";
+                btn.disabled = true;
+            }
+            alert("Pendaftaran berhasil disetujui & jadwal dikonfirmasi!");
         }
 
+        // Send WhatsApp Schedule
         function sendWAJadwal(nama, phone, id) {
-            const jadwal = document.getElementById(`jadwal-${id}`).value;
-            const meja = document.getElementById(`meja-${id}`).value;
-            const message = `Halo *${nama}*,\n\nPendaftaran ujian/kursus Anda di UPA Bahasa POLNES telah di-ACC.\n\n*INFO LENGKAP SESI UJIAN:*\n🗓️ *Jadwal & Sesi:* ${jadwal}\n🖥️ *Lokasi & Nomor Meja:* ${meja}\n\nMohon datang 15 menit sebelum waktu ujian. Terima kasih.`;
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+            const jadwal = document.getElementById(`jadwal-${id}`)?.value || '';
+            const meja = document.getElementById(`meja-${id}`)?.value || '';
+            
+            const message = `Halo ${nama},\n\nPengajuan ujian/kursus Anda di UPA Bahasa POLNES telah DISETUJUIR.\n\n📅 Jadwal: ${jadwal}\n📍 Lokasi/Meja: ${meja}\n\nHarap hadir 15 menit sebelum sesi dimulai. Terima kasih!`;
+            
+            window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
+        // Update Complaint Tracking Status
         function updateStatusLaporan(id, status) {
             const tag = document.getElementById(`status-tag-${id}`);
-            if (status === 'Selesai') {
-                tag.className = 'bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]';
-                tag.innerText = 'Laporan Selesai Ditangani';
-                alert('Status laporan publik diperbarui menjadi: SELESAI');
-            } else {
-                tag.className = 'bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-[10px]';
-                tag.innerText = 'Laporan Sedang Diproses';
-                alert('Status laporan publik diperbarui menjadi: SEDANG DIPROSES');
+            if (tag) {
+                if (status === 'Selesai') {
+                    tag.className = "bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]";
+                    tag.innerText = "Selesai Ditangani";
+                } else {
+                    tag.className = "bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-[10px]";
+                    tag.innerText = "Sedang Diproses Staff";
+                }
             }
+            alert(`Status keluhan #${id} diperbarui menjadi: ${status}`);
         }
 
+        // Send WhatsApp Complaint Details
         function sendWALaporan(nama, phone, id) {
-            const statusTag = document.getElementById(`status-tag-${id}`).innerText;
-            const message = `Halo *${nama}*,\n\nBerikut adalah info perkembangan laporan kendala Anda di UPA Bahasa POLNES:\n\n*STATUS TERBARU:* ${statusTag}\n*DETAIL TINDAK LANJUT:* Koreksi pencetakan sertifikat telah diselesaikan oleh petugas. Silakan mengambil dokumen fisik di Gedung UPA Bahasa POLNES pada jam kerja.\n\nTerima kasih.`;
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+            const message = `Halo ${nama},\n\nTindak lanjut laporan kendala Anda di UPA Bahasa POLNES telah diproses.\n\nSilakan cek status terbaru secara berkala di portal web utama. Terima kasih!`;
+            
+            window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
+        // Preview News Image
         function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                document.getElementById('img-preview').src = reader.result;
-                document.getElementById('preview-container').classList.remove('hidden');
-            };
-            if(event.target.files[0]) {
-                reader.readAsDataURL(event.target.files[0]);
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('img-preview');
+                    img.src = e.target.result;
+                    document.getElementById('preview-container').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
             }
         }
 
+        // Publish News
         function publishBerita(e) {
             e.preventDefault();
-            alert('Berita narasi dan foto kegiatan berhasil diterbitkan ke Halaman Web Utama!');
-            document.getElementById('berita-judul').value = '';
-            document.getElementById('berita-isi').value = '';
-            document.getElementById('berita-foto-file').value = '';
+            const judul = document.getElementById('berita-judul').value;
+            alert(`Berita "${judul}" berhasil diterbitkan ke Web Utama!`);
+            e.target.reset();
             document.getElementById('preview-container').classList.add('hidden');
         }
     </script>
