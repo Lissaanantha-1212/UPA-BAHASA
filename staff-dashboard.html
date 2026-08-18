@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Operasional Staff - UPA Bahasa POLNES</title>
     <!-- Google Fonts & Tailwind CSS -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS CDN untuk membaca file .xlsx dan .xls -->
+    <!-- Library SheetJS & QRCode.js -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    fontFamily: { 
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Cinzel"', 'serif']
+                    },
                     colors: {
                         brand: {
                             50: '#f0fdf4',
@@ -27,11 +31,39 @@
             }
         }
     </script>
+    <style>
+        /* Sembunyikan elemen non-sertifikat saat mode Print/Cetak PDF */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #modal-sertifikat, #modal-sertifikat * {
+                visibility: visible;
+            }
+            #modal-sertifikat {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+        }
+    </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
 
     <!-- HEADER / NAVBAR STAFF -->
-    <header class="bg-brand-950 text-white py-3.5 px-6 border-b border-emerald-900 shadow-md sticky top-0 z-40">
+    <header class="bg-brand-950 text-white py-3.5 px-6 border-b border-emerald-900 shadow-md sticky top-0 z-40 no-print">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <div class="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-slate-950 font-black">
@@ -44,7 +76,7 @@
             </div>
 
             <div class="flex items-center gap-4 text-xs">
-                <span class="text-slate-200">Petugas: <strong id="user-display-name" class="text-amber-400">Staff</strong></span>
+                <span class="text-slate-200">Petugas: <strong id="user-display-name" class="text-amber-400">Staff UPA</strong></span>
                 <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-semibold transition text-[11px]">
                     Lihat Web Utama ↗
                 </a>
@@ -56,12 +88,15 @@
     </header>
 
     <!-- KONTEN UTAMA DASHBOARD STAFF -->
-    <main class="max-w-7xl mx-auto px-6 py-6 flex-1 w-full space-y-6">
+    <main class="max-w-7xl mx-auto px-6 py-6 flex-1 w-full space-y-6 no-print">
 
         <!-- TAB NAVIGASI MODUL STAFF -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
             <button onclick="switchTab('tab-excel')" id="btn-tab-excel" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-800 text-white transition">
                 📊 Upload Excel Hasil Ujian
+            </button>
+            <button onclick="switchTab('tab-sertifikat')" id="btn-tab-sertifikat" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                📜 Generator & Cetak Sertifikat
             </button>
             <button onclick="switchTab('tab-pendaftaran')" id="btn-tab-pendaftaran" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
                 📝 ACC & Jadwal Ujian/Kursus
@@ -103,7 +138,6 @@
                             </tr>
                         </thead>
                         <tbody id="excel-preview-body">
-                            <!-- Data Default -->
                             <tr class="border-b">
                                 <td class="p-3 text-slate-600">2107026001</td>
                                 <td class="p-3 font-semibold">Budi Santoso</td>
@@ -136,7 +170,55 @@
             </div>
         </div>
 
-        <!-- 2. MODUL ACC PENDAFTARAN & JADWAL + WA OTOMATIS -->
+        <!-- 2. MODUL GENERATOR & CETAK SERTIFIKAT (FITUR BARU) -->
+        <div id="tab-sertifikat" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">Daftar Kelulusan & Penerbitan Sertifikat (QR Code)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Pilih mahasiswa yang lulus untuk mencetak Sertifikat Resmi lengkap dengan QR Code Keabsahan.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-3 border-b">NIM</th>
+                                <th class="p-3 border-b">Nama Mahasiswa</th>
+                                <th class="p-3 border-b text-center">Skor TOEFL</th>
+                                <th class="p-3 border-b">No. Sertifikat</th>
+                                <th class="p-3 border-b text-center">Aksi Cetak</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sertifikat-table-body">
+                            <tr class="border-b">
+                                <td class="p-3 text-slate-600 font-mono">2107026001</td>
+                                <td class="p-3 font-semibold text-slate-900">Budi Santoso</td>
+                                <td class="p-3 text-center font-bold text-emerald-800">520</td>
+                                <td class="p-3 text-slate-500 font-mono">UPA-POLNES/2026/CERT-001</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="generateSertifikat('2107026001', 'Budi Santoso', '520', 'UPA-POLNES/2026/CERT-001', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                        📜 Lihat & Cetak Sertifikat
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 text-slate-600 font-mono">20611012</td>
+                                <td class="p-3 font-semibold text-slate-900">Rian Hidayat</td>
+                                <td class="p-3 text-center font-bold text-emerald-800">485</td>
+                                <td class="p-3 text-slate-500 font-mono">UPA-POLNES/2026/CERT-002</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="generateSertifikat('20611012', 'Rian Hidayat', '485', 'UPA-POLNES/2026/CERT-002', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                        📜 Lihat & Cetak Sertifikat
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. MODUL ACC PENDAFTARAN & JADWAL -->
         <div id="tab-pendaftaran" class="tab-content hidden space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                 <div>
@@ -187,7 +269,7 @@
             </div>
         </div>
 
-        <!-- 3. MODUL PENERIMAAN KELUAHAN & TRACKING STATUS + WA -->
+        <!-- 4. MODUL KELUAHAN -->
         <div id="tab-keluhan" class="tab-content hidden space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                 <div>
@@ -234,7 +316,7 @@
             </div>
         </div>
 
-        <!-- 4. MODUL KELOLA BERITA, NARASI & FOTO KEGIATAN -->
+        <!-- 5. MODUL BERITA -->
         <div id="tab-berita" class="tab-content hidden space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                 <div>
@@ -257,7 +339,6 @@
                         <label class="font-semibold text-slate-700 block mb-1">Upload File Foto Kegiatan</label>
                         <input type="file" id="berita-foto-file" accept="image/*" required onchange="previewImage(event)" class="w-full p-2 border border-slate-200 rounded-lg bg-slate-50 text-xs">
                         
-                        <!-- Preview Foto -->
                         <div id="preview-container" class="mt-2 hidden">
                             <p class="text-[10px] text-slate-500 mb-1">Preview Foto Upload:</p>
                             <img id="img-preview" src="#" alt="Preview Foto" class="h-32 object-cover rounded-lg border border-slate-300">
@@ -273,9 +354,76 @@
 
     </main>
 
-    <!-- SCRIPT LOGIKA UTUH WORKFLOW STAFF -->
+    <!-- MODAL / TEMPLATE SERTIFIKAT RESMI BER-QR CODE -->
+    <div id="modal-sertifikat" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-2xl max-w-4xl w-full border-8 border-double border-amber-600 shadow-2xl relative text-center space-y-6">
+            
+            <!-- Tombol Tutup & Cetak (Sembunyi saat diprint) -->
+            <div class="absolute top-4 right-4 flex gap-2 no-print">
+                <button onclick="window.print()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1 shadow">
+                    🖨️ Cetak / Download PDF
+                </button>
+                <button onclick="closeModalSertifikat()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2 rounded-lg text-xs">
+                    ✕ Tutup
+                </button>
+            </div>
+
+            <!-- HEADER SERTIFIKAT -->
+            <div class="border-b-2 border-amber-500 pb-4">
+                <h2 class="font-serif text-2xl font-black text-amber-800 tracking-wider">POLITEKNIK NEGERI SAMARINDA</h2>
+                <h3 class="font-semibold text-xs tracking-widest text-slate-600 uppercase mt-0.5">Unit Pelaksana Akademis (UPA) Bahasa</h3>
+                <p class="text-[10px] text-slate-400 mt-1">Jl. Cipto Mangunkusumo Kampus Gunung Lipan, Samarinda</p>
+            </div>
+
+            <!-- JUDUL UTAMA -->
+            <div class="space-y-1">
+                <h1 class="font-serif text-3xl font-extrabold text-slate-900 tracking-wide uppercase">Certificate of Achievement</h1>
+                <p class="text-xs text-amber-700 font-bold tracking-widest uppercase">TOEFL EQUIVALENT TEST</p>
+                <p class="text-[11px] text-slate-400 font-mono mt-1" id="cert-number">No: UPA-POLNES/2026/CERT-001</p>
+            </div>
+
+            <!-- ISI NAMA MAHASISWA -->
+            <div class="py-2 space-y-1">
+                <p class="text-xs text-slate-500 italic">This is to certify that</p>
+                <h2 id="cert-nama" class="font-serif text-2xl font-bold text-brand-950 underline decoration-amber-500 underline-offset-8">BUDI SANTOSO</h2>
+                <p class="text-xs text-slate-600 font-mono mt-1">NIM: <span id="cert-nim">2107026001</span></p>
+            </div>
+
+            <!-- SKOR & PENJELASAN -->
+            <div class="bg-amber-50/60 p-3 rounded-xl border border-amber-200 inline-block px-8">
+                <p class="text-xs text-slate-600">Has successfully achieved a total score of:</p>
+                <p id="cert-score" class="font-serif text-3xl font-black text-brand-900 my-0.5">520</p>
+                <p class="text-[10px] text-emerald-800 font-bold uppercase">Status: PASSED / LULUS</p>
+            </div>
+
+            <!-- TANDA TANGAN & QR CODE KEABSAHAN -->
+            <div class="flex justify-between items-end pt-4 border-t border-slate-200">
+                <!-- QR CODE VERIFIKASI -->
+                <div class="text-left space-y-1">
+                    <div id="qrcode" class="p-1.5 bg-white border border-slate-300 rounded-lg inline-block"></div>
+                    <p class="text-[9px] text-slate-500 font-semibold max-w-[140px] leading-tight">
+                        Scan QR Code di atas untuk memverifikasi keabsahan sertifikat secara online.
+                    </p>
+                </div>
+
+                <!-- TANGGAL & TTDA HEAD OF UPA BAHASA -->
+                <div class="text-center space-y-1">
+                    <p class="text-xs text-slate-600">Samarinda, <span id="cert-date">18 Agustus 2026</span></p>
+                    <p class="text-[11px] font-bold text-slate-800">Kepala UPA Bahasa POLNES,</p>
+                    <div class="h-12 flex items-center justify-center">
+                        <span class="font-serif italic text-slate-400 text-xs">[ Tanda Tangan Digital ]</span>
+                    </div>
+                    <p class="text-xs font-bold text-slate-900 underline">Dr. H. Ahmad Dahlan, M.Hum.</p>
+                    <p class="text-[10px] text-slate-500">NIP. 19750812 200112 1 002</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIKA WORKFLOW STAFF -->
     <script>
-        // 1. Tab Switcher
+        // Tab Switcher
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -289,7 +437,7 @@
             activeBtn.classList.add('bg-brand-800', 'text-white');
         }
 
-        // 2. Upload & Parsing CSV/Excel Serbaguna + Penambahan Baris Dinamis ke Tabel
+        // Upload Excel/CSV Fleksibel
         function processExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -317,6 +465,7 @@
                 }
 
                 const tbody = document.getElementById('excel-preview-body');
+                const certBody = document.getElementById('sertifikat-table-body');
                 let addedCount = 0;
 
                 rows.forEach((cols, idx) => {
@@ -334,6 +483,7 @@
                         const totalScore = Math.round(((l + s + r) / 120) * 490 + 210);
                         const isLulus = totalScore >= 450;
 
+                        // Tambah ke tabel Excel Preview
                         const rowHtml = `
                             <tr class="border-b bg-emerald-50/30 transition">
                                 <td class="p-3 text-slate-600">${nim}</td>
@@ -349,6 +499,26 @@
                             </tr>
                         `;
                         tbody.insertAdjacentHTML('beforeend', rowHtml);
+
+                        // Jika lulus, otomatis tambahkan juga ke modul Cetak Sertifikat
+                        if (isLulus) {
+                            const certNo = `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}`;
+                            const certRow = `
+                                <tr class="border-b">
+                                    <td class="p-3 text-slate-600 font-mono">${nim}</td>
+                                    <td class="p-3 font-semibold text-slate-900">${nama}</td>
+                                    <td class="p-3 text-center font-bold text-emerald-800">${totalScore}</td>
+                                    <td class="p-3 text-slate-500 font-mono">${certNo}</td>
+                                    <td class="p-3 text-center">
+                                        <button onclick="generateSertifikat('${nim}', '${nama}', '${totalScore}', '${certNo}', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                            📜 Lihat & Cetak Sertifikat
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                            certBody.insertAdjacentHTML('beforeend', certRow);
+                        }
+
                         addedCount++;
                     }
                 });
@@ -363,16 +533,45 @@
             }
         }
 
+        // GENERATOR SERTIFIKAT + GENERATE QR CODE DINAMIS
+        function generateSertifikat(nim, nama, score, noCert, dateStr) {
+            document.getElementById('cert-nim').innerText = nim;
+            document.getElementById('cert-nama').innerText = nama.toUpperCase();
+            document.getElementById('cert-score').innerText = score;
+            document.getElementById('cert-number').innerText = `No: ${noCert}`;
+            document.getElementById('cert-date').innerText = dateStr;
+
+            // Generate QR Code mengarah ke URL Validasi
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = ''; // Bersihkan QR lama
+            const verifyUrl = `https://upa-bahasa.vercel.app/verify.html?nim=${nim}`;
+            
+            new QRCode(qrContainer, {
+                text: verifyUrl,
+                width: 90,
+                height: 90,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            // Tampilkan Modal Sertifikat
+            document.getElementById('modal-sertifikat').classList.remove('hidden');
+        }
+
+        function closeModalSertifikat() {
+            document.getElementById('modal-sertifikat').classList.add('hidden');
+        }
+
         function publishToWeb() {
             alert('Seluruh data hasil kalkulasi TOEFL berhasil diterbitkan ke Halaman Web Publik!');
         }
 
-        // 3. ACC Pendaftaran
         function accPendaftaran(id) {
             const badge = document.getElementById(`badge-acc-${id}`);
             const btn = document.getElementById(`btn-acc-${id}`);
-            const inputJadwal = document.getElementById(`jadwal-${id}`);
-            const inputMeja = document.getElementById(`meja-${id}`);
+            document.getElementById(`jadwal-${id}`).disabled = true;
+            document.getElementById(`meja-${id}`).disabled = true;
 
             badge.className = 'bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]';
             badge.innerText = 'TERJADWAL (ACC)';
@@ -381,23 +580,16 @@
             btn.innerText = 'Disetujui';
             btn.disabled = true;
 
-            inputJadwal.disabled = true;
-            inputMeja.disabled = true;
-
             alert('Jadwal berhasil disetujui (ACC) dan dikunci!');
         }
 
-        // 4. WA Otomatis Sesi Ujian
         function sendWAJadwal(nama, phone, id) {
             const jadwal = document.getElementById(`jadwal-${id}`).value;
             const meja = document.getElementById(`meja-${id}`).value;
-            
             const message = `Halo *${nama}*,\n\nPendaftaran ujian/kursus Anda di UPA Bahasa POLNES telah di-ACC.\n\n*INFO LENGKAP SESI UJIAN:*\n🗓️ *Jadwal & Sesi:* ${jadwal}\n🖥️ *Lokasi & Nomor Meja:* ${meja}\n\nMohon datang 15 menit sebelum waktu ujian. Terima kasih.`;
-            
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // 5. Update Status Laporan Keluhan
         function updateStatusLaporan(id, status) {
             const tag = document.getElementById(`status-tag-${id}`);
             if (status === 'Selesai') {
@@ -411,21 +603,16 @@
             }
         }
 
-        // 6. WA Otomatis Detail Laporan Keluhan
         function sendWALaporan(nama, phone, id) {
             const statusTag = document.getElementById(`status-tag-${id}`).innerText;
-            
             const message = `Halo *${nama}*,\n\nBerikut adalah info perkembangan laporan kendala Anda di UPA Bahasa POLNES:\n\n*STATUS TERBARU:* ${statusTag}\n*DETAIL TINDAK LANJUT:* Koreksi pencetakan sertifikat telah diselesaikan oleh petugas. Silakan mengambil dokumen fisik di Gedung UPA Bahasa POLNES pada jam kerja.\n\nTerima kasih.`;
-            
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // 7. Preview & Upload Foto Berita
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function() {
-                const output = document.getElementById('img-preview');
-                output.src = reader.result;
+                document.getElementById('img-preview').src = reader.result;
                 document.getElementById('preview-container').classList.remove('hidden');
             };
             if(event.target.files[0]) {
