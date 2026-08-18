@@ -57,9 +57,11 @@
             border-radius: 9999px;
         }
         .hero-bg {
-            background-image: linear-gradient(to bottom, rgba(5, 46, 22, 0.75), rgba(20, 83, 45, 0.85)), url('assets/img/gedung-polnes.jpg');
-            background-size: cover;
-            background-position: center;
+            /* Latar belakang diubah menggunakan file foto polnes.jpg dengan overlay gradasi agar teks terbaca jelas */
+            background-image: linear-gradient(to bottom, rgba(5, 46, 22, 0.75), rgba(20, 83, 45, 0.85)), url('assets/img/polnes.jpg');
+            background-size: cover;          /* Agar gambar pas menutupi area tanpa gepeng/tarik */
+            background-position: center;     /* Memposisikan gambar tepat di tengah */
+            background-repeat: no-repeat;    /* Mencegah gambar berulang */
         }
         .card-academic {
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -102,7 +104,7 @@
             
             <div class="flex items-center space-x-3.5 cursor-pointer group" onclick="showPage('beranda', 'Beranda', 'nav-beranda')">
                 <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center p-1 border-2 border-amber-400/80 shadow-md group-hover:scale-105 transition-transform duration-300">
-                    <img src="assets/img/logo-polnes.png" alt="Logo Polnes" class="w-full h-full object-contain">
+                    <img src="assets/img/logo.png" alt="Logo Polnes" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <h1 class="text-xl font-black text-brand-950 tracking-tight leading-none group-hover:text-brand-800 transition">UPA BAHASA</h1>
@@ -180,8 +182,8 @@
                     <button onclick="showPage('cek-skor', 'Cek Skor TOEFL Mahasiswa', 'nav-skor')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded-lg shadow-md active:scale-95 transition-all text-xs">
                         Cek Skor TOEFL
                     </button>
-                    <button onclick="showPage('cek-sertifikat', 'Cek Sertifikat TOEFL (Semester 5+)', 'nav-sertifikat')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg shadow-md active:scale-95 transition-all text-xs border border-emerald-500">
-                        Cek Sertifikat (Smtr 5+)
+                    <button onclick="showPage('cek-sertifikat', 'Cek Sertifikat TOEFL', 'nav-sertifikat')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg shadow-md active:scale-95 transition-all text-xs border border-emerald-500">
+                        Cek Sertifikat 
                     </button>
                 </div>
             </div>
