@@ -57,7 +57,6 @@
             border-radius: 9999px;
         }
         .hero-bg {
-            /* Menggunakan gambar gedung Polnes sesuai permintaan */
             background-image: linear-gradient(to bottom, rgba(5, 46, 22, 0.75), rgba(20, 83, 45, 0.85)), url('assets/img/gedung-polnes.jpg');
             background-size: cover;
             background-position: center;
@@ -102,7 +101,6 @@
         <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
             
             <div class="flex items-center space-x-3.5 cursor-pointer group" onclick="showPage('beranda', 'Beranda', 'nav-beranda')">
-                <!-- Logo Polnes (Ganti huruf P dengan tag gambar. Pastikan file logo-polnes.png tersedia di folder assets/img/) -->
                 <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center p-1 border-2 border-amber-400/80 shadow-md group-hover:scale-105 transition-transform duration-300">
                     <img src="assets/img/logo-polnes.png" alt="Logo Polnes" class="w-full h-full object-contain">
                 </div>
@@ -150,7 +148,7 @@
                     Cek Sertifikat
                 </button>
 
-                <!-- Dropdown: Lainnya (Berita & Galeri) -->
+                <!-- Dropdown: Lainnya -->
                 <div class="relative group">
                     <button id="nav-lainnya" class="nav-btn py-2 hover:text-brand-800 transition flex items-center gap-1 uppercase tracking-wider">
                         Lainnya <span class="text-[9px] opacity-60">▾</span>
@@ -168,7 +166,7 @@
         </div>
     </header>
 
-    <!-- HALAMAN BERANDA PUBLIK (DIPERPANJANG DENGAN BERITA & MAPS POLNES) -->
+    <!-- HALAMAN BERANDA PUBLIK -->
     <div id="page-beranda" class="page-content flex-1 flex flex-col">
         <section class="relative hero-bg text-white flex items-center justify-center py-20 sm:py-28">
             <div class="relative max-w-3xl mx-auto px-6 text-center z-10">
@@ -256,17 +254,18 @@
             </div>
         </section>
 
-        <!-- Lokasi Maps Kampus Polnes di Beranda -->
-        <section class="bg-slate-100 py-12 border-t border-slate-200 mt-auto">
-            <div class="max-w-7xl mx-auto px-6 space-y-6">
+        <!-- Lokasi Maps Kampus Polnes (Compact / Proporsional) -->
+        <section class="bg-slate-100 py-10 border-t border-slate-200 mt-auto">
+            <div class="max-w-4xl mx-auto px-6 space-y-4 text-center">
                 <div>
                     <span class="text-[10px] font-extrabold text-brand-700 uppercase tracking-widest">Peta Lokasi</span>
-                    <h3 class="text-xl font-extrabold text-brand-950">Lokasi Kampus UPA Bahasa POLNES</h3>
+                    <h3 class="text-lg font-extrabold text-brand-950">Lokasi Kampus UPA Bahasa POLNES</h3>
                     <p class="text-xs text-slate-500 mt-0.5">Jl. Cipto Mangunkusumo, Kecamatan Samarinda Seberang, Kota Samarinda, Kalimantan Timur 75131</p>
                 </div>
-                <div class="rounded-2xl overflow-hidden border border-slate-300 shadow-sm h-80 w-full bg-slate-200">
+                
+                <div class="max-w-lg mx-auto rounded-2xl overflow-hidden border border-slate-300 shadow-sm h-64 bg-slate-200 text-left">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.66440266299!2d117.118557!3d-0.528345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df67e0e7a79e497%3A0x6b8015c9a75949a2!2sPoliteknik%20Negeri%20Samarinda!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1994.832201331495!2d117.118557!3d-0.528345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df67e0e7a79e497%3A0x6b8015c9a75949a2!2sPoliteknik%20Negeri%20Samarinda!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid" 
                         width="100%" 
                         height="100%" 
                         style="border:0;" 
@@ -491,7 +490,6 @@
                         </button>
                     </div>
 
-                    <!-- RINGKASAN PREDIKSI & UNGGULAN -->
                     <div id="analisis-summary-card" class="grid sm:grid-cols-3 gap-4">
                         <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-1">
                             <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Prodi Paling Unggul</span>
@@ -510,7 +508,6 @@
                         </div>
                     </div>
 
-                    <!-- GRAFIK COMPARISON -->
                     <div class="grid md:grid-cols-2 gap-6 pt-4">
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                             <h4 class="font-bold text-slate-800 mb-3 text-center">Rata-Rata Skor TOEFL per Program Studi</h4>
