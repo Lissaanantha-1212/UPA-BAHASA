@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Keabsahan Sertifikat - UPA Bahasa POLNES</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-100 font-['Plus_Jakarta_Sans'] min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+        <!-- Header status -->
+        <div class="bg-emerald-600 text-white p-6 text-center">
+            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl">
+                ✓
+            </div>
+            <h1 class="text-xl font-extrabold tracking-wide">SERTIFIKAT VALID & TERDAFTAR</h1>
+            <p class="text-xs text-emerald-100 mt-1">Sistem Verifikasi Digital UPA Bahasa POLNES</p>
+        </div>
+
+        <!-- Detail sertifikat hasil scan -->
+        <div class="p-6 space-y-4 text-sm">
+            <div class="border-b pb-3">
+                <p class="text-xs text-slate-400">Nama Pemilik Sertifikat</p>
+                <p class="font-bold text-slate-800 text-base" id="val-nama">Budi Santoso</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 border-b pb-3">
+                <div>
+                    <p class="text-xs text-slate-400">NIM</p>
+                    <p class="font-bold text-slate-800" id="val-nim">2107026001</p>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400">Skor TOEFL</p>
+                    <p class="font-bold text-emerald-700 text-base" id="val-skor">520</p>
+                </div>
+            </div>
+
+            <div class="border-b pb-3">
+                <p class="text-xs text-slate-400">Nomor Registrasi Sertifikat</p>
+                <p class="font-mono font-semibold text-slate-700 text-xs" id="val-nocert">UPA-POLNES/2026/CERT-001</p>
+            </div>
+
+            <div class="border-b pb-3">
+                <p class="text-xs text-slate-400">Tanggal Diterbitkan</p>
+                <p class="font-semibold text-slate-700">18 Agustus 2026</p>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl text-center">
+                <p class="text-[11px] text-emerald-800 font-medium">
+                    Dokumen ini dinyatakan **ASLI** dan diterbitkan secara resmi oleh Unit Pelaksana Akademis (UPA) Bahasa Politeknik Negeri Samarinda.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 px-6 py-4 text-center border-t border-slate-100">
+            <a href="index.html" class="text-xs font-bold text-emerald-700 hover:underline">← Kembali ke Web Utama UPA Bahasa</a>
+        </div>
+    </div>
+
+    <script>
+        // Membaca parameter ?nim=... dari URL QR Code
+        const urlParams = new URLSearchParams(window.location.search);
+        const nimParam = urlParams.get('nim');
+
+        if (nimParam) {
+            document.getElementById('val-nim').innerText = nimParam;
+            
+            // Simulasi pencocokan data sederhana berdasarkan NIM
+            if (nimParam === '20611012') {
+                document.getElementById('val-nama').innerText = 'Rian Hidayat';
+                document.getElementById('val-skor').innerText = '485';
+                document.getElementById('val-nocert').innerText = 'UPA-POLNES/2026/CERT-002';
+            }
+        }
+    </script>
+</body>
+</html>
