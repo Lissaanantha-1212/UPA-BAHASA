@@ -7,7 +7,7 @@
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -16,6 +16,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Cinzel"', 'serif']
                     },
                     colors: {
                         brand: {
@@ -59,6 +60,15 @@
             background-image: linear-gradient(to bottom, rgba(5, 46, 22, 0.70), rgba(20, 83, 45, 0.80)), url('https://images.unsplash.com/photo-1562774053-701939374585?w=1600&auto=format&fit=crop&q=80');
             background-size: cover;
             background-position: center;
+        }
+        /* Efek Timbul 3D untuk Kartu Instruktur */
+        .card-3d {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+        .card-3d:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 35px -10px rgba(21, 128, 61, 0.25), 0 10px 15px -5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -116,7 +126,7 @@
                         Tentang Kami <span class="text-[9px] opacity-60">▾</span>
                     </button>
                     <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white border border-slate-100 rounded-2xl shadow-xl py-3 z-50 transition-all duration-200">
-                        <button onclick="showPage('struktur-organisasi', 'Struktur Tim UPA Bahasa', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Struktur Organisasi UPA Bahasa</button>
+                        <button onclick="showPage('struktur-organisasi', 'Struktur Organisasi UPA Bahasa', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Struktur Organisasi UPA Bahasa</button>
                         <button onclick="showPage('sejarah-profil', 'Sejarah & Profil', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Sejarah & Profil</button>
                         <button onclick="showPage('visi-misi', 'Visi & Misi', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Visi & Misi</button>
                         <button onclick="showPage('tujuan-fungsi', 'Tujuan dan Fungsi', 'nav-tentang')" class="w-full text-left px-5 py-2.5 text-xs text-slate-700 hover:bg-emerald-50 hover:text-brand-800 font-semibold transition">Tujuan dan Fungsi</button>
@@ -217,34 +227,140 @@
         </div>
 
         <div class="space-y-6">
-            <div id="page-struktur-organisasi" class="page-item hidden space-y-6">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <h3 class="text-base font-bold text-brand-950 mb-0.5">Struktur Tim UPA Bahasa</h3>
-                    <p class="text-xs text-slate-500">Daftar staf pengajar dan teknisi kebahasaan POLNES.</p>
+            <!-- REVISI: PAGE STRUKTUR ORGANISASI (KARTU TIMBUL 3D INSTRUKTUR) -->
+            <div id="page-struktur-organisasi" class="page-item hidden space-y-8">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm text-center max-w-2xl mx-auto">
+                    <span class="bg-emerald-100 text-brand-800 font-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Tim Pengajar & Pengelola</span>
+                    <h3 class="text-xl font-black text-brand-950 mt-2 font-serif">Instruktur & Staff UPA Bahasa POLNES</h3>
+                    <p class="text-xs text-slate-500 mt-1">Tenaga pendidik dan teknisi profesional pendukung kegiatan sertifikasi kebahasaan.</p>
                 </div>
-                <div id="staff-grid-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5"></div>
-            </div>
 
-            <div id="page-visi-misi" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 text-xs">
-                <div>
-                    <span class="text-amber-700 font-bold text-[10px] tracking-wider uppercase bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200">VISI</span>
-                    <p class="text-base font-bold text-brand-950 mt-2">
-                        "Menjadi pusat layanan kebahasaan yang unggul, berstandar internasional, dan mendukung daya saing lulusan POLNES."
-                    </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                    <!-- KARTU 1 -->
+                    <div class="card-3d bg-white rounded-2xl overflow-hidden border border-slate-200 flex flex-col justify-between">
+                        <div class="relative bg-gradient-to-b from-amber-600 to-brand-950 h-60 flex items-end justify-center overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400" alt="Instruktur" class="h-full object-cover">
+                        </div>
+                        <div class="p-4 bg-brand-950 text-white text-center space-y-1 flex-1 flex flex-col justify-center">
+                            <h4 class="font-bold text-xs text-amber-400">Muhammad Rafiq, S.E.</h4>
+                            <p class="text-[10px] text-emerald-300 font-medium">ADMINISTRASI & OPERASIONAL</p>
+                            <p class="text-[9px] text-slate-400">Part of the team since 2018</p>
+                        </div>
+                    </div>
+
+                    <!-- KARTU 2 -->
+                    <div class="card-3d bg-white rounded-2xl overflow-hidden border border-slate-200 flex flex-col justify-between">
+                        <div class="relative bg-gradient-to-b from-emerald-700 to-brand-950 h-60 flex items-end justify-center overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" alt="Instruktur" class="h-full object-cover">
+                        </div>
+                        <div class="p-4 bg-brand-950 text-white text-center space-y-1 flex-1 flex flex-col justify-center">
+                            <h4 class="font-bold text-xs text-amber-400">Luqman Hakim, S.S., M.Hum.</h4>
+                            <p class="text-[10px] text-emerald-300 font-medium">INSTRUKTUR UPA BAHASA</p>
+                            <p class="text-[9px] text-slate-400">Pengajar Senior TOEFL & Grammar</p>
+                        </div>
+                    </div>
+
+                    <!-- KARTU 3 -->
+                    <div class="card-3d bg-white rounded-2xl overflow-hidden border border-slate-200 flex flex-col justify-between">
+                        <div class="relative bg-gradient-to-b from-emerald-800 to-brand-950 h-60 flex items-end justify-center overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400" alt="Instruktur" class="h-full object-cover">
+                        </div>
+                        <div class="p-4 bg-brand-950 text-white text-center space-y-1 flex-1 flex flex-col justify-center">
+                            <h4 class="font-bold text-xs text-amber-400">Bagus Gentur Susetyo, M.Pd.</h4>
+                            <p class="text-[10px] text-emerald-300 font-medium">INSTRUKTUR UPA BAHASA</p>
+                            <p class="text-[9px] text-slate-400">Spesialis Listening & Speaking</p>
+                        </div>
+                    </div>
+
+                    <!-- KARTU 4 -->
+                    <div class="card-3d bg-white rounded-2xl overflow-hidden border border-slate-200 flex flex-col justify-between">
+                        <div class="relative bg-gradient-to-b from-brand-800 to-slate-900 h-60 flex items-end justify-center overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400" alt="Instruktur" class="h-full object-cover">
+                        </div>
+                        <div class="p-4 bg-brand-950 text-white text-center space-y-1 flex-1 flex flex-col justify-center">
+                            <h4 class="font-bold text-xs text-amber-400">Aditya Chandra Nugroho, M.Pd.</h4>
+                            <p class="text-[10px] text-emerald-300 font-medium">INSTRUKTUR UPA BAHASA</p>
+                            <p class="text-[9px] text-slate-400">Spesialis Reading Comprehension</p>
+                        </div>
+                    </div>
+
+                    <!-- KARTU 5 -->
+                    <div class="card-3d bg-white rounded-2xl overflow-hidden border border-slate-200 flex flex-col justify-between">
+                        <div class="relative bg-gradient-to-b from-slate-700 to-brand-950 h-60 flex items-end justify-center overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400" alt="Instruktur" class="h-full object-cover">
+                        </div>
+                        <div class="p-4 bg-brand-950 text-white text-center space-y-1 flex-1 flex flex-col justify-center">
+                            <h4 class="font-bold text-xs text-amber-400">Panji Alen Syahputra, M.Pd.</h4>
+                            <p class="text-[10px] text-emerald-300 font-medium">INSTRUKTUR UPA BAHASA</p>
+                            <p class="text-[9px] text-slate-400">Pengajar Kursus Intensif</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="page-sejarah-profil" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-3 text-xs text-slate-700">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Sejarah & Profil</h3>
-                <p>UPA Bahasa POLNES didirikan untuk mendukung keterampilan kebahasaan civitas akademika melalui pengujian TOEFL dan pelatihan bahasa asing.</p>
+            <!-- REVISI: PAGE VISI & MISI -->
+            <div id="page-visi-misi" class="page-item hidden space-y-6">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-gradient-to-br from-brand-950 to-brand-900 text-white p-6 rounded-2xl border border-emerald-800 space-y-3 shadow-md">
+                        <div class="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center text-slate-950 font-black text-lg">👁️</div>
+                        <h3 class="text-lg font-bold font-serif text-amber-400">Visi UPA Bahasa</h3>
+                        <p class="text-xs text-slate-200 leading-relaxed">
+                            "Menjadi pusat layanan dan pengembangan bahasa unggulan yang profesional, terpercaya, serta berstandar Internasional dalam mendukung daya saing lulusan Vokasi Politeknik Negeri Samarinda."
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-3 shadow-sm">
+                        <div class="w-10 h-10 bg-brand-800 text-white rounded-xl flex items-center justify-center font-black text-lg">🎯</div>
+                        <h3 class="text-lg font-bold font-serif text-brand-950">Misi UPA Bahasa</h3>
+                        <ul class="text-xs text-slate-600 space-y-2 list-disc pl-4">
+                            <li>Menyelenggarakan ujian standardisasi bahasa asing (TOEFL/IELTS Equivalent) yang transparan, akuntabel, dan berbasis teknologi.</li>
+                            <li>Menyediakan program kursus dan pelatihan intensif untuk meningkatkan kemahiran berkomunikasi civitas akademika.</li>
+                            <li>Memberikan layanan penerjemahan dan penyuntingan dokumen akademis yang akurat dan tepat waktu.</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
-            <div id="page-tujuan-fungsi" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-3">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Tujuan dan Fungsi</h3>
-                <ul class="list-disc pl-4 space-y-2 text-slate-700 font-medium">
-                    <li>Penyelenggaraan tes TOEFL ITP terstandar.</li>
-                    <li>Pelatihan Bahasa Inggris dan Mandarin.</li>
-                </ul>
+            <!-- REVISI: PAGE SEJARAH & PROFIL -->
+            <div id="page-sejarah-profil" class="page-item hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-xs text-slate-700">
+                <div class="border-b pb-3">
+                    <span class="bg-emerald-100 text-brand-900 font-bold px-2.5 py-0.5 rounded text-[10px] uppercase">Profil Lembaga</span>
+                    <h3 class="text-lg font-bold text-brand-950 mt-1 font-serif">Sejarah & Perkembangan UPA Bahasa POLNES</h3>
+                </div>
+                <p class="leading-relaxed">
+                    Unit Pelaksana Akademis (UPA) Bahasa Politeknik Negeri Samarinda berdiri sebagai sarana pendukung utama dalam peningkatan kualitas sumber daya manusia dan lulusan Vokasi agar mampu bersaing di tingkat nasional maupun internasional.
+                </p>
+                <p class="leading-relaxed">
+                    Seiring berkembangnya kebutuhan industri global, UPA Bahasa POLNES memfasilitasi sertifikasi kemampuan bahasa asing (khususnya TOEFL Equivalent Test), pelatihan/kursus remedial, serta layanan penerjemahan dokumen resmi bagi civitas akademika dan masyarakat umum.
+                </p>
+            </div>
+
+            <!-- REVISI: PAGE TUJUAN & FUNGSI -->
+            <div id="page-tujuan-fungsi" class="page-item hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-bold text-brand-950 border-b pb-2 font-serif">Tujuan dan Fungsi UPA Bahasa</h3>
+                    <p class="text-xs text-slate-500 mt-2">Tugas pokok dan fungsi operasional UPA Bahasa POLNES meliputi:</p>
+                </div>
+
+                <div class="grid sm:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-2 shadow-sm">
+                        <div class="text-2xl">📝</div>
+                        <h4 class="font-bold text-brand-950">Standardisasi Nilai Ujian</h4>
+                        <p class="text-slate-500 leading-relaxed">Menyediakan media pengujian TOEFL terpadu sebagai syarat kelulusan Diploma dan Sarjana Terapan POLNES.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-2 shadow-sm">
+                        <div class="text-2xl">🎓</div>
+                        <h4 class="font-bold text-brand-950">Pelatihan & Remedial</h4>
+                        <p class="text-slate-500 leading-relaxed">Menyelenggarakan kelas perbaikan dan pengayaan kemampuan Bahasa Inggris secara berkala untuk mahasiswa.</p>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-2 shadow-sm">
+                        <div class="text-2xl">🌐</div>
+                        <h4 class="font-bold text-brand-950">Layanan Penerjemahan</h4>
+                        <p class="text-slate-500 leading-relaxed">Memfasilitasi terjemahan abstrak, jurnal, dan dokumen ijazah/transkrip nilai civitas akademika.</p>
+                    </div>
+                </div>
             </div>
 
             <div id="page-layanan-analisis" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
@@ -387,12 +503,8 @@
         // FUNGSI LOGOUT AMAN: Hanya hapus sesi user, data upload TETAP AMAN!
         function handleLogout() {
             if (confirm("Apakah Anda yakin ingin keluar dari akun?")) {
-                // Hapus akun sesi dari Local/Session Storage
                 localStorage.removeItem('user_session');
                 sessionStorage.removeItem('user_session');
-
-                // JANGAN PERNAH panggil localStorage.clear() agar data upload Excel/Sertifikat tidak terhapus!
-
                 updateAuthUI(null);
                 window.location.href = 'index.html';
             }
