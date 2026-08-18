@@ -390,6 +390,8 @@
                 if (typeof clearSession === 'function') {
                     clearSession();
                 } else {
+                    localStorage.removeItem('user_session');
+                    sessionStorage.removeItem('user_session');
                     localStorage.clear();
                     sessionStorage.clear();
                 }
@@ -572,6 +574,11 @@
             let user = null;
             if (typeof getSession === 'function') {
                 user = getSession();
+            } else {
+                const stored = localStorage.getItem('user_session') || sessionStorage.getItem('user_session');
+                if (stored) {
+                    try { user = JSON.parse(stored); } catch (e) {}
+                }
             }
             updateAuthUI(user);
         });

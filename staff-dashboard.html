@@ -55,11 +55,11 @@
             </div>
 
             <div class="flex items-center gap-4 text-xs">
-                <span class="text-slate-200">Petugas: <strong id="user-display-name" class="text-amber-400">Staff UPA</strong></span>
+                <span class="text-slate-200">Petugas: <strong id="user-display-name" class="text-amber-400">lissa [Staff]</strong></span>
                 <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-semibold transition text-[11px]">
                     Lihat Web Utama ↗
                 </a>
-                <!-- PROSES LOGOUT LANGSUNG 1 KALI KLIK -->
+                <!-- LOGOUT HARUS LANGSUNG MEMBERSIHKAN SESSION -->
                 <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-lg font-bold transition">
                     Logout
                 </button>
@@ -338,7 +338,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT LOGIKA PERMANENT STORAGE & ONETIME LOGOUT -->
+    <!-- SCRIPT LOGIKA DASHBOARD & CLEAN LOGOUT -->
     <script>
         let currentFolder = {
             jurusan: 'Teknologi Informasi',
@@ -346,14 +346,16 @@
             kelas: null
         };
 
-        // FUNGSI LOGOUT YANG BENAR: Hapus session pengguna tanpa menghapus database Excel
+        // FUNGSI LOGOUT DIPERBAIKI: Hapus seluruh key auth tanpa merusak DB Excel
         function handleLogout() {
             localStorage.removeItem('user_session');
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('currentUser');
             localStorage.removeItem('upa_user');
-            
-            // Langsung dialihkan ke web umum
+            localStorage.removeItem('logged_in_user');
+            localStorage.removeItem('role');
+
+            // Pengalihan otomatis ke index.html
             window.location.href = 'index.html';
         }
 
