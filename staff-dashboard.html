@@ -4,234 +4,370 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Operasional Staff - UPA Bahasa POLNES</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Google Fonts & Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- QRCode.js CDN untuk membuat QR Code dinamis -->
+    <!-- Library SheetJS & QRCode.js -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
-    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Cinzel"', 'serif']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* CSS KHUSUS SAAT DICETAK ATAU DIUNDUH SEBAGAI PDF */
+        /* Sembunyikan elemen non-sertifikat saat mode Print/Cetak PDF */
         @media print {
             body * {
-                visibility: hidden !important;
+                visibility: hidden;
             }
             #modal-sertifikat, #modal-sertifikat * {
-                visibility: visible !important;
+                visibility: visible;
+            }
+            #modal-sertifikat {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
             }
             .no-print {
                 display: none !important;
             }
-            #modal-sertifikat {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                overflow: visible !important;
-            }
-            .cert-paper {
-                box-shadow: none !important;
-                border-width: 6px !important;
-                margin: 0 auto !important;
-                page-break-inside: avoid;
+            @page {
+                size: A4 landscape;
+                margin: 0;
             }
         }
     </style>
 </head>
-<body class="bg-slate-100 font-['Plus_Jakarta_Sans'] antialiased min-h-screen flex flex-col">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- NAVBAR TOPBAR -->
-    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-emerald-600 rounded-xl flex items-center justify-center font-bold text-lg shadow-md">
-                    U
+    <!-- HEADER / NAVBAR STAFF -->
+    <header class="bg-brand-950 text-white py-3.5 px-6 border-b border-emerald-900 shadow-md sticky top-0 z-40 no-print">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-slate-950 font-black">
+                    S
                 </div>
                 <div>
-                    <h1 class="font-bold text-sm tracking-wide">UPA BAHASA POLNES</h1>
-                    <p class="text-[10px] text-slate-400">Panel Operasional Staff</p>
+                    <h1 class="text-base font-bold tracking-wide leading-tight">PANEL OPERASIONAL STAFF</h1>
+                    <p class="text-[10px] text-emerald-300 font-medium">UPA Bahasa Politeknik Negeri Samarinda</p>
                 </div>
             </div>
-            
-            <div class="flex items-center gap-4">
-                <span class="text-xs bg-slate-800 border border-slate-700 text-emerald-400 px-3 py-1.5 rounded-full font-medium">
-                    ● Staff Operasional
-                </span>
-                <button onclick="window.location.href='index.html'" class="text-xs bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg border border-red-500/30 font-medium transition">
-                    Keluar
+
+            <div class="flex items-center gap-4 text-xs">
+                <span class="text-slate-200">Petugas: <strong id="user-display-name" class="text-amber-400">Staff UPA</strong></span>
+                <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-semibold transition text-[11px]">
+                    Lihat Web Utama ↗
+                </a>
+                <button onclick="window.location.href='index.html'" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-lg font-bold transition">
+                    Logout
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- CONTENT WRAPPER -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6 no-print">
-        
-        <!-- DASHBOARD HEADER & STATISTIK RINGKAS -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-                <h2 class="text-xl font-extrabold text-slate-900">Manajemen & Kelulusan TOEFL</h2>
-                <p class="text-xs text-slate-500 mt-1">Kelola nilai peserta, verifikasi status kelulusan, dan terbitkan sertifikat resmi ber-QR Code.</p>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="openModalTambah()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition flex items-center gap-2">
-                    <span>+</span> Tambah Data Peserta
-                </button>
-            </div>
+    <!-- KONTEN UTAMA DASHBOARD STAFF -->
+    <main class="max-w-7xl mx-auto px-6 py-6 flex-1 w-full space-y-6 no-print">
+
+        <!-- TAB NAVIGASI MODUL STAFF -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+            <button onclick="switchTab('tab-excel')" id="btn-tab-excel" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-800 text-white transition">
+                📊 Upload Excel Hasil Ujian
+            </button>
+            <button onclick="switchTab('tab-sertifikat')" id="btn-tab-sertifikat" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                📜 Generator & Cetak Sertifikat
+            </button>
+            <button onclick="switchTab('tab-pendaftaran')" id="btn-tab-pendaftaran" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                📝 ACC & Jadwal Ujian/Kursus
+            </button>
+            <button onclick="switchTab('tab-keluhan')" id="btn-tab-keluhan" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                🛠️ Keluhan & Tracking Status
+            </button>
+            <button onclick="switchTab('tab-berita')" id="btn-tab-berita" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+                📰 Kelola Berita & Galeri
+            </button>
         </div>
 
-        <!-- CARDS RINGKASAN DATA -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <p class="text-xs text-slate-500 font-semibold">Total Peserta Ujian</p>
-                <p class="text-2xl font-black text-slate-800 mt-1" id="stat-total">128</p>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <p class="text-xs text-emerald-600 font-semibold">Peserta Lulus (Sertifikat Terbit)</p>
-                <p class="text-2xl font-black text-emerald-600 mt-1" id="stat-lulus">94</p>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <p class="text-xs text-amber-600 font-semibold">Tidak Lulus</p>
-                <p class="text-2xl font-black text-amber-600 mt-1" id="stat-gagal">34</p>
-            </div>
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <p class="text-xs text-blue-600 font-semibold">Rata-Rata Skor</p>
-                <p class="text-2xl font-black text-blue-600 mt-1">492</p>
-            </div>
-        </div>
+        <!-- 1. MODUL UPLOAD EXCEL HASIL TES TOEFL -->
+        <div id="tab-excel" class="tab-content space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">Upload & Kalkulasi Hasil Tes TOEFL (.xlsx / .csv)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Pilih file Excel/CSV untuk menghitung otomatis skor & status kelulusan mahasiswa secara langsung ke tabel.</p>
+                </div>
 
-        <!-- TABEL DATA KELULUSAN & PENCARIAN -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row justify-between items-center gap-3">
-                <h3 class="font-bold text-sm text-slate-800">Daftar Kelulusan & Sertifikat Digital</h3>
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <input type="text" id="search-input" onkeyup="filterTable()" placeholder="Cari Nama / NIM..." class="text-xs border border-slate-300 rounded-lg px-3 py-2 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <div class="border-2 border-dashed border-emerald-300 bg-emerald-50/50 p-6 rounded-xl text-center space-y-3">
+                    <input type="file" id="excel-file-input" accept=".csv, .xlsx, .xls" class="hidden" onchange="processExcelUpload(event)">
+                    <label for="excel-file-input" class="cursor-pointer inline-flex items-center gap-2 bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition">
+                        📁 Pilih File Excel / CSV Hasil Tes
+                    </label>
+                    <p class="text-[11px] text-slate-500">Format Kolom: NIM | Nama | No. Komputer | Benar Listening | Benar Structure | Benar Reading</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-3 border-b">NIM</th>
+                                <th class="p-3 border-b">Nama Mahasiswa</th>
+                                <th class="p-3 border-b">No. Komputer</th>
+                                <th class="p-3 border-b text-center">Jawaban Benar</th>
+                                <th class="p-3 border-b text-center">Kalkulasi Skor</th>
+                                <th class="p-3 border-b text-center">Status Kelulusan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="excel-preview-body">
+                            <tr class="border-b">
+                                <td class="p-3 text-slate-600">2107026001</td>
+                                <td class="p-3 font-semibold">Budi Santoso</td>
+                                <td class="p-3">PC-12</td>
+                                <td class="p-3 text-center text-slate-500">L: 35 | S: 28 | R: 40</td>
+                                <td class="p-3 text-center font-bold text-brand-900">520</td>
+                                <td class="p-3 text-center">
+                                    <span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]">LULUS (Hijau)</span>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 text-slate-600">2107026044</td>
+                                <td class="p-3 font-semibold">Siti Aminah</td>
+                                <td class="p-3">PC-08</td>
+                                <td class="p-3 text-center text-slate-500">L: 20 | S: 15 | R: 22</td>
+                                <td class="p-3 text-center font-bold text-rose-700">410</td>
+                                <td class="p-3 text-center">
+                                    <span class="bg-rose-100 text-rose-800 font-bold px-2.5 py-1 rounded-full text-[10px]">REMEDIAL</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button onclick="publishToWeb()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-md">
+                        Publish Skor ke Web Umum
+                    </button>
                 </div>
             </div>
+        </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs text-slate-700" id="toefl-table">
-                    <thead class="bg-slate-100 text-slate-600 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
-                        <tr>
-                            <th class="py-3.5 px-4">NIM</th>
-                            <th class="py-3.5 px-4">Nama Mahasiswa</th>
-                            <th class="py-3.5 px-4">Jurusan / Program Studi</th>
-                            <th class="py-3.5 px-4">Skor TOEFL</th>
-                            <th class="py-3.5 px-4">Status</th>
-                            <th class="py-3.5 px-4 text-center">Aksi Sertifikat</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 font-medium" id="table-body">
-                        <!-- Baris 1 -->
-                        <tr class="hover:bg-slate-50/80 transition">
-                            <td class="py-3.5 px-4 font-mono font-semibold text-slate-900">2107026001</td>
-                            <td class="py-3.5 px-4 font-bold text-slate-800">BUDI SANTOSO</td>
-                            <td class="py-3.5 px-4 text-slate-600">Teknik Informatika</td>
-                            <td class="py-3.5 px-4 font-bold text-emerald-700">520</td>
-                            <td class="py-3.5 px-4">
-                                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-emerald-200">
-                                    LULUS
-                                </span>
-                            </td>
-                            <td class="py-3.5 px-4 text-center">
-                                <button onclick="openModalSertifikat('BUDI SANTOSO', '2107026001', '520', 'UPA-POLNES/2026/CERT-001')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow transition">
-                                    📜 Lihat & Cetak Sertifikat
-                                </button>
-                            </td>
-                        </tr>
+        <!-- 2. MODUL GENERATOR & CETAK SERTIFIKAT (FITUR BARU) -->
+        <div id="tab-sertifikat" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">Daftar Kelulusan & Penerbitan Sertifikat (QR Code)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Pilih mahasiswa yang lulus untuk mencetak Sertifikat Resmi lengkap dengan QR Code Keabsahan.</p>
+                </div>
 
-                        <!-- Baris 2 -->
-                        <tr class="hover:bg-slate-50/80 transition">
-                            <td class="py-3.5 px-4 font-mono font-semibold text-slate-900">20611012</td>
-                            <td class="py-3.5 px-4 font-bold text-slate-800">RIAN HIDAYAT</td>
-                            <td class="py-3.5 px-4 text-slate-600">Teknik Sipil</td>
-                            <td class="py-3.5 px-4 font-bold text-emerald-700">485</td>
-                            <td class="py-3.5 px-4">
-                                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-emerald-200">
-                                    LULUS
-                                </span>
-                            </td>
-                            <td class="py-3.5 px-4 text-center">
-                                <button onclick="openModalSertifikat('RIAN HIDAYAT', '20611012', '485', 'UPA-POLNES/2026/CERT-002')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow transition">
-                                    📜 Lihat & Cetak Sertifikat
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Baris 3 -->
-                        <tr class="hover:bg-slate-50/80 transition">
-                            <td class="py-3.5 px-4 font-mono font-semibold text-slate-900">2107026045</td>
-                            <td class="py-3.5 px-4 font-bold text-slate-800">SITI NURHALIZA</td>
-                            <td class="py-3.5 px-4 text-slate-600">Akuntansi Manajerial</td>
-                            <td class="py-3.5 px-4 font-bold text-amber-600">410</td>
-                            <td class="py-3.5 px-4">
-                                <span class="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-amber-200">
-                                    TIDAK LULUS
-                                </span>
-                            </td>
-                            <td class="py-3.5 px-4 text-center">
-                                <span class="text-[11px] text-slate-400 italic">Belum Memenuhi</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-3 border-b">NIM</th>
+                                <th class="p-3 border-b">Nama Mahasiswa</th>
+                                <th class="p-3 border-b text-center">Skor TOEFL</th>
+                                <th class="p-3 border-b">No. Sertifikat</th>
+                                <th class="p-3 border-b text-center">Aksi Cetak</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sertifikat-table-body">
+                            <tr class="border-b">
+                                <td class="p-3 text-slate-600 font-mono">2107026001</td>
+                                <td class="p-3 font-semibold text-slate-900">Budi Santoso</td>
+                                <td class="p-3 text-center font-bold text-emerald-800">520</td>
+                                <td class="p-3 text-slate-500 font-mono">UPA-POLNES/2026/CERT-001</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="generateSertifikat('2107026001', 'Budi Santoso', '520', 'UPA-POLNES/2026/CERT-001', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                        📜 Lihat & Cetak Sertifikat
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 text-slate-600 font-mono">20611012</td>
+                                <td class="p-3 font-semibold text-slate-900">Rian Hidayat</td>
+                                <td class="p-3 text-center font-bold text-emerald-800">485</td>
+                                <td class="p-3 text-slate-500 font-mono">UPA-POLNES/2026/CERT-002</td>
+                                <td class="p-3 text-center">
+                                    <button onclick="generateSertifikat('20611012', 'Rian Hidayat', '485', 'UPA-POLNES/2026/CERT-002', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                        📜 Lihat & Cetak Sertifikat
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
+        <!-- 3. MODUL ACC PENDAFTARAN & JADWAL -->
+        <div id="tab-pendaftaran" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">ACC Pendaftaran & Penjadwalan Ujian / Remedial / Kursus</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Verifikasi pengajuan mahasiswa, tetapkan jadwal/meja, lalu kirim info lengkap via WhatsApp.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-3 border-b">NIM & Nama</th>
+                                <th class="p-3 border-b">No. WhatsApp</th>
+                                <th class="p-3 border-b">Pengajuan</th>
+                                <th class="p-3 border-b">Atur Jadwal & Meja</th>
+                                <th class="p-3 border-b text-center">Aksi ACC</th>
+                                <th class="p-3 border-b text-center">Notifikasi WA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b" id="row-acc-1">
+                                <td class="p-3">
+                                    <p class="font-bold text-slate-800">Rian Hidayat</p>
+                                    <p class="text-[10px] text-slate-500">NIM: 20611012</p>
+                                </td>
+                                <td class="p-3 text-slate-600">081255554321</td>
+                                <td class="p-3">
+                                    <span id="badge-acc-1" class="bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded text-[10px]">Menunggu ACC</span>
+                                </td>
+                                <td class="p-3 space-y-1">
+                                    <input type="text" id="jadwal-1" value="Kamis, 20 Ags 2026 - Sesi 1 (08.00 WITA)" class="w-full p-1.5 border rounded text-[11px]">
+                                    <input type="text" id="meja-1" value="Lab Komputer 2 (Meja #14)" class="w-full p-1.5 border rounded text-[11px]">
+                                </td>
+                                <td class="p-3 text-center">
+                                    <button id="btn-acc-1" onclick="accPendaftaran(1)" class="bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-800 text-[11px] shadow">
+                                        ACC Jadwal
+                                    </button>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <button onclick="sendWAJadwal('Rian Hidayat', '081255554321', 1)" class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-700 text-[11px] flex items-center justify-center gap-1 mx-auto shadow">
+                                        📲 Kirim WA Sesi
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. MODUL KELUAHAN -->
+        <div id="tab-keluhan" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">Penerimaan & Penanganan Laporan Kendala</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Ubah status laporan publik dan kirim rincian tindak lanjut lengkap via WhatsApp Otomatis.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-3 border-b">Pelapor & Kendala</th>
+                                <th class="p-3 border-b">Rincian Laporan</th>
+                                <th class="p-3 border-b">Status Tracking Web Publik</th>
+                                <th class="p-3 border-b text-center">Update Status</th>
+                                <th class="p-3 border-b text-center">Kirim Detail via WA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-3">
+                                    <p class="font-bold text-slate-800">Andi Pratama</p>
+                                    <p class="text-[10px] text-slate-500">NIM: 2107026099 | WA: 082199887766</p>
+                                </td>
+                                <td class="p-3 text-slate-600 max-w-xs">
+                                    <span class="font-semibold text-rose-700">[Kesalahan Sertifikat]</span> Penulisan nama kurang gelar S.Tr.T.
+                                </td>
+                                <td class="p-3">
+                                    <span id="status-tag-1" class="bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-[10px]">Laporan Masuk / Diproses</span>
+                                </td>
+                                <td class="p-3 text-center space-y-1">
+                                    <button onclick="updateStatusLaporan(1, 'Sedang Diproses')" class="block w-full bg-amber-500 hover:bg-amber-600 text-white font-bold px-2 py-1 rounded text-[10px]">Set Diproses</button>
+                                    <button onclick="updateStatusLaporan(1, 'Selesai')" class="block w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-2 py-1 rounded text-[10px]">Set Selesai</button>
+                                </td>
+                                <td class="p-3 text-center">
+                                    <button onclick="sendWALaporan('Andi Pratama', '082199887766', 1)" class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-700 text-[11px] flex items-center justify-center gap-1 mx-auto shadow">
+                                        📲 Kirim WA Detail
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. MODUL BERITA -->
+        <div id="tab-berita" class="tab-content hidden space-y-4">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                <div>
+                    <h3 class="font-bold text-base text-brand-950">Publikasi Berita & Upload Foto Kegiatan</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Upload file foto kegiatan langsung dan buat narasi pengumuman untuk web umum.</p>
+                </div>
+
+                <form onsubmit="publishBerita(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Judul Berita / Pengumuman</label>
+                        <input type="text" id="berita-judul" required placeholder="Contoh: Jadwal Pelaksanaan Tes TOEFL Remedial Semester Ganjil" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition">
+                    </div>
+
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Narasi Berita / Deskripsi Kegiatan</label>
+                        <textarea id="berita-isi" rows="4" required placeholder="Tuliskan isi narasi pengumuman di sini..." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none bg-slate-50 focus:bg-white focus:border-brand-800 transition"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="font-semibold text-slate-700 block mb-1">Upload File Foto Kegiatan</label>
+                        <input type="file" id="berita-foto-file" accept="image/*" required onchange="previewImage(event)" class="w-full p-2 border border-slate-200 rounded-lg bg-slate-50 text-xs">
+                        
+                        <div id="preview-container" class="mt-2 hidden">
+                            <p class="text-[10px] text-slate-500 mb-1">Preview Foto Upload:</p>
+                            <img id="img-preview" src="#" alt="Preview Foto" class="h-32 object-cover rounded-lg border border-slate-300">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-xl transition text-xs shadow-md">
+                        Terbitkan Berita ke Web Utama
+                    </button>
+                </form>
+            </div>
+        </div>
+
     </main>
 
-    <!-- MODAL FORM TAMBAH DATA PESERTA -->
-    <div id="modal-tambah" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden no-print">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-extrabold text-slate-900 text-base">Tambah Hasil Tes TOEFL</h3>
-                <button onclick="closeModalTambah()" class="text-slate-400 hover:text-slate-600 text-lg">✕</button>
-            </div>
-            <form onsubmit="tambahPeserta(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">NIM Mahasiswa</label>
-                    <input type="text" id="add-nim" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap</label>
-                    <input type="text" id="add-nama" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Jurusan / Prodi</label>
-                    <input type="text" id="add-prodi" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Skor TOEFL</label>
-                    <input type="number" id="add-skor" required class="w-full border border-slate-300 rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-                </div>
-                <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeModalTambah()" class="px-4 py-2 bg-slate-100 text-slate-700 font-bold rounded-xl text-xs">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded-xl text-xs hover:bg-emerald-700">Simpan Data</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL TEMPLATE SERTIFIKAT BER-QR CODE -->
-    <div id="modal-sertifikat" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex flex-col items-center justify-start p-4 overflow-y-auto hidden">
-        
-        <!-- CONTAINER TOMBOL AKSI (Disembunyikan Otomatis Saat Diunduh) -->
-        <div class="max-w-4xl w-full flex justify-end gap-2 mb-3 no-print">
-            <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg transition cursor-pointer">
-                🖨️ Cetak / Unduh PDF
-            </button>
-            <button onclick="closeModalSertifikat()" class="bg-white hover:bg-slate-100 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-xs border border-slate-300 shadow-md cursor-pointer">
-                ✕ Tutup
-            </button>
-        </div>
-
-        <!-- KERTAS SERTIFIKAT -->
-        <div class="cert-paper bg-white p-8 rounded-2xl max-w-4xl w-full border-8 border-double border-amber-600 shadow-2xl relative text-center space-y-6 my-auto">
+    <!-- MODAL / TEMPLATE SERTIFIKAT RESMI BER-QR CODE -->
+    <div id="modal-sertifikat" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white p-8 rounded-2xl max-w-4xl w-full border-8 border-double border-amber-600 shadow-2xl relative text-center space-y-6">
             
+            <!-- Tombol Tutup & Cetak (Sembunyi saat diprint) -->
+            <div class="absolute top-4 right-4 flex gap-2 no-print">
+                <button onclick="window.print()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1 shadow">
+                    🖨️ Cetak / Download PDF
+                </button>
+                <button onclick="closeModalSertifikat()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2 rounded-lg text-xs">
+                    ✕ Tutup
+                </button>
+            </div>
+
             <!-- HEADER SERTIFIKAT -->
             <div class="border-b-2 border-amber-500 pb-4">
                 <h2 class="font-serif text-2xl font-black text-amber-800 tracking-wider">POLITEKNIK NEGERI SAMARINDA</h2>
@@ -249,14 +385,14 @@
             <!-- ISI NAMA MAHASISWA -->
             <div class="py-2 space-y-1">
                 <p class="text-xs text-slate-500 italic">This is to certify that</p>
-                <h2 id="cert-nama" class="font-serif text-2xl font-bold text-slate-900 underline decoration-amber-500 underline-offset-8">BUDI SANTOSO</h2>
+                <h2 id="cert-nama" class="font-serif text-2xl font-bold text-brand-950 underline decoration-amber-500 underline-offset-8">BUDI SANTOSO</h2>
                 <p class="text-xs text-slate-600 font-mono mt-1">NIM: <span id="cert-nim">2107026001</span></p>
             </div>
 
             <!-- SKOR & PENJELASAN -->
             <div class="bg-amber-50/60 p-3 rounded-xl border border-amber-200 inline-block px-8">
                 <p class="text-xs text-slate-600">Has successfully achieved a total score of:</p>
-                <p id="cert-score" class="font-serif text-3xl font-black text-slate-900 my-0.5">520</p>
+                <p id="cert-score" class="font-serif text-3xl font-black text-brand-900 my-0.5">520</p>
                 <p class="text-[10px] text-emerald-800 font-bold uppercase">Status: PASSED / LULUS</p>
             </div>
 
@@ -264,13 +400,13 @@
             <div class="flex justify-between items-end pt-4 border-t border-slate-200">
                 <!-- QR CODE VERIFIKASI -->
                 <div class="text-left space-y-1">
-                    <div id="qrcode" class="p-1 bg-white border border-slate-300 rounded-lg inline-block"></div>
+                    <div id="qrcode" class="p-1.5 bg-white border border-slate-300 rounded-lg inline-block"></div>
                     <p class="text-[9px] text-slate-500 font-semibold max-w-[140px] leading-tight">
                         Scan QR Code di atas untuk memverifikasi keabsahan sertifikat secara online.
                     </p>
                 </div>
 
-                <!-- TANGGAL & TTD HEAD OF UPA BAHASA -->
+                <!-- TANGGAL & TTDA HEAD OF UPA BAHASA -->
                 <div class="text-center space-y-1">
                     <p class="text-xs text-slate-600">Samarinda, <span id="cert-date">18 Agustus 2026</span></p>
                     <p class="text-[11px] font-bold text-slate-800">Kepala UPA Bahasa POLNES,</p>
@@ -285,29 +421,141 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC DENGAN FUNGSI LENGKAP -->
+    <!-- SCRIPT LOGIKA WORKFLOW STAFF -->
     <script>
-        // Modal Sertifikat
-        function openModalSertifikat(nama, nim, skor, noCert) {
-            document.getElementById('cert-nama').innerText = nama;
+        // Tab Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-800', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            activeBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            activeBtn.classList.add('bg-brand-800', 'text-white');
+        }
+
+        // Upload Excel/CSV Fleksibel
+        function processExcelUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            const isBinary = file.name.endsWith('.xlsx') || file.name.endsWith('.xls');
+
+            reader.onload = function(e) {
+                let rows = [];
+
+                if (isBinary) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                } else {
+                    const text = e.target.result;
+                    const lines = text.split(/\r\n|\n/);
+                    rows = lines.map(line => {
+                        if (line.includes(';')) return line.split(';');
+                        if (line.includes('\t')) return line.split('\t');
+                        return line.split(',');
+                    });
+                }
+
+                const tbody = document.getElementById('excel-preview-body');
+                const certBody = document.getElementById('sertifikat-table-body');
+                let addedCount = 0;
+
+                rows.forEach((cols, idx) => {
+                    if (idx === 0 || !cols || cols.length < 2) return;
+
+                    const nim = cols[0] ? cols[0].toString().trim() : '';
+                    const nama = cols[1] ? cols[1].toString().trim() : '';
+                    const pc = cols[2] && cols[2].toString().trim() !== '' ? cols[2].toString().trim() : 'PC-01';
+                    
+                    const l = parseInt(cols[3]) || 0;
+                    const s = parseInt(cols[4]) || 0;
+                    const r = parseInt(cols[5]) || 0;
+
+                    if (nim && nama) {
+                        const totalScore = Math.round(((l + s + r) / 120) * 490 + 210);
+                        const isLulus = totalScore >= 450;
+
+                        // Tambah ke tabel Excel Preview
+                        const rowHtml = `
+                            <tr class="border-b bg-emerald-50/30 transition">
+                                <td class="p-3 text-slate-600">${nim}</td>
+                                <td class="p-3 font-semibold text-slate-900">${nama}</td>
+                                <td class="p-3">${pc}</td>
+                                <td class="p-3 text-center text-slate-500">L: ${l} | S: ${s} | R: ${r}</td>
+                                <td class="p-3 text-center font-bold ${isLulus ? 'text-brand-900' : 'text-rose-700'}">${totalScore}</td>
+                                <td class="p-3 text-center">
+                                    <span class="${isLulus ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} font-bold px-2.5 py-1 rounded-full text-[10px]">
+                                        ${isLulus ? 'LULUS (Hijau)' : 'REMEDIAL'}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                        tbody.insertAdjacentHTML('beforeend', rowHtml);
+
+                        // Jika lulus, otomatis tambahkan juga ke modul Cetak Sertifikat
+                        if (isLulus) {
+                            const certNo = `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}`;
+                            const certRow = `
+                                <tr class="border-b">
+                                    <td class="p-3 text-slate-600 font-mono">${nim}</td>
+                                    <td class="p-3 font-semibold text-slate-900">${nama}</td>
+                                    <td class="p-3 text-center font-bold text-emerald-800">${totalScore}</td>
+                                    <td class="p-3 text-slate-500 font-mono">${certNo}</td>
+                                    <td class="p-3 text-center">
+                                        <button onclick="generateSertifikat('${nim}', '${nama}', '${totalScore}', '${certNo}', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                            📜 Lihat & Cetak Sertifikat
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                            certBody.insertAdjacentHTML('beforeend', certRow);
+                        }
+
+                        addedCount++;
+                    }
+                });
+
+                alert(`Berhasil mengimpor ${addedCount} data mahasiswa dari file!`);
+            };
+
+            if (isBinary) {
+                reader.readAsArrayBuffer(file);
+            } else {
+                reader.readAsText(file);
+            }
+        }
+
+        // GENERATOR SERTIFIKAT + GENERATE QR CODE DINAMIS
+        function generateSertifikat(nim, nama, score, noCert, dateStr) {
             document.getElementById('cert-nim').innerText = nim;
-            document.getElementById('cert-score').innerText = skor;
-            document.getElementById('cert-number').innerText = 'No: ' + noCert;
+            document.getElementById('cert-nama').innerText = nama.toUpperCase();
+            document.getElementById('cert-score').innerText = score;
+            document.getElementById('cert-number').innerText = `No: ${noCert}`;
+            document.getElementById('cert-date').innerText = dateStr;
 
+            // Generate QR Code mengarah ke URL Validasi
             const qrContainer = document.getElementById('qrcode');
-            qrContainer.innerHTML = '';
-
+            qrContainer.innerHTML = ''; // Bersihkan QR lama
             const verifyUrl = `https://upa-bahasa.vercel.app/verify.html?nim=${nim}`;
-
+            
             new QRCode(qrContainer, {
                 text: verifyUrl,
                 width: 90,
                 height: 90,
-                colorDark: "#0f172a",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
             });
 
+            // Tampilkan Modal Sertifikat
             document.getElementById('modal-sertifikat').classList.remove('hidden');
         }
 
@@ -315,58 +563,70 @@
             document.getElementById('modal-sertifikat').classList.add('hidden');
         }
 
-        // Modal Tambah Peserta
-        function openModalTambah() {
-            document.getElementById('modal-tambah').classList.remove('hidden');
+        function publishToWeb() {
+            alert('Seluruh data hasil kalkulasi TOEFL berhasil diterbitkan ke Halaman Web Publik!');
         }
 
-        function closeModalTambah() {
-            document.getElementById('modal-tambah').classList.add('hidden');
-        }
+        function accPendaftaran(id) {
+            const badge = document.getElementById(`badge-acc-${id}`);
+            const btn = document.getElementById(`btn-acc-${id}`);
+            document.getElementById(`jadwal-${id}`).disabled = true;
+            document.getElementById(`meja-${id}`).disabled = true;
 
-        function tambahPeserta(e) {
-            e.preventDefault();
-            const nim = document.getElementById('add-nim').value;
-            const nama = document.getElementById('add-nama').value.toUpperCase();
-            const prodi = document.getElementById('add-prodi').value;
-            const skor = parseInt(document.getElementById('add-skor').value);
-            const isLulus = skor >= 450;
-
-            const tbody = document.getElementById('table-body');
-            const newRow = document.createElement('tr');
-            newRow.className = "hover:bg-slate-50/80 transition";
+            badge.className = 'bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]';
+            badge.innerText = 'TERJADWAL (ACC)';
             
-            const certNo = `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}`;
+            btn.className = 'bg-slate-300 text-slate-600 font-bold px-3 py-1.5 rounded-lg text-[11px] cursor-not-allowed';
+            btn.innerText = 'Disetujui';
+            btn.disabled = true;
 
-            newRow.innerHTML = `
-                <td class="py-3.5 px-4 font-mono font-semibold text-slate-900">${nim}</td>
-                <td class="py-3.5 px-4 font-bold text-slate-800">${nama}</td>
-                <td class="py-3.5 px-4 text-slate-600">${prodi}</td>
-                <td class="py-3.5 px-4 font-bold ${isLulus ? 'text-emerald-700' : 'text-amber-600'}">${skor}</td>
-                <td class="py-3.5 px-4">
-                    <span class="${isLulus ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200'} text-[10px] font-extrabold px-2.5 py-1 rounded-full border">
-                        ${isLulus ? 'LULUS' : 'TIDAK LULUS'}
-                    </span>
-                </td>
-                <td class="py-3.5 px-4 text-center">
-                    ${isLulus ? `<button onclick="openModalSertifikat('${nama}', '${nim}', '${skor}', '${certNo}')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow transition">📜 Lihat & Cetak Sertifikat</button>` : `<span class="text-[11px] text-slate-400 italic">Belum Memenuhi</span>`}
-                </td>
-            `;
-
-            tbody.prepend(newRow);
-            closeModalTambah();
-            e.target.reset();
+            alert('Jadwal berhasil disetujui (ACC) dan dikunci!');
         }
 
-        // Fitur Filter / Pencarian Tabel
-        function filterTable() {
-            const input = document.getElementById('search-input').value.toLowerCase();
-            const rows = document.querySelectorAll('#table-body tr');
+        function sendWAJadwal(nama, phone, id) {
+            const jadwal = document.getElementById(`jadwal-${id}`).value;
+            const meja = document.getElementById(`meja-${id}`).value;
+            const message = `Halo *${nama}*,\n\nPendaftaran ujian/kursus Anda di UPA Bahasa POLNES telah di-ACC.\n\n*INFO LENGKAP SESI UJIAN:*\n🗓️ *Jadwal & Sesi:* ${jadwal}\n🖥️ *Lokasi & Nomor Meja:* ${meja}\n\nMohon datang 15 menit sebelum waktu ujian. Terima kasih.`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
 
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(input) ? '' : 'none';
-            });
+        function updateStatusLaporan(id, status) {
+            const tag = document.getElementById(`status-tag-${id}`);
+            if (status === 'Selesai') {
+                tag.className = 'bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]';
+                tag.innerText = 'Laporan Selesai Ditangani';
+                alert('Status laporan publik diperbarui menjadi: SELESAI');
+            } else {
+                tag.className = 'bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-[10px]';
+                tag.innerText = 'Laporan Sedang Diproses';
+                alert('Status laporan publik diperbarui menjadi: SEDANG DIPROSES');
+            }
+        }
+
+        function sendWALaporan(nama, phone, id) {
+            const statusTag = document.getElementById(`status-tag-${id}`).innerText;
+            const message = `Halo *${nama}*,\n\nBerikut adalah info perkembangan laporan kendala Anda di UPA Bahasa POLNES:\n\n*STATUS TERBARU:* ${statusTag}\n*DETAIL TINDAK LANJUT:* Koreksi pencetakan sertifikat telah diselesaikan oleh petugas. Silakan mengambil dokumen fisik di Gedung UPA Bahasa POLNES pada jam kerja.\n\nTerima kasih.`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                document.getElementById('img-preview').src = reader.result;
+                document.getElementById('preview-container').classList.remove('hidden');
+            };
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        function publishBerita(e) {
+            e.preventDefault();
+            alert('Berita narasi dan foto kegiatan berhasil diterbitkan ke Halaman Web Utama!');
+            document.getElementById('berita-judul').value = '';
+            document.getElementById('berita-isi').value = '';
+            document.getElementById('berita-foto-file').value = '';
+            document.getElementById('preview-container').classList.add('hidden');
         }
     </script>
 </body>
