@@ -167,7 +167,7 @@
     </header>
 
     <!-- HALAMAN BERANDA PUBLIK -->
-    <div id="page-beranda" class="page-content flex-1 flex flex-col">
+    <div id="page-beranda" class="page-item page-content flex-1 flex flex-col">
         <section class="relative hero-bg text-white flex items-center justify-center py-20 sm:py-28">
             <div class="relative max-w-3xl mx-auto px-6 text-center z-10">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3 leading-snug">
@@ -249,6 +249,49 @@
                     </div>
                     <div class="px-4 pb-4 pt-0">
                         <span class="text-[10px] text-slate-400 block border-t border-slate-100 pt-2">12 Juni 2026</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKILAS GALERI KEGIATAN DI BERANDA -->
+        <section class="max-w-7xl mx-auto px-6 pb-12 w-full space-y-6">
+            <div class="flex justify-between items-end">
+                <div>
+                    <span class="text-[10px] font-extrabold text-brand-700 uppercase tracking-widest">Dokumentasi</span>
+                    <h3 class="text-xl font-extrabold text-brand-950">Galeri Kegiatan UPA Bahasa</h3>
+                </div>
+                <button onclick="showPage('galeri', 'Galeri Kegiatan', 'nav-lainnya')" class="text-xs font-bold text-brand-800 hover:underline">Lihat Semua Galeri &rarr;</button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm group">
+                    <div class="h-48 w-full overflow-hidden bg-slate-100 relative">
+                        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=600&auto=format&fit=crop&q=80" alt="Kegiatan 1" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-bold text-xs text-slate-900">Pelatihan Tes TOEFL Mahasiswa</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Sesi bimbingan intensif persiapan ujian sertifikasi.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm group">
+                    <div class="h-48 w-full overflow-hidden bg-slate-100 relative">
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&auto=format&fit=crop&q=80" alt="Kegiatan 2" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-bold text-xs text-slate-900">Placement Test Karyawan</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Pengujian tingkat kemahiran bahasa di lingkungan kampus.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm group sm:col-span-2 md:col-span-1">
+                    <div class="h-48 w-full overflow-hidden bg-slate-100 relative">
+                        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&auto=format&fit=crop&q=80" alt="Kegiatan 3" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-bold text-xs text-slate-900">Studi Banding & Kerjasama</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Kunjungan strategis peningkatan mutu layanan bahasa.</p>
                     </div>
                 </div>
             </div>
