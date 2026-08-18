@@ -135,9 +135,13 @@
                     </div>
                 </div>
 
-                <!-- Menu Nilai TOEFL -->
-                <button id="nav-nilai" onclick="showPage('cek-skor', 'Nilai TOEFL Mahasiswa', 'nav-nilai')" class="nav-btn py-2 hover:text-brand-800 transition uppercase tracking-wider">
-                    Nilai TOEFL
+                <!-- Menu TOEFL Dipisah: Skor vs Sertifikat -->
+                <button id="nav-skor" onclick="showPage('cek-skor', 'Cek Skor TOEFL Mahasiswa', 'nav-skor')" class="nav-btn py-2 hover:text-brand-800 transition uppercase tracking-wider">
+                    Cek Skor
+                </button>
+
+                <button id="nav-sertifikat" onclick="showPage('cek-sertifikat', 'Cek Sertifikat TOEFL (Semester 5+)', 'nav-sertifikat')" class="nav-btn py-2 hover:text-brand-800 transition uppercase tracking-wider text-amber-600">
+                    Cek Sertifikat
                 </button>
 
                 <!-- Dropdown: Lainnya -->
@@ -151,7 +155,7 @@
                     </div>
                 </div>
 
-                <button onclick="showPage('cek-skor', 'Nilai TOEFL Mahasiswa', 'nav-nilai')" class="bg-brand-800 hover:bg-brand-900 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs transition-all shadow-md hover:shadow-lg active:scale-95 border border-emerald-700">
+                <button onclick="showPage('cek-skor', 'Cek Skor TOEFL Mahasiswa', 'nav-skor')" class="bg-brand-800 hover:bg-brand-900 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs transition-all shadow-md hover:shadow-lg active:scale-95 border border-emerald-700">
                     CEK SKOR
                 </button>
             </nav>
@@ -166,14 +170,14 @@
                     Layanan Bahasa & Tes TOEFL <br><span class="text-amber-400">Politeknik Negeri Samarinda</span>
                 </h2>
                 <p class="text-xs sm:text-sm text-emerald-100/90 mb-8 max-w-xl mx-auto font-normal leading-relaxed">
-                    Sertifikasi TOEFL ITP, pelatihan bahasa asing, dan pemantauan nilai akademik mahasiswa.
+                    Sertifikasi TOEFL ITP, pelatihan bahasa asing, dan pemantauan nilai akademik mahasiswa dari Semester 1 hingga Akhir.
                 </p>
                 <div class="flex flex-wrap justify-center gap-3">
-                    <button onclick="showPage('cek-skor', 'Nilai TOEFL Mahasiswa', 'nav-nilai')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded-lg shadow-md active:scale-95 transition-all text-xs">
+                    <button onclick="showPage('cek-skor', 'Cek Skor TOEFL Mahasiswa', 'nav-skor')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded-lg shadow-md active:scale-95 transition-all text-xs">
                         Cek Skor TOEFL
                     </button>
-                    <button onclick="showPage('layanan-kursus', 'Pendaftaran Kursus Bahasa', 'nav-layanan')" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-2.5 rounded-lg border border-white/20 backdrop-blur-md active:scale-95 transition-all text-xs">
-                        Ajukan Kursus
+                    <button onclick="showPage('cek-sertifikat', 'Cek Sertifikat TOEFL (Semester 5+)', 'nav-sertifikat')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-5 py-2.5 rounded-lg shadow-md active:scale-95 transition-all text-xs border border-emerald-500">
+                        Cek Sertifikat (Smtr 5+)
                     </button>
                 </div>
             </div>
@@ -283,13 +287,42 @@
                 </form>
             </div>
 
-            <!-- CEK SKOR TOEFL -->
+            <!-- CEK SKOR TOEFL (UNTUK SEMUA SEMESTER) -->
             <div id="page-cek-skor" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Cek Skor TOEFL</h3>
-                <div class="flex gap-2">
-                    <input id="input-nim" placeholder="Masukkan NIM" class="flex-1 p-2.5 border border-slate-200 rounded-lg outline-none">
-                    <button onclick="alert('Mencari NIM: ' + document.getElementById('input-nim').value)" class="bg-brand-800 text-white font-bold px-4 py-2.5 rounded-lg hover:bg-brand-900 transition">Cari</button>
+                <div class="border-b pb-2">
+                    <h3 class="text-base font-bold text-brand-950">Cek Skor TOEFL Mahasiswa</h3>
+                    <p class="text-slate-500 text-[11px] mt-0.5">Dapat diakses oleh mahasiswa seluruh semester untuk melihat rekam nilai tes.</p>
                 </div>
+                <div class="flex gap-2">
+                    <input id="input-nim-skor" placeholder="Masukkan NIM (Contoh: 210101001)" class="flex-1 p-2.5 border border-slate-200 rounded-lg outline-none focus:border-brand-800">
+                    <button onclick="cariHasilToefl('skor')" class="bg-brand-800 text-white font-bold px-5 py-2.5 rounded-lg hover:bg-brand-900 transition">Cari Skor</button>
+                </div>
+
+                <!-- Container Hasil Pencarian Skor -->
+                <div id="hasil-skor-container" class="hidden mt-4 pt-4 border-t border-slate-100"></div>
+            </div>
+
+            <!-- CEK SERTIFIKAT TOEFL (KHUSUS SEMESTER 5+) -->
+            <div id="page-cek-sertifikat" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
+                <div class="border-b pb-2">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-base font-bold text-brand-950">Cek & Unduh Sertifikat TOEFL</h3>
+                        <span class="bg-amber-100 text-amber-800 font-extrabold px-2 py-0.5 rounded text-[10px] border border-amber-300">Khusus Semester 5+</span>
+                    </div>
+                    <p class="text-slate-500 text-[11px] mt-0.5">Layanan cetak/unduh sertifikat resmi untuk prasyarat kelulusan dan tugas akhir.</p>
+                </div>
+                
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-amber-900 text-[11px]">
+                    💡 <strong>Informasi:</strong> Mahasiswa semester 1–4 hanya diperkenankan melihat rekapitulasi nilai pada menu <strong>Cek Skor</strong>. Penerbitan sertifikat fisik/digital baru diberikan untuk tes tingkat lanjut semester 5 ke atas.
+                </div>
+
+                <div class="flex gap-2">
+                    <input id="input-nim-sertifikat" placeholder="Masukkan NIM (Contoh: 210101001)" class="flex-1 p-2.5 border border-slate-200 rounded-lg outline-none focus:border-brand-800">
+                    <button onclick="cariHasilToefl('sertifikat')" class="bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded-lg hover:bg-amber-500 transition">Cari Sertifikat</button>
+                </div>
+
+                <!-- Container Hasil Pencarian Sertifikat -->
+                <div id="hasil-sertifikat-container" class="hidden mt-4 pt-4 border-t border-slate-100"></div>
             </div>
 
             <!-- PPID -->
@@ -373,8 +406,12 @@
             const username = document.getElementById('login-username').value;
             const posisi = document.getElementById('login-posisi').value;
             
-            // Panggil fungsi simpan login dari auth.js
-            saveSession(username, posisi);
+            // Panggil fungsi simpan login dari auth.js jika tersedia
+            if (typeof saveSession === 'function') {
+                saveSession(username, posisi);
+            } else {
+                localStorage.setItem('user_session', JSON.stringify({ username, posisi }));
+            }
 
             // Redirect sesuai pilihan posisi
             if (posisi === 'Staff') {
@@ -411,9 +448,108 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // FUNGSI PENCARIAN DATA YANG DIPUBLIKASIKAN OLEH STAFF
+        function cariHasilToefl(type) {
+            const inputId = type === 'skor' ? 'input-nim-skor' : 'input-nim-sertifikat';
+            const containerId = type === 'skor' ? 'hasil-skor-container' : 'hasil-sertifikat-container';
+            
+            const nimInput = document.getElementById(inputId).value.trim();
+            const container = document.getElementById(containerId);
+
+            if (!nimInput) {
+                alert('Harap masukkan NIM terlebih dahulu!');
+                return;
+            }
+
+            // Ambil data yang dipublish oleh staff dari localStorage
+            const publishedData = JSON.parse(localStorage.getItem('pub_toefl_results') || '[]');
+            
+            // Cari data sesuai NIM
+            const mhs = publishedData.find(item => item.nim.toString().toLowerCase() === nimInput.toLowerCase());
+
+            container.classList.remove('hidden');
+
+            if (!mhs) {
+                container.innerHTML = `
+                    <div class="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl text-center">
+                        <p class="font-bold">Data Tidak Ditemukan!</p>
+                        <p class="text-[11px] mt-1">NIM <strong>${nimInput}</strong> belum dipublikasikan oleh Staff atau belum mengikuti tes.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Jika tipe pencarian adalah Sertifikat tetapi semester mahasiswa < 5
+            if (type === 'sertifikat' && mhs.semester && parseInt(mhs.semester) < 5) {
+                container.innerHTML = `
+                    <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl">
+                        <p class="font-bold text-sm">Sertifikat Belum Tersedia (Khusus Semester 5+)</p>
+                        <p class="text-[11px] mt-1">Mahasiswa <strong>${mhs.nama}</strong> saat ini tercatat di <strong>Semester ${mhs.semester}</strong>.</p>
+                        <p class="text-[11px] mt-2">Sertifikat TOEFL hanya diterbitkan untuk tes semester 5 ke atas. Silakan periksa skor nilai Anda di menu <button onclick="showPage('cek-skor', 'Cek Skor TOEFL Mahasiswa', 'nav-skor')" class="underline font-bold text-brand-800">Cek Skor</button>.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render Tampilan Skor
+            if (type === 'skor') {
+                container.innerHTML = `
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
+                        <div class="flex justify-between items-start border-b pb-2 border-slate-200">
+                            <div>
+                                <h4 class="font-bold text-sm text-brand-950">${mhs.nama}</h4>
+                                <p class="text-slate-500 text-[11px]">NIM: ${mhs.nim} | Jurusan: ${mhs.jurusan || 'POLNES'} | Semester: ${mhs.semester || '-'}</p>
+                            </div>
+                            <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold border border-emerald-300">Terpublikasi</span>
+                        </div>
+                        <div class="grid grid-cols-4 gap-2 text-center">
+                            <div class="bg-white p-2 rounded border">
+                                <p class="text-[10px] text-slate-500">Listening</p>
+                                <p class="font-bold text-brand-900">${mhs.listening || 0}</p>
+                            </div>
+                            <div class="bg-white p-2 rounded border">
+                                <p class="text-[10px] text-slate-500">Structure</p>
+                                <p class="font-bold text-brand-900">${mhs.structure || 0}</p>
+                            </div>
+                            <div class="bg-white p-2 rounded border">
+                                <p class="text-[10px] text-slate-500">Reading</p>
+                                <p class="font-bold text-brand-900">${mhs.reading || 0}</p>
+                            </div>
+                            <div class="bg-emerald-50 p-2 rounded border border-emerald-200">
+                                <p class="text-[10px] text-emerald-700 font-bold">Total Skor</p>
+                                <p class="font-black text-emerald-900 text-sm">${mhs.totalSkor || mhs.skor || 0}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Render Tampilan Sertifikat
+                container.innerHTML = `
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-3">
+                        <div class="flex justify-between items-start border-b pb-2 border-emerald-200">
+                            <div>
+                                <h4 class="font-bold text-sm text-brand-950">${mhs.nama}</h4>
+                                <p class="text-slate-600 text-[11px]">NIM: ${mhs.nim} | Jurusan: ${mhs.jurusan || 'POLNES'} | Semester: ${mhs.semester}</p>
+                            </div>
+                            <span class="bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded text-[10px]">Sertifikat Valid</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-emerald-100">
+                            <div>
+                                <p class="text-[11px] font-bold text-slate-700">Total Skor TOEFL: <span class="text-emerald-800 font-black text-sm">${mhs.totalSkor || mhs.skor || 0}</span></p>
+                                <p class="text-[10px] text-slate-500">Tanggal Ujian: ${mhs.tanggalUjian || 'Terbaru'}</p>
+                            </div>
+                            <button onclick="alert('Mengunduh Sertifikat PDF untuk NIM: ${mhs.nim}')" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-3 py-1.5 rounded text-[11px] flex items-center gap-1 shadow">
+                                📥 Unduh Sertifikat
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         // Perbarui Tombol Topbar jika sudah ada sesi
         window.addEventListener('DOMContentLoaded', () => {
-            const user = getSession();
+            const user = typeof getSession === 'function' ? getSession() : JSON.parse(localStorage.getItem('user_session'));
             const container = document.getElementById('auth-button-container');
             if (user) {
                 container.innerHTML = `
@@ -421,7 +557,7 @@
                         <a href="${user.posisi === 'Staff' ? 'staff-dashboard.html' : 'kepala-dashboard.html'}" class="text-amber-400 font-extrabold hover:underline">
                             ${user.username} [${user.posisi}]
                         </a>
-                        <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-2.5 py-1 rounded-full text-[10px]">Logout</button>
+                        <button onclick="localStorage.removeItem('user_session'); location.reload();" class="bg-rose-700 hover:bg-rose-800 text-white px-2.5 py-1 rounded-full text-[10px]">Logout</button>
                     </div>
                 `;
             }
