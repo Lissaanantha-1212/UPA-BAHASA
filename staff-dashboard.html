@@ -93,7 +93,7 @@
         <!-- TAB NAVIGASI MODUL STAFF -->
         <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
             <button onclick="switchTab('tab-excel')" id="btn-tab-excel" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-brand-800 text-white transition">
-                📊 Upload Excel Hasil Ujian
+                📊 Upload Excel & Folder Hasil Ujian
             </button>
             <button onclick="switchTab('tab-sertifikat')" id="btn-tab-sertifikat" class="tab-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
                 📜 Generator & Cetak Sertifikat
@@ -109,38 +109,28 @@
             </button>
         </div>
 
-        <!-- 1. MODUL UPLOAD EXCEL HASIL TES TOEFL -->
+        <!-- 1. MODUL UPLOAD EXCEL HASIL TES TOEFL (WITH FOLDER STRUCTURE) -->
         <div id="tab-excel" class="tab-content space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <div>
-                    <h3 class="font-bold text-base text-brand-950">Upload & Kalkulasi Hasil Tes TOEFL (.xlsx / .csv)</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Pilih file Excel/CSV untuk menghitung otomatis skor & status kelulusan mahasiswa secara langsung ke tabel.</p>
-                </div>
-
-                <div class="border-2 border-dashed border-emerald-300 bg-emerald-50/50 p-6 rounded-xl text-center space-y-3">
-                    <input type="file" id="excel-file-input" accept=".csv, .xlsx, .xls" class="hidden" onchange="processExcelUpload(event)">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-base text-brand-950">📂 Folder Hasil Ujian per Jurusan & Prodi</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Upload file Excel untuk mengelompokkan mahasiswa secara otomatis berdasarkan Prodi dan Kelas.</p>
+                    </div>
                     <label for="excel-file-input" class="cursor-pointer inline-flex items-center gap-2 bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition">
-                        📁 Pilih File Excel / CSV Hasil Tes
+                        📁 Upload Excel Hasil Ujian
                     </label>
-                    <p class="text-[11px] text-slate-500">Format Kolom: NIM | Nama | No. Komputer | Benar Listening | Benar Structure | Benar Reading</p>
+                    <input type="file" id="excel-file-input" accept=".csv, .xlsx, .xls" class="hidden" onchange="processExcelUpload(event)">
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs">
-                        <thead>
-                            <tr class="bg-slate-100 text-slate-700">
-                                <th class="p-3 border-b">NIM</th>
-                                <th class="p-3 border-b">Nama Mahasiswa</th>
-                                <th class="p-3 border-b">No. Komputer</th>
-                                <th class="p-3 border-b text-center">Jawaban Benar</th>
-                                <th class="p-3 border-b text-center">Kalkulasi Skor</th>
-                                <th class="p-3 border-b text-center">Status Kelulusan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="excel-preview-body">
-                            <!-- Populated Dynamically via LocalStorage -->
-                        </tbody>
-                    </table>
+                <!-- BREADCRUMB NAVIGASI FOLDER -->
+                <div id="breadcrumb" class="flex items-center gap-2 text-xs font-semibold bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <!-- Populated Dynamically -->
+                </div>
+
+                <!-- AREA DISPLAY FOLDER / TABEL DATA -->
+                <div id="folder-view-area" class="min-h-[250px] border border-slate-100 rounded-xl p-4 bg-slate-50/50">
+                    <!-- Populated Dynamically -->
                 </div>
 
                 <div class="flex justify-between items-center pt-2">
@@ -148,7 +138,7 @@
                         🔄 Reset Data Awal
                     </button>
                     <button onclick="publishToWeb()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-md flex items-center gap-2">
-                        🚀 Publish Skor ke Web Umum
+                        🚀 Publish Semua Skor ke Web Utama
                     </button>
                 </div>
             </div>
@@ -174,7 +164,7 @@
                             </tr>
                         </thead>
                         <tbody id="sertifikat-table-body">
-                            <!-- Populated Dynamically via LocalStorage -->
+                            <!-- Populated Dynamically -->
                         </tbody>
                     </table>
                 </div>
@@ -376,9 +366,14 @@
         </div>
     </div>
 
-    <!-- SCRIPT LOGIKA WORKFLOW STAFF & PERMANENT STORAGE -->
+    <!-- SCRIPT LOGIKA WORKFLOW STAFF & PERMANENT STORAGE WITH FOLDER STRUCTURE -->
     <script>
-        let currentScores = [];
+        // State Navigasi Folder
+        let currentFolder = {
+            jurusan: 'Teknologi Informasi',
+            prodi: null,
+            kelas: null
+        };
 
         // Konversi Raw Score Jawaban Benar ke Scaled Score TOEFL PBT
         function convertToTOEFLScore(l, s, r) {
@@ -393,181 +388,269 @@
             return Math.round(((scaledL + scaledS + scaledR) * 10) / 3);
         }
 
-        function getDefaultScores() {
-            return [
-                { nim: '2107026001', nama: 'Budi Santoso', pc: 'PC-12', detail: 'L: 35 | S: 28 | R: 40', score: 557, status: 'LULUS', certNo: 'UPA-POLNES/2026/CERT-001' },
-                { nim: '2107026044', nama: 'Siti Aminah', pc: 'PC-08', detail: 'L: 20 | S: 15 | R: 22', score: 440, status: 'REMEDIAL', certNo: '' }
-            ];
+        // Database Default
+        function getDefaultFolderDB() {
+            return {
+                "Teknologi Informasi": {
+                    "TI": {
+                        "5 B": [
+                            { nim: '2107026001', nama: 'Budi Santoso', pc: 'PC-12', l: 35, s: 28, r: 40, score: 557, status: 'LULUS', certNo: 'UPA-POLNES/2026/CERT-001' },
+                            { nim: '2107026044', nama: 'Siti Aminah', pc: 'PC-08', l: 20, s: 15, r: 22, score: 440, status: 'REMEDIAL', certNo: '' }
+                        ]
+                    },
+                    "TRK": {},
+                    "TIM": {},
+                    "TK": {}
+                }
+            };
+        }
+
+        function getDB() {
+            const data = localStorage.getItem('upa_folder_db');
+            return data ? JSON.parse(data) : getDefaultFolderDB();
+        }
+
+        function saveDB(db) {
+            localStorage.setItem('upa_folder_db', JSON.stringify(db));
         }
 
         function initStaffData() {
-            const savedData = localStorage.getItem('upa_published_scores');
-            if (savedData) {
-                try {
-                    currentScores = JSON.parse(savedData);
-                } catch (e) {
-                    console.error("Gagal membaca LocalStorage:", e);
-                    currentScores = getDefaultScores();
-                }
-            } else {
-                currentScores = getDefaultScores();
-            }
-            renderStaffTables();
+            renderFolderView();
+            renderSertifikatTable();
         }
 
-        function renderStaffTables() {
-            const tbody = document.getElementById('excel-preview-body');
+        // Render Navigasi & Tampilan Folder
+        function renderFolderView() {
+            renderBreadcrumb();
+            const db = getDB();
+            const area = document.getElementById('folder-view-area');
+            if (!area) return;
+
+            area.innerHTML = '';
+            const jurusanData = db[currentFolder.jurusan] || {};
+
+            // LEVEL 1: Pilih Prodi
+            if (!currentFolder.prodi) {
+                const prodiList = ["TI", "TRK", "TIM", "TK"];
+                let html = '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
+                prodiList.forEach(p => {
+                    const countKelas = Object.keys(jurusanData[p] || {}).length;
+                    html += `
+                        <div onclick="openProdiFolder('${p}')" class="p-4 bg-white border border-slate-200 rounded-xl hover:border-emerald-600 hover:shadow-sm cursor-pointer transition">
+                            <div class="text-3xl mb-1">📁</div>
+                            <div class="font-bold text-slate-800 text-sm">Prodi ${p}</div>
+                            <div class="text-[11px] text-slate-500">${countKelas} Sesi / Kelas Ujian</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                area.innerHTML = html;
+                return;
+            }
+
+            // LEVEL 2: Pilih Kelas
+            if (currentFolder.prodi && !currentFolder.kelas) {
+                const prodiData = jurusanData[currentFolder.prodi] || {};
+                const kelases = Object.keys(prodiData);
+
+                if (kelases.length === 0) {
+                    area.innerHTML = `<p class="text-xs text-slate-400 italic py-8 text-center">Belum ada file/kelas yang diupload di Prodi ${currentFolder.prodi}. Silakan upload file Excel.</p>`;
+                    return;
+                }
+
+                let html = '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
+                kelases.forEach(k => {
+                    const totalMhs = prodiData[k].length;
+                    html += `
+                        <div onclick="openKelasFolder('${k}')" class="p-4 bg-white border border-slate-200 rounded-xl hover:border-emerald-600 hover:shadow-sm cursor-pointer transition">
+                            <div class="text-3xl mb-1">📄</div>
+                            <div class="font-bold text-slate-800 text-sm">Kelas ${k}</div>
+                            <div class="text-[11px] text-slate-500">${totalMhs} Mahasiswa Peserta</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                area.innerHTML = html;
+                return;
+            }
+
+            // LEVEL 3: Tabel Data Mahasiswa per Kelas
+            if (currentFolder.prodi && currentFolder.kelas) {
+                const list = jurusanData[currentFolder.prodi][currentFolder.kelas] || [];
+                let html = `
+                    <div class="overflow-x-auto bg-white rounded-xl border border-slate-200">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700">
+                                    <th class="p-3 border-b">NIM</th>
+                                    <th class="p-3 border-b">Nama Mahasiswa</th>
+                                    <th class="p-3 border-b">No. Komputer</th>
+                                    <th class="p-3 border-b text-center">Jawaban Benar</th>
+                                    <th class="p-3 border-b text-center">Kalkulasi Skor</th>
+                                    <th class="p-3 border-b text-center">Status Kelulusan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                if (list.length === 0) {
+                    html += `<tr><td colspan="6" class="p-4 text-center text-slate-400 italic">Tidak ada data peserta di kelas ini.</td></tr>`;
+                } else {
+                    list.forEach(item => {
+                        const isLulus = item.status === 'LULUS';
+                        html += `
+                            <tr class="border-b">
+                                <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
+                                <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
+                                <td class="p-3">${item.pc}</td>
+                                <td class="p-3 text-center text-slate-500">L: ${item.l} | S: ${item.s} | R: ${item.r}</td>
+                                <td class="p-3 text-center font-bold ${isLulus ? 'text-brand-900' : 'text-rose-700'}">${item.score}</td>
+                                <td class="p-3 text-center">
+                                    <span class="${isLulus ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} font-bold px-2.5 py-1 rounded-full text-[10px]">
+                                        ${item.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                html += `</tbody></table></div>`;
+                area.innerHTML = html;
+            }
+        }
+
+        function renderBreadcrumb() {
+            const bc = document.getElementById('breadcrumb');
+            if (!bc) return;
+
+            let html = `<span onclick="navigateFolder(null, null)" class="text-emerald-700 cursor-pointer hover:underline">Jurusan ${currentFolder.jurusan}</span>`;
+            if (currentFolder.prodi) {
+                html += ` <span class="text-slate-400">/</span> <span onclick="navigateFolder('${currentFolder.prodi}', null)" class="text-emerald-700 cursor-pointer hover:underline">Prodi ${currentFolder.prodi}</span>`;
+            }
+            if (currentFolder.kelas) {
+                html += ` <span class="text-slate-400">/</span> <span class="text-slate-700">Kelas ${currentFolder.kelas}</span>`;
+            }
+            bc.innerHTML = html;
+        }
+
+        function openProdiFolder(prodi) { currentFolder.prodi = prodi; currentFolder.kelas = null; renderFolderView(); }
+        function openKelasFolder(kelas) { currentFolder.kelas = kelas; renderFolderView(); }
+        function navigateFolder(prodi, kelas) { currentFolder.prodi = prodi; currentFolder.kelas = kelas; renderFolderView(); }
+
+        // Render Tabel Sertifikat
+        function renderSertifikatTable() {
             const certBody = document.getElementById('sertifikat-table-body');
-            
-            if (tbody) tbody.innerHTML = '';
-            if (certBody) certBody.innerHTML = '';
+            if (!certBody) return;
 
-            currentScores.forEach((item, index) => {
-                const isLulus = item.status === 'LULUS' || item.score >= 450;
-                const detailText = item.detail || 'L: - | S: - | R: -';
-                const pcText = item.pc || 'PC-01';
+            certBody.innerHTML = '';
+            const db = getDB();
+            let indexCount = 100;
 
-                if (tbody) {
-                    const rowHtml = `
-                        <tr class="border-b" data-nim="${item.nim}" data-nama="${item.nama}" data-score="${item.score}">
-                            <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
-                            <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
-                            <td class="p-3">${pcText}</td>
-                            <td class="p-3 text-center text-slate-500">${detailText}</td>
-                            <td class="p-3 text-center font-bold ${isLulus ? 'text-brand-900' : 'text-rose-700'}">${item.score}</td>
-                            <td class="p-3 text-center">
-                                <span class="${isLulus ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} font-bold px-2.5 py-1 rounded-full text-[10px]">
-                                    ${isLulus ? 'LULUS' : 'REMEDIAL'}
-                                </span>
-                            </td>
-                        </tr>
-                    `;
-                    tbody.insertAdjacentHTML('beforeend', rowHtml);
-                }
-
-                if (isLulus && certBody) {
-                    const certNo = item.certNo || `UPA-POLNES/2026/CERT-${100 + index}`;
-                    item.certNo = certNo;
-                    const certRow = `
-                        <tr class="border-b">
-                            <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
-                            <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
-                            <td class="p-3 text-center font-bold text-emerald-800">${item.score}</td>
-                            <td class="p-3 text-slate-500 font-mono">${certNo}</td>
-                            <td class="p-3 text-center">
-                                <button onclick="generateSertifikat('${item.nim}', '${item.nama}', '${item.score}', '${certNo}', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
-                                    📜 Lihat & Cetak Sertifikat
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                    certBody.insertAdjacentHTML('beforeend', certRow);
-                }
+            Object.keys(db[currentFolder.jurusan] || {}).forEach(prodi => {
+                Object.keys(db[currentFolder.jurusan][prodi] || {}).forEach(kelas => {
+                    const list = db[currentFolder.jurusan][prodi][kelas] || [];
+                    list.forEach(item => {
+                        if (item.status === 'LULUS') {
+                            const certNo = item.certNo || `UPA-POLNES/2026/CERT-${indexCount++}`;
+                            item.certNo = certNo;
+                            const certRow = `
+                                <tr class="border-b">
+                                    <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
+                                    <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
+                                    <td class="p-3 text-center font-bold text-emerald-800">${item.score}</td>
+                                    <td class="p-3 text-slate-500 font-mono">${certNo}</td>
+                                    <td class="p-3 text-center">
+                                        <button onclick="generateSertifikat('${item.nim}', '${item.nama}', '${item.score}', '${certNo}', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                            📜 Lihat & Cetak Sertifikat
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                            certBody.insertAdjacentHTML('beforeend', certRow);
+                        }
+                    });
+                });
             });
         }
 
-        function parseCSVLine(text) {
-            const result = [];
-            let entry = '';
-            let inQuotes = false;
-            for (let i = 0; i < text.length; i++) {
-                const c = text[i];
-                if (c === '"') {
-                    inQuotes = !inQuotes;
-                } else if ((c === ',' || c === ';' || c === '\t') && !inQuotes) {
-                    result.push(entry.trim());
-                    entry = '';
-                } else {
-                    entry += c;
-                }
-            }
-            result.push(entry.trim());
-            return result;
-        }
-
+        // Processing Upload File Excel / CSV
         function processExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
-            const isBinary = file.name.endsWith('.xlsx') || file.name.endsWith('.xls');
-
             reader.onload = function(e) {
-                let rows = [];
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-                if (isBinary) {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
-                    rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-                } else {
-                    const text = e.target.result;
-                    const lines = text.split(/\r\n|\n/);
-                    rows = lines.map(line => parseCSVLine(line));
-                }
-
+                const db = getDB();
                 let addedCount = 0;
 
                 rows.forEach((cols, idx) => {
-                    if (idx === 0 || !cols || cols.length < 2) return;
+                    if (idx === 0 || !cols || cols.length < 8) return;
 
-                    const nim = cols[0] ? cols[0].toString().replace(/^"|"$/g, '').trim() : '';
-                    const nama = cols[1] ? cols[1].toString().replace(/^"|"$/g, '').trim() : '';
-                    const pc = cols[2] && cols[2].toString().trim() !== '' ? cols[2].toString().replace(/^"|"$/g, '').trim() : 'PC-01';
-                    
-                    const l = parseInt(cols[3]) || 0;
-                    const s = parseInt(cols[4]) || 0;
-                    const r = parseInt(cols[5]) || 0;
+                    const nim = cols[0] ? cols[0].toString().trim() : '';
+                    const nama = cols[1] ? cols[1].toString().trim() : '';
+                    const pc = cols[2] ? cols[2].toString().trim() : 'PC-01';
+                    const prodi = cols[3] ? cols[3].toString().trim().toUpperCase() : 'TI';
+                    const kelas = cols[4] ? cols[4].toString().trim().toUpperCase() : '1 A';
+                    const l = parseInt(cols[5]) || 0;
+                    const s = parseInt(cols[6]) || 0;
+                    const r = parseInt(cols[7]) || 0;
 
                     if (nim && nama) {
                         const totalScore = convertToTOEFLScore(l, s, r);
                         const isLulus = totalScore >= 450;
                         const statusStr = isLulus ? 'LULUS' : 'REMEDIAL';
 
-                        const newData = {
+                        if (!db[currentFolder.jurusan]) db[currentFolder.jurusan] = {};
+                        if (!db[currentFolder.jurusan][prodi]) db[currentFolder.jurusan][prodi] = {};
+                        if (!db[currentFolder.jurusan][prodi][kelas]) db[currentFolder.jurusan][prodi][kelas] = [];
+
+                        const itemObj = {
                             nim,
                             nama,
                             pc,
-                            detail: `L: ${l} | S: ${s} | R: ${r}`,
+                            l,
+                            s,
+                            r,
                             score: totalScore,
                             status: statusStr,
                             certNo: isLulus ? `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}` : ''
                         };
 
-                        const existingIndex = currentScores.findIndex(item => item.nim === nim);
-                        if (existingIndex >= 0) {
-                            currentScores[existingIndex] = newData;
+                        const existingIdx = db[currentFolder.jurusan][prodi][kelas].findIndex(x => x.nim === nim);
+                        if (existingIdx >= 0) {
+                            db[currentFolder.jurusan][prodi][kelas][existingIdx] = itemObj;
                         } else {
-                            currentScores.push(newData);
+                            db[currentFolder.jurusan][prodi][kelas].push(itemObj);
                         }
-
                         addedCount++;
                     }
                 });
 
-                localStorage.setItem('upa_published_scores', JSON.stringify(currentScores));
-                renderStaffTables();
-                alert(`Berhasil mengimpor & menyimpan ${addedCount} data mahasiswa!`);
+                saveDB(db);
+                renderFolderView();
+                renderSertifikatTable();
+                alert(`✅ Upload Berhasil! Memproses ${addedCount} data mahasiswa ke folder masing-masing.`);
             };
-
-            if (isBinary) {
-                reader.readAsArrayBuffer(file);
-            } else {
-                reader.readAsText(file);
-            }
+            reader.readAsArrayBuffer(file);
         }
 
         function publishToWeb() {
-            localStorage.setItem('upa_published_scores', JSON.stringify(currentScores));
-            alert('✅ Berhasil mempublikasikan ' + currentScores.length + ' data skor ke Web Utama!');
+            alert('✅ Berhasil mempublikasikan data hasil tes ke Web Utama!');
         }
 
         function resetDataToDefault() {
             if (confirm("Apakah Anda yakin ingin mengembalikan data ke tampilan default?")) {
-                currentScores = getDefaultScores();
-                localStorage.setItem('upa_published_scores', JSON.stringify(currentScores));
-                renderStaffTables();
+                saveDB(getDefaultFolderDB());
+                currentFolder.prodi = null;
+                currentFolder.kelas = null;
+                renderFolderView();
+                renderSertifikatTable();
                 alert("Data berhasil direset!");
             }
         }
@@ -640,7 +723,7 @@
         }
 
         function sendWALaporan(nama, wa, id) {
-            const msg = `Halo ${nama}, laporan kendala Anda mengenai layanan UPA Bahasa POLNES telah kami proses. Terima kasih over masukan Anda.`;
+            const msg = `Halo ${nama}, laporan kendala Anda mengenai layanan UPA Bahasa POLNES telah kami proses. Terima kasih atas masukan Anda.`;
             window.open(`https://wa.me/${wa.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
