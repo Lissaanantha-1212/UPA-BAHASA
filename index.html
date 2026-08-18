@@ -61,7 +61,6 @@
             background-size: cover;
             background-position: center;
         }
-        /* Efek Timbul Minimalis & Modern */
         .card-academic {
             transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -88,7 +87,6 @@
                     <button class="hover:text-amber-400 text-slate-300 transition">EN</button>
                 </div>
 
-                <!-- Tombol Masuk / Status Auth Container -->
                 <div id="auth-button-container">
                     <button onclick="toggleLoginModal(true)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold px-3.5 py-1 rounded-full transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 text-[11px]">
                         Masuk
@@ -102,7 +100,6 @@
     <header class="bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200/80 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
             
-            <!-- Logo Brand POLNES -->
             <div class="flex items-center space-x-3.5 cursor-pointer group" onclick="showPage('beranda', 'Beranda', 'nav-beranda')">
                 <div class="w-11 h-11 bg-gradient-to-br from-brand-900 to-brand-700 rounded-xl flex items-center justify-center text-white font-black text-xl border-2 border-amber-400/80 shadow-md group-hover:scale-105 transition-transform duration-300">
                     P
@@ -113,7 +110,6 @@
                 </div>
             </div>
 
-            <!-- Menu Navigasi Utama -->
             <nav class="hidden md:flex items-center space-x-7 text-xs font-bold text-slate-700">
                 <button id="nav-beranda" onclick="showPage('beranda', 'Beranda', 'nav-beranda')" class="nav-btn py-2 hover:text-brand-800 transition uppercase tracking-wider nav-btn-active">
                     Beranda
@@ -226,7 +222,7 @@
         </div>
 
         <div class="space-y-6">
-            <!-- REVISI MINIMALIS & MODERN: STRUKTUR ORGANISASI -->
+            <!-- STRUKTUR ORGANISASI (Menggunakan folder assets/img/) -->
             <div id="page-struktur-organisasi" class="page-item hidden space-y-8">
                 <div class="text-center max-w-xl mx-auto space-y-2">
                     <span class="text-[11px] font-bold tracking-widest text-brand-700 uppercase">Manajemen & Pengajar</span>
@@ -297,7 +293,7 @@
                 </div>
             </div>
 
-            <!-- REVISI MINIMALIS & MODERN: VISI & MISI -->
+            <!-- VISI & MISI -->
             <div id="page-visi-misi" class="page-item hidden space-y-8">
                 <div class="max-w-2xl mx-auto text-center space-y-2">
                     <span class="text-[11px] font-bold tracking-widest text-brand-700 uppercase">Landasan Operasional</span>
@@ -305,7 +301,6 @@
                 </div>
 
                 <div class="grid md:grid-cols-12 gap-6 items-stretch">
-                    <!-- VISI -->
                     <div class="md:col-span-5 bg-gradient-to-br from-brand-950 to-brand-900 text-white p-8 rounded-2xl flex flex-col justify-between relative overflow-hidden shadow-sm">
                         <div class="absolute -right-6 -bottom-6 text-emerald-800/20 text-9xl font-black select-none pointer-events-none">V</div>
                         <div class="space-y-4 relative z-10">
@@ -321,7 +316,6 @@
                         </div>
                     </div>
 
-                    <!-- MISI -->
                     <div class="md:col-span-7 bg-white p-8 rounded-2xl border border-slate-200/80 flex flex-col justify-between shadow-sm">
                         <div class="space-y-6">
                             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold tracking-widest uppercase border border-slate-200">
@@ -358,18 +352,15 @@
                 </div>
             </div>
 
-            <!-- REVISI MINIMALIS & MODERN: SEJARAH & PROFIL -->
+            <!-- SEJARAH & PROFIL -->
             <div id="page-sejarah-profil" class="page-item hidden space-y-6">
                 <div class="bg-white rounded-2xl border border-slate-200/80 p-8 shadow-sm">
                     <div class="grid lg:grid-cols-12 gap-8 items-center">
                         <div class="lg:col-span-7 space-y-4">
-                            <span class="text-[10px] font-extrabold text-brand-700 uppercase tracking-widest">Rekam Jekat & Peran</span>
+                            <span class="text-[10px] font-extrabold text-brand-700 uppercase tracking-widest">Rekam Jejak & Peran</span>
                             <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight">Sejarah & Profil Lembaga</h3>
                             <p class="text-xs text-slate-600 leading-relaxed">
                                 Unit Pelaksana Akademis (UPA) Bahasa Politeknik Negeri Samarinda berdiri sebagai unsur penunjang akademik yang berfokus pada penguatan kemahiran kebahasaan. Kehadirannya menjadi pilar vital dalam memastikan setiap lulusan memiliki kesiapan tinggi menghadapi dinamika industri nasional maupun global.
-                            </p>
-                            <p class="text-xs text-slate-600 leading-relaxed">
-                                Seiring transformasi digital dan tuntutan standar kompetensi vokasi, UPA Bahasa POLNES terus mengembangkan infrastruktur pengujian modern, metode pelatihan adaptif, serta kemudahan akses sertifikasi bagi seluruh mahasiswa.
                             </p>
                         </div>
                         <div class="lg:col-span-5 bg-slate-50 p-6 rounded-xl border border-slate-200/80 space-y-4">
@@ -387,17 +378,13 @@
                                     <span class="w-1.5 h-1.5 rounded-full bg-brand-700"></span>
                                     Penerjemahan Dokumen Resmi & Abstrak Ilmiah
                                 </li>
-                                <li class="flex items-center gap-2.5">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-brand-700"></span>
-                                    Pusat Uji Kompetensi Kebahasaan Mahasiswa
-                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- REVISI MINIMALIS & MODERN: TUJUAN & FUNGSI -->
+            <!-- TUJUAN & FUNGSI -->
             <div id="page-tujuan-fungsi" class="page-item hidden space-y-6">
                 <div class="text-center max-w-xl mx-auto space-y-2">
                     <span class="text-[11px] font-bold tracking-widest text-brand-700 uppercase">Tugas Pokok</span>
@@ -433,27 +420,140 @@
                 </div>
             </div>
 
-            <div id="page-layanan-kursus" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Pendaftaran Kursus Bahasa</h3>
-                <form id="form-kursus" onsubmit="alert('Pengajuan terkirim!')" class="space-y-3">
-                    <div class="grid md:grid-cols-2 gap-3">
-                        <input type="text" required placeholder="Nama Lengkap" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none">
-                        <input type="text" required placeholder="NIM" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none">
+            <!-- REVISI: FORM PENDAFTARAN KURSUS/REMEDIAL YANG LEBIH DETAIL & KOMPREHENSIF -->
+            <div id="page-layanan-kursus" class="page-item hidden bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-xs space-y-6">
+                <div class="border-b border-slate-200 pb-4">
+                    <h3 class="text-lg font-extrabold text-brand-950">Pendaftaran Kursus & Remedial Bahasa UPA POLNES</h3>
+                    <p class="text-slate-500 text-[11px] mt-1">Silakan lengkapi formulir pendaftaran di bawah ini secara teliti untuk registrasi kelas pelatihan atau perbaikan skor.</p>
+                </div>
+                
+                <form id="form-kursus-detail" onsubmit="handleKursusSubmit(event)" class="space-y-5">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Nama Lengkap Mahasiswa <span class="text-rose-500">*</span></label>
+                            <input type="text" id="kursus-nama" required placeholder="Masukkan nama sesuai KTM" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Nomor Induk Mahasiswa (NIM) <span class="text-rose-500">*</span></label>
+                            <input type="text" id="kursus-nim" required placeholder="Contoh: 220102034" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50">
+                        </div>
                     </div>
-                    <button type="submit" class="w-full bg-brand-800 hover:bg-brand-900 text-white font-bold py-2.5 rounded-lg transition text-xs">
-                        Kirim Pendaftaran
-                    </button>
+
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Program Studi / Jurusan <span class="text-rose-500">*</span></label>
+                            <select id="kursus-prodi" required class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50 font-medium">
+                                <option value="" disabled selected>-- Pilih Program Studi --</option>
+                                <option value="Teknik Informatika">D4 - Teknik Informatika</option>
+                                <option value="Teknik Sipil">D3 / D4 - Teknik Sipil</option>
+                                <option value="Teknik Mesin">D3 / D4 - Teknik Mesin</option>
+                                <option value="Teknik Elektro">D3 / D4 - Teknik Elektro</option>
+                                <option value="Akuntansi">D3 / D4 - Akuntansi</option>
+                                <option value="Administrasi Bisnis">D3 / D4 - Administrasi Bisnis</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Semester Saat Ini <span class="text-rose-500">*</span></label>
+                            <select id="kursus-semester" required class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50 font-medium">
+                                <option value="" disabled selected>-- Pilih Semester --</option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7 / Akhir</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Pilihan Jenis Layanan <span class="text-rose-500">*</span></label>
+                            <select id="kursus-jenis" required class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50 font-medium">
+                                <option value="" disabled selected>-- Pilih Jenis Layanan --</option>
+                                <option value="Kursus Intensif Bahasa Inggris">Kursus Intensif Bahasa Inggris</option>
+                                <option value="Kursus Bahasa Mandarin Dasar">Kursus Bahasa Mandarin Dasar</option>
+                                <option value="Program Remedial TOEFL">Program Remedial TOEFL</option>
+                                <option value="Kelas Persiapan Sertifikasi Internasional">Kelas Persiapan Sertifikasi Internasional</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Nomor WhatsApp / HP Aktif <span class="text-rose-500">*</span></label>
+                            <input type="tel" id="kursus-wa" required placeholder="Contoh: 081234567890" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Email Akademik / Pribadi <span class="text-rose-500">*</span></label>
+                            <input type="email" id="kursus-email" required placeholder="nama@student.polnes.ac.id" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1.5">Catatan Tambahan atau Riwayat Skor Sebelumnya (Opsional)</label>
+                        <textarea id="kursus-catatan" rows="3" placeholder="Sebutkan jika ada kendala spesifik atau skor TOEFL terakhir Anda..." class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50"></textarea>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full bg-brand-800 hover:bg-brand-900 text-white font-extrabold py-3.5 rounded-xl transition shadow-md active:scale-95 text-xs uppercase tracking-wider">
+                            Kirim Formulir Pendaftaran Kursus / Remedial
+                        </button>
+                    </div>
                 </form>
             </div>
 
-            <div id="page-layanan-keluhan" class="page-item hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm text-xs space-y-4">
-                <h3 class="text-base font-bold text-brand-950 border-b pb-2">Laporan Kendala Ujian</h3>
-                <form onsubmit="alert('Laporan Pengaduan Terkirim!')" class="space-y-3">
-                    <input type="text" required placeholder="Nama Lengkap" class="w-full p-2.5 border border-slate-200 rounded-lg outline-none">
-                    <textarea rows="3" required placeholder="Deskripsi Kendala..." class="w-full p-2.5 border border-slate-200 rounded-lg outline-none"></textarea>
-                    <button type="submit" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-5 py-2.5 rounded-lg transition text-xs">
-                        Kirim
-                    </button>
+            <!-- REVISI: FORM PENGADUAN & KENDALA UJIAN YANG LEBIH DETAIL & KOMPREHENSIF -->
+            <div id="page-layanan-keluhan" class="page-item hidden bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-xs space-y-6">
+                <div class="border-b border-slate-200 pb-4">
+                    <h3 class="text-lg font-extrabold text-brand-950">Pusat Pengaduan & Kendala Ujian / Sertifikasi</h3>
+                    <p class="text-slate-500 text-[11px] mt-1">Sampaikan kendala teknis, masalah server ujian, atau kesalahan data sertifikat TOEFL Anda melalui formulir terstruktur ini.</p>
+                </div>
+                
+                <form id="form-keluhan-detail" onsubmit="handleKeluhanSubmit(event)" class="space-y-5">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Nama Lengkap Pelapor <span class="text-rose-500">*</span></label>
+                            <input type="text" id="keluhan-nama" required placeholder="Masukkan nama lengkap Anda" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">NIM / Nomor Identitas <span class="text-rose-500">*</span></label>
+                            <input type="text" id="keluhan-nim" required placeholder="Masukkan NIM atau No. Identitas" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Kategori Kendala <span class="text-rose-500">*</span></label>
+                            <select id="keluhan-kategori" required class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50 font-medium">
+                                <option value="" disabled selected>-- Pilih Kategori Masalah --</option>
+                                <option value="Kendala Sistem / Server Ujian TOEFL">Kendala Sistem / Server Ujian TOEFL</option>
+                                <option value="Kesalahan Penulisan Nama / Data Sertifikat">Kesalahan Penulisan Nama / Data Sertifikat</option>
+                                <option value="Skor Nilai Belum Muncul di Sistem">Skor Nilai Belum Muncul di Sistem</option>
+                                <option value="Jadwal Ujian Bentrok / Absen">Jadwal Ujian Bentrok / Absen</option>
+                                <option value="Lainnya">Lainnya (Tuliskan di deskripsi)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1.5">Nomor WhatsApp yang Dapat Dihubungi <span class="text-rose-500">*</span></label>
+                            <input type="tel" id="keluhan-wa" required placeholder="Contoh: 081234567890" class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1.5">Uraian Detail Kendala / Pengaduan <span class="text-rose-500">*</span></label>
+                        <textarea id="keluhan-pesan" rows="4" required placeholder="Jelaskan kronologi atau detail masalah yang Anda alami secara jelas..." class="w-full p-3 border border-slate-200 rounded-xl outline-none focus:border-brand-800 bg-slate-50/50"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1.5">Unggah Bukti Pendukung (Screenshot / Foto Bukti)</label>
+                        <input type="file" id="keluhan-lampiran" class="w-full p-2.5 border border-slate-200 rounded-xl outline-none bg-slate-50 text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-brand-800 hover:file:bg-emerald-100">
+                        <p class="text-[10px] text-slate-400 mt-1">Format yang didukung: JPG, PNG, PDF (Maks. 5MB)</p>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full bg-brand-800 hover:bg-brand-900 text-white font-extrabold py-3.5 rounded-xl transition shadow-md active:scale-95 text-xs uppercase tracking-wider">
+                            Kirim Pengaduan & Laporan Kendala
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -557,13 +657,11 @@
     </footer>
 
     <!-- SCRIPT UTAMA -->
-    <script src="assets/js/auth.js"></script>
     <script>
         function toggleLoginModal(show) {
             document.getElementById('login-modal').classList.toggle('hidden', !show);
         }
 
-        // FUNGSI LOGOUT AMAN
         function handleLogout() {
             if (confirm("Apakah Anda yakin ingin keluar dari akun?")) {
                 localStorage.removeItem('user_session');
@@ -573,7 +671,6 @@
             }
         }
 
-        // FUNGSI UPDATE TAMPILAN SESI
         function updateAuthUI(user) {
             const container = document.getElementById('auth-button-container');
             if (!container) return;
@@ -602,7 +699,6 @@
             }
         }
 
-        // PENANGANAN LOGIN DENGAN LOGIKA REDIRECT
         function handleLoginSubmit(e) {
             e.preventDefault();
             const username = document.getElementById('login-username').value;
@@ -643,6 +739,22 @@
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function handleKursusSubmit(e) {
+            e.preventDefault();
+            const nama = document.getElementById('kursus-nama').value;
+            const jenis = document.getElementById('kursus-jenis').value;
+            alert(`Terima kasih, ${nama}! Pendaftaran untuk "${jenis}" berhasil dikirim dan akan segera diverifikasi oleh admin UPA Bahasa.`);
+            document.getElementById('form-kursus-detail').reset();
+        }
+
+        function handleKeluhanSubmit(e) {
+            e.preventDefault();
+            const nama = document.getElementById('keluhan-nama').value;
+            const kategori = document.getElementById('keluhan-kategori').value;
+            alert(`Laporan kendala dengan kategori "${kategori}" atas nama ${nama} berhasil dikirim. Tim teknis akan segera menindaklanjuti.`);
+            document.getElementById('form-keluhan-detail').reset();
         }
 
         function cariHasilToefl(type) {
@@ -737,7 +849,6 @@
             }
         }
 
-        // PERIKSA STATUS SESI SAAT HALAMAN DIMUAT
         window.addEventListener('DOMContentLoaded', () => {
             let user = null;
             const stored = localStorage.getItem('user_session') || sessionStorage.getItem('user_session');
