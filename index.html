@@ -393,32 +393,35 @@
         </div>
     </footer>
 
-    <!-- SCRIPT AUTH & SPA CONTROLLER (MEMPERBAIKI MASALAH LOGOUT) -->
+    <!-- SCRIPT AUTH & SPA CONTROLLER -->
     <script src="assets/js/auth.js"></script>
     <script>
         function toggleLoginModal(show) {
             document.getElementById('login-modal').classList.toggle('hidden', !show);
         }
 
-        // FUNGSI LOGOUT DIPERBAIKI SECARA TOTAL
+        // FUNGSI LOGOUT DIPERBAIKI SECARA TUNTAS & BERSIH
         function handleLogout() {
             if (confirm("Apakah Anda yakin ingin keluar dari akun?")) {
-                // 1. Panggil fungsi clearSession jika terdefinisi di auth.js
+                // 1. Panggil fungsi clearSession bawaan jika ada di auth.js
                 if (typeof clearSession === 'function') {
-                    clearSession();
+                    try { clearSession(); } catch(e) {}
                 }
                 
-                // 2. Hapus secara menyeluruh seluruh kemungkinan key penyimpanan sesi
-                localStorage.removeItem('user_session');
-                localStorage.removeItem('upa_current_user');
-                sessionStorage.removeItem('user_session');
-                sessionStorage.removeItem('upa_current_user');
+                // 2. Hapus total seluruh penyimpanan browser (localStorage & sessionStorage)
+                localStorage.clear();
+                sessionStorage.clear();
 
-                // 3. Render ulang tampilan tombol auth di topbar
+                // 3. Hapus seluruh cookie jika diset oleh auth.js
+                document.cookie.split(";").forEach(function(c) {
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                });
+
+                // 4. Update UI secara paksa ke mode belum login
                 updateAuthUI(null);
 
-                // 4. Reload halaman secara bersih
-                window.location.reload();
+                // 5. Muat ulang halaman ke kondisi bersih
+                window.location.href = 'index.html';
             }
         }
 
@@ -427,7 +430,7 @@
             const container = document.getElementById('auth-button-container');
             if (!container) return;
 
-            if (user && (user.username || user.name)) {
+            if (user && (user.username || user.name) && user.isLoggedIn !== false) {
                 const displayName = user.username || user.name;
                 const displayRole = user.posisi || user.role || 'Staff';
                 const dashboardPage = (displayRole === 'Kepala') ? 'kepala-dashboard.html' : 'staff-dashboard.html';
@@ -460,7 +463,7 @@
             const sessionData = { username: username, posisi: posisi, isLoggedIn: true };
 
             if (typeof saveSession === 'function') {
-                saveSession(username, posisi);
+                try { saveSession(username, posisi); } catch(e) {}
             }
             
             localStorage.setItem('user_session', JSON.stringify(sessionData));
@@ -598,7 +601,7 @@
             let user = null;
 
             if (typeof getSession === 'function') {
-                user = getSession();
+                try { user = getSession(); } catch(e) {}
             }
             
             if (!user) {
