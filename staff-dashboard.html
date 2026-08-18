@@ -7,6 +7,8 @@
     <!-- Google Fonts & Tailwind CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS CDN untuk membaca file .xlsx dan .xls -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -28,7 +30,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
 
-    <!-- HEADER / NAVBAR -->
+    <!-- HEADER / NAVBAR STAFF -->
     <header class="bg-brand-950 text-white py-3.5 px-6 border-b border-emerald-900 shadow-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -76,16 +78,16 @@
         <div id="tab-excel" class="tab-content space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                 <div>
-                    <h3 class="font-bold text-base text-brand-950">Upload & Kalkulasi Hasil Tes TOEFL (File CSV / Excel)</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Pilih file CSV/Excel untuk menghitung otomatis skor & status kelulusan mahasiswa secara langsung ke tabel.</p>
+                    <h3 class="font-bold text-base text-brand-950">Upload & Kalkulasi Hasil Tes TOEFL (.xlsx / .csv)</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Pilih file Excel/CSV untuk menghitung otomatis skor & status kelulusan mahasiswa secara langsung ke tabel.</p>
                 </div>
 
                 <div class="border-2 border-dashed border-emerald-300 bg-emerald-50/50 p-6 rounded-xl text-center space-y-3">
                     <input type="file" id="excel-file-input" accept=".csv, .xlsx, .xls" class="hidden" onchange="processExcelUpload(event)">
                     <label for="excel-file-input" class="cursor-pointer inline-flex items-center gap-2 bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2.5 rounded-xl text-xs shadow-md transition">
-                        📁 Pilih File CSV / Excel Hasil Tes
+                        📁 Pilih File Excel / CSV Hasil Tes
                     </label>
-                    <p class="text-[11px] text-slate-500">Format CSV: NIM, Nama, No. Komputer, Benar Listening, Benar Structure, Benar Reading</p>
+                    <p class="text-[11px] text-slate-500">Format Kolom: NIM | Nama | No. Komputer | Benar Listening | Benar Structure | Benar Reading</p>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -287,32 +289,48 @@
             activeBtn.classList.add('bg-brand-800', 'text-white');
         }
 
-        // 2. Upload & Parsing CSV/Excel + Penambahan Baris Dinamis ke Tabel
+        // 2. Upload & Parsing CSV/Excel Serbaguna + Penambahan Baris Dinamis ke Tabel
         function processExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
+            const isBinary = file.name.endsWith('.xlsx') || file.name.endsWith('.xls');
+
             reader.onload = function(e) {
-                const text = e.target.result;
-                const lines = text.split('\n');
+                let rows = [];
+
+                if (isBinary) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                } else {
+                    const text = e.target.result;
+                    const lines = text.split(/\r\n|\n/);
+                    rows = lines.map(line => {
+                        if (line.includes(';')) return line.split(';');
+                        if (line.includes('\t')) return line.split('\t');
+                        return line.split(',');
+                    });
+                }
+
                 const tbody = document.getElementById('excel-preview-body');
-                
                 let addedCount = 0;
 
-                lines.forEach((line, idx) => {
-                    if (idx === 0 || !line.trim()) return; // Skip Header & baris kosong
-                    
-                    const cols = line.split(',');
-                    if (cols.length >= 6) {
-                        const nim = cols[0].trim();
-                        const nama = cols[1].trim();
-                        const pc = cols[2].trim();
-                        const l = parseInt(cols[3].trim()) || 0;
-                        const s = parseInt(cols[4].trim()) || 0;
-                        const r = parseInt(cols[5].trim()) || 0;
+                rows.forEach((cols, idx) => {
+                    if (idx === 0 || !cols || cols.length < 2) return;
 
-                        // Formula sederhana kalkulasi TOEFL
+                    const nim = cols[0] ? cols[0].toString().trim() : '';
+                    const nama = cols[1] ? cols[1].toString().trim() : '';
+                    const pc = cols[2] && cols[2].toString().trim() !== '' ? cols[2].toString().trim() : 'PC-01';
+                    
+                    const l = parseInt(cols[3]) || 0;
+                    const s = parseInt(cols[4]) || 0;
+                    const r = parseInt(cols[5]) || 0;
+
+                    if (nim && nama) {
                         const totalScore = Math.round(((l + s + r) / 120) * 490 + 210);
                         const isLulus = totalScore >= 450;
 
@@ -335,10 +353,14 @@
                     }
                 });
 
-                alert(`Berhasil mengimpor ${addedCount} data mahasiswa dari file CSV/Excel!`);
+                alert(`Berhasil mengimpor ${addedCount} data mahasiswa dari file!`);
             };
 
-            reader.readAsText(file);
+            if (isBinary) {
+                reader.readAsArrayBuffer(file);
+            } else {
+                reader.readAsText(file);
+            }
         }
 
         function publishToWeb() {
@@ -353,7 +375,7 @@
             const inputMeja = document.getElementById(`meja-${id}`);
 
             badge.className = 'bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]';
-                badge.innerText = 'TERJADWAL (ACC)';
+            badge.innerText = 'TERJADWAL (ACC)';
             
             btn.className = 'bg-slate-300 text-slate-600 font-bold px-3 py-1.5 rounded-lg text-[11px] cursor-not-allowed';
             btn.innerText = 'Disetujui';
