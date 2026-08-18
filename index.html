@@ -57,7 +57,8 @@
             border-radius: 9999px;
         }
         .hero-bg {
-            background-image: linear-gradient(to bottom, rgba(5, 46, 22, 0.70), rgba(20, 83, 45, 0.80)), url('https://images.unsplash.com/photo-1562774053-701939374585?w=1600&auto=format&fit=crop&q=80');
+            /* Menggunakan gambar gedung Polnes sesuai permintaan */
+            background-image: linear-gradient(to bottom, rgba(5, 46, 22, 0.75), rgba(20, 83, 45, 0.85)), url('assets/img/gedung-polnes.jpg');
             background-size: cover;
             background-position: center;
         }
@@ -76,7 +77,7 @@
     <div class="bg-brand-950 text-slate-200 text-xs py-2.5 px-6 border-b border-emerald-900">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-6 text-[11px] font-medium tracking-wide">
-                <span>Kampus Gunung Kelua, Samarinda</span>
+                <span>Jl. Cipto Mangunkusumo, Samarinda Seberang</span>
                 <span class="hidden md:inline">upabahasa@polnes.ac.id</span>
                 <span class="hidden lg:inline">(0541) 743584</span>
             </div>
@@ -101,8 +102,9 @@
         <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
             
             <div class="flex items-center space-x-3.5 cursor-pointer group" onclick="showPage('beranda', 'Beranda', 'nav-beranda')">
-                <div class="w-11 h-11 bg-gradient-to-br from-brand-900 to-brand-700 rounded-xl flex items-center justify-center text-white font-black text-xl border-2 border-amber-400/80 shadow-md group-hover:scale-105 transition-transform duration-300">
-                    P
+                <!-- Logo Polnes (Ganti huruf P dengan tag gambar. Pastikan file logo-polnes.png tersedia di folder assets/img/) -->
+                <div class="w-11 h-11 bg-white rounded-xl flex items-center justify-center p-1 border-2 border-amber-400/80 shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <img src="assets/img/logo-polnes.png" alt="Logo Polnes" class="w-full h-full object-contain">
                 </div>
                 <div>
                     <h1 class="text-xl font-black text-brand-950 tracking-tight leading-none group-hover:text-brand-800 transition">UPA BAHASA</h1>
@@ -166,9 +168,9 @@
         </div>
     </header>
 
-    <!-- HALAMAN BERANDA PUBLIK -->
-    <div id="page-beranda" class="page-content flex-1">
-        <section class="relative hero-bg text-white flex items-center justify-center py-16 sm:py-20">
+    <!-- HALAMAN BERANDA PUBLIK (DIPERPANJANG DENGAN BERITA & MAPS POLNES) -->
+    <div id="page-beranda" class="page-content flex-1 flex flex-col">
+        <section class="relative hero-bg text-white flex items-center justify-center py-20 sm:py-28">
             <div class="relative max-w-3xl mx-auto px-6 text-center z-10">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mb-3 leading-snug">
                     Layanan Bahasa & Tes TOEFL <br><span class="text-amber-400">Politeknik Negeri Samarinda</span>
@@ -205,6 +207,73 @@
                 <div class="p-2">
                     <p class="text-2xl md:text-3xl font-black text-brand-900">24/7</p>
                     <p class="text-[11px] text-slate-500 font-medium mt-0.5">Layanan Online</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sekilas Berita & Kegiatan di Beranda -->
+        <section class="max-w-7xl mx-auto px-6 py-12 w-full space-y-6">
+            <div class="flex justify-between items-end">
+                <div>
+                    <span class="text-[10px] font-extrabold text-brand-700 uppercase tracking-widest">Informasi Terkini</span>
+                    <h3 class="text-xl font-extrabold text-brand-950">Berita & Kegiatan Terbaru</h3>
+                </div>
+                <button onclick="showPage('berita', 'Berita & Informasi Terbaru', 'nav-lainnya')" class="text-xs font-bold text-brand-800 hover:underline">Lihat Semua &rarr;</button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 w-full overflow-hidden bg-slate-100 relative">
+                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80" alt="Placement Test" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                            <span class="absolute top-3 left-3 bg-emerald-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow">NEWS</span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-sm text-slate-900 leading-snug">Kunjungan Team UPA BAHASA dalam rangka Placement Test</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed line-clamp-2">Dalam rangka meningkatkan kemampuan bahasa Inggris semua karyawan, tim UPA Bahasa melakukan kunjungan dan uji penempatan kemampuan...</p>
+                        </div>
+                    </div>
+                    <div class="px-4 pb-4 pt-0">
+                        <span class="text-[10px] text-slate-400 block border-t border-slate-100 pt-2">10 Juni 2026</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 w-full overflow-hidden bg-slate-100 relative">
+                            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&auto=format&fit=crop&q=80" alt="Balai Bahasa" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                            <span class="absolute top-3 left-3 bg-emerald-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow">NEWS</span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-sm text-slate-900 leading-snug">Kunjungan Ke Balai Bahasa Surabaya</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed line-clamp-2">UPA Bahasa melakukan kunjungan dan menjalin kerjasama strategis dengan Balai Bahasa Provinsi Jawa Timur guna memperkuat kualitas layanan...</p>
+                        </div>
+                    </div>
+                    <div class="px-4 pb-4 pt-0">
+                        <span class="text-[10px] text-slate-400 block border-t border-slate-100 pt-2">12 Juni 2026</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lokasi Maps Kampus Polnes di Beranda -->
+        <section class="bg-slate-100 py-12 border-t border-slate-200 mt-auto">
+            <div class="max-w-7xl mx-auto px-6 space-y-6">
+                <div>
+                    <span class="text-[10px] font-extrabold text-brand-700 uppercase tracking-widest">Peta Lokasi</span>
+                    <h3 class="text-xl font-extrabold text-brand-950">Lokasi Kampus UPA Bahasa POLNES</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Jl. Cipto Mangunkusumo, Kecamatan Samarinda Seberang, Kota Samarinda, Kalimantan Timur 75131</p>
+                </div>
+                <div class="rounded-2xl overflow-hidden border border-slate-300 shadow-sm h-80 w-full bg-slate-200">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.66440266299!2d117.118557!3d-0.528345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2df67e0e7a79e497%3A0x6b8015c9a75949a2!2sPoliteknik%20Negeri%20Samarinda!5e0!3m2!1sid!2sid!4v1710000000000!5m2!1sid!2sid" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
             </div>
         </section>
@@ -637,7 +706,6 @@
                 </div>
                 
                 <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Berita 1 -->
                     <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="h-44 w-full overflow-hidden bg-slate-100 relative">
@@ -654,7 +722,6 @@
                         </div>
                     </div>
                     
-                    <!-- Berita 2 -->
                     <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="h-44 w-full overflow-hidden bg-slate-100 relative">
@@ -727,7 +794,7 @@
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between gap-4">
             <div>
                 <p class="font-bold text-white">UPA Bahasa Politeknik Negeri Samarinda</p>
-                <p class="mt-1 text-emerald-300">Jl. Gerilya, Kampus Gunung Kelua, Samarinda</p>
+                <p class="mt-1 text-emerald-300">Jl. Cipto Mangunkusumo, Kecamatan Samarinda Seberang, Kota Samarinda, Kalimantan Timur 75131</p>
             </div>
             <div class="text-left md:text-right text-[11px]">
                 <p class="text-emerald-400">&copy; 2026 UPA Bahasa POLNES. All rights reserved.</p>
@@ -813,7 +880,6 @@
                 document.getElementById('page-title-heading').innerText = pageTitle;
                 document.getElementById('breadcrumb-current').innerText = pageTitle;
 
-                // Jika halaman analisis dibuka, render otomatis chart & prediksinya
                 if (pageId === 'layanan-analisis') {
                     setTimeout(renderAnalisisData, 100);
                 }
@@ -828,7 +894,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // FUNGSI ANALISIS & PREDIKSI BERDASARKAN DATA PUBLIK / UPLOAD STAFF
         function renderAnalisisData() {
             let publishedData = JSON.parse(localStorage.getItem('pub_toefl_results') || '[]');
             
