@@ -55,11 +55,10 @@
             </div>
 
             <div class="flex items-center gap-4 text-xs">
-                <span class="text-slate-200">Petugas: <strong id="user-display-name" class="text-amber-400">lissa [Staff]</strong></span>
+                <span class="text-slate-200">Petugas: <strong id="user-display-name" class="text-amber-400">Staff UPA</strong></span>
                 <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-semibold transition text-[11px]">
                     Lihat Web Utama ↗
                 </a>
-                <!-- LOGOUT HARUS LANGSUNG MEMBERSIHKAN SESSION -->
                 <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-lg font-bold transition">
                     Logout
                 </button>
@@ -326,7 +325,7 @@
                 </div>
 
                 <div class="text-center space-y-1">
-                    <p class="text-xs text-slate-600">Samarinda, <span id="cert-date">18 Agustus 2026</span></p>
+                    <p class="text-xs text-slate-600">Samarinda, <span id="cert-date">19 Agustus 2026</span></p>
                     <p class="text-[11px] font-bold text-slate-800">Kepala UPA Bahasa POLNES,</p>
                     <div class="h-12 flex items-center justify-center">
                         <span class="font-serif italic text-slate-400 text-xs">[ Tanda Tangan Digital ]</span>
@@ -346,17 +345,20 @@
             kelas: null
         };
 
-        // FUNGSI LOGOUT DIPERBAIKI: Hapus seluruh key auth tanpa merusak DB Excel
+        // LOGOUT SAFE: Hapus akun tanpa merusak data upload
         function handleLogout() {
-            localStorage.removeItem('user_session');
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('upa_user');
-            localStorage.removeItem('logged_in_user');
-            localStorage.removeItem('role');
+            if (confirm("Apakah Anda yakin ingin keluar dari Panel Staff?")) {
+                localStorage.removeItem('user_session');
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('upa_user');
+                localStorage.removeItem('logged_in_user');
+                localStorage.removeItem('role');
 
-            // Pengalihan otomatis ke index.html
-            window.location.href = 'index.html';
+                sessionStorage.removeItem('user_session');
+
+                window.location.href = 'index.html';
+            }
         }
 
         function convertToTOEFLScore(l, s, r) {
@@ -396,11 +398,52 @@
             return defaultDb;
         }
 
+        // FUNGSI SINKRONISASI OTOMATIS DENGAN INDEX.HTML
+        function syncDBToPublicWeb(db) {
+            let flatResults = [];
+            Object.keys(db).forEach(jurnalKey => {
+                const prodiObj = db[jurnalKey] || {};
+                Object.keys(prodiObj).forEach(prodiKey => {
+                    const kelasObj = prodiObj[prodiKey] || {};
+                    Object.keys(kelasObj).forEach(kelasKey => {
+                        const mhsArray = kelasObj[kelasKey] || [];
+                        mhsArray.forEach(mhs => {
+                            flatResults.push({
+                                nim: mhs.nim,
+                                nama: mhs.nama,
+                                jurusan: jurnalKey,
+                                prodi: prodiKey,
+                                kelas: kelasKey,
+                                listening: mhs.l || 0,
+                                structure: mhs.s || 0,
+                                reading: mhs.r || 0,
+                                totalSkor: mhs.score || 0,
+                                status: mhs.status || 'REMEDIAL',
+                                certNo: mhs.certNo || '',
+                                tanggalUjian: new Date().toISOString().split('T')[0]
+                            });
+                        });
+                    });
+                });
+            });
+
+            // Simpan langsung ke pub_toefl_results yang dibaca oleh index.html
+            localStorage.setItem('pub_toefl_results', JSON.stringify(flatResults));
+        }
+
         function saveDB(db) {
             localStorage.setItem('upa_folder_db', JSON.stringify(db));
+            syncDBToPublicWeb(db); // Otomatis sync!
         }
 
         function initStaffData() {
+            // Ambil nama user jika login
+            const userSession = JSON.parse(localStorage.getItem('user_session') || sessionStorage.getItem('user_session') || '{}');
+            if (userSession.username) {
+                const disp = document.getElementById('user-display-name');
+                if (disp) disp.innerText = userSession.username + ' [Staff]';
+            }
+
             renderFolderView();
             renderSertifikatTable();
         }
@@ -540,7 +583,7 @@
                                     <td class="p-3 text-center font-bold text-emerald-800">${item.score}</td>
                                     <td class="p-3 text-slate-500 font-mono">${certNo}</td>
                                     <td class="p-3 text-center">
-                                        <button onclick="generateSertifikat('${item.nim}', '${item.nama}', '${item.score}', '${certNo}', '18 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
+                                        <button onclick="generateSertifikat('${item.nim}', '${item.nama}', '${item.score}', '${certNo}', '19 Agustus 2026')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-[11px] transition shadow">
                                             📜 Lihat & Cetak Sertifikat
                                         </button>
                                     </td>
@@ -568,16 +611,16 @@
                 let addedCount = 0;
 
                 rows.forEach((cols, idx) => {
-                    if (idx === 0 || !cols || cols.length < 8) return;
+                    if (idx === 0 || !cols || cols.length < 2) return;
 
                     const nim = cols[0] ? cols[0].toString().trim() : '';
                     const nama = cols[1] ? cols[1].toString().trim() : '';
                     const pc = cols[5] ? cols[5].toString().trim() : (cols[2] ? cols[2].toString().trim() : 'PC-01');
                     const prodi = cols[3] ? cols[3].toString().trim().toUpperCase() : 'TI';
                     const kelas = cols[4] ? cols[4].toString().trim().toUpperCase() : '1 A';
-                    const l = parseInt(cols[6]) || parseInt(cols[3]) || 0;
-                    const s = parseInt(cols[7]) || parseInt(cols[4]) || 0;
-                    const r = parseInt(cols[8]) || parseInt(cols[5]) || 0;
+                    const l = parseInt(cols[6]) || parseInt(cols[2]) || 0;
+                    const s = parseInt(cols[7]) || parseInt(cols[3]) || 0;
+                    const r = parseInt(cols[8]) || parseInt(cols[4]) || 0;
 
                     if (nim && nama) {
                         const totalScore = convertToTOEFLScore(l, s, r);
@@ -610,22 +653,25 @@
                     }
                 });
 
-                saveDB(db);
+                saveDB(db); // Menyimpan permanen & sinkron ke Web Utama
                 renderFolderView();
                 renderSertifikatTable();
-                alert(`✅ Upload Berhasil! Memproses ${addedCount} data mahasiswa ke folder masing-masing dan tersimpan secara permanen.`);
+                alert(`✅ Upload Berhasil! Memproses ${addedCount} data mahasiswa ke folder masing-masing dan otomatis dipublish ke Halaman Utama.`);
                 event.target.value = '';
             };
             reader.readAsArrayBuffer(file);
         }
 
         function publishToWeb() {
-            alert('✅ Berhasil mempublikasikan data hasil tes ke Web Utama!');
+            const db = getDB();
+            saveDB(db);
+            alert('✅ Berhasil mempublikasikan data hasil tes ke Web Utama! Mahasiswa dapat langsung mencari hasilnya.');
         }
 
         function resetDataToDefault() {
             if (confirm("Apakah Anda yakin ingin menghapus semua data upload dan mengembalikan ke folder kosong?")) {
-                saveDB(getDefaultFolderDB());
+                const defaultDb = getDefaultFolderDB();
+                saveDB(defaultDb);
                 currentFolder.prodi = null;
                 currentFolder.kelas = null;
                 renderFolderView();

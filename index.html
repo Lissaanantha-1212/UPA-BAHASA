@@ -384,17 +384,14 @@
             document.getElementById('login-modal').classList.toggle('hidden', !show);
         }
 
-        // FUNGSI LOGOUT DIPERBAIKI SECARA TUNTAS & BERSIH
+        // FUNGSI LOGOUT AMAN: Hanya hapus sesi user, data upload TETAP AMAN!
         function handleLogout() {
             if (confirm("Apakah Anda yakin ingin keluar dari akun?")) {
-                if (typeof clearSession === 'function') {
-                    clearSession();
-                } else {
-                    localStorage.removeItem('user_session');
-                    sessionStorage.removeItem('user_session');
-                    localStorage.clear();
-                    sessionStorage.clear();
-                }
+                // Hapus akun sesi dari Local/Session Storage
+                localStorage.removeItem('user_session');
+                sessionStorage.removeItem('user_session');
+
+                // JANGAN PERNAH panggil localStorage.clear() agar data upload Excel/Sertifikat tidak terhapus!
 
                 updateAuthUI(null);
                 window.location.href = 'index.html';
@@ -436,12 +433,8 @@
             const username = document.getElementById('login-username').value;
             const posisi = document.getElementById('login-posisi').value;
             
-            if (typeof saveSession === 'function') {
-                saveSession(username, posisi);
-            } else {
-                const sessionData = { username: username, posisi: posisi, isLoggedIn: true };
-                localStorage.setItem('user_session', JSON.stringify(sessionData));
-            }
+            const sessionData = { username: username, posisi: posisi, isLoggedIn: true };
+            localStorage.setItem('user_session', JSON.stringify(sessionData));
 
             if (posisi === 'Staff') {
                 window.location.href = 'staff-dashboard.html';
@@ -572,13 +565,9 @@
         // PERIKSA STATUS SESI SAAT HALAMAN DIMUAT
         window.addEventListener('DOMContentLoaded', () => {
             let user = null;
-            if (typeof getSession === 'function') {
-                user = getSession();
-            } else {
-                const stored = localStorage.getItem('user_session') || sessionStorage.getItem('user_session');
-                if (stored) {
-                    try { user = JSON.parse(stored); } catch (e) {}
-                }
+            const stored = localStorage.getItem('user_session') || sessionStorage.getItem('user_session');
+            if (stored) {
+                try { user = JSON.parse(stored); } catch (e) {}
             }
             updateAuthUI(user);
         });
