@@ -366,7 +366,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT LOGIKA WORKFLOW STAFF & PERMANENT STORAGE WITH FOLDER STRUCTURE -->
+    <!-- SCRIPT LOGIKA WORKFLOW STAFF & PERMANENT STORAGE -->
     <script>
         // State Navigasi Folder
         let currentFolder = {
@@ -388,7 +388,7 @@
             return Math.round(((scaledL + scaledS + scaledR) * 10) / 3);
         }
 
-        // Database Default (Semua Prodi Kosong / 0 Sesi)
+        // Structure Folder Default
         function getDefaultFolderDB() {
             return {
                 "Teknologi Informasi": {
@@ -400,11 +400,22 @@
             };
         }
 
+        // Ambil DB dari LocalStorage (Jika tidak ada, baru buat default)
         function getDB() {
             const data = localStorage.getItem('upa_folder_db');
-            return data ? JSON.parse(data) : getDefaultFolderDB();
+            if (data) {
+                try {
+                    return JSON.parse(data);
+                } catch(e) {
+                    console.error("Error parsing DB", e);
+                }
+            }
+            const defaultDb = getDefaultFolderDB();
+            localStorage.setItem('upa_folder_db', JSON.stringify(defaultDb));
+            return defaultDb;
         }
 
+        // Simpan DB ke LocalStorage secara Permanen
         function saveDB(db) {
             localStorage.setItem('upa_folder_db', JSON.stringify(db));
         }
@@ -540,15 +551,13 @@
 
             certBody.innerHTML = '';
             const db = getDB();
-            let indexCount = 100;
 
             Object.keys(db[currentFolder.jurusan] || {}).forEach(prodi => {
                 Object.keys(db[currentFolder.jurusan][prodi] || {}).forEach(kelas => {
                     const list = db[currentFolder.jurusan][prodi][kelas] || [];
                     list.forEach(item => {
                         if (item.status === 'LULUS') {
-                            const certNo = item.certNo || `UPA-POLNES/2026/CERT-${indexCount++}`;
-                            item.certNo = certNo;
+                            const certNo = item.certNo;
                             const certRow = `
                                 <tr class="border-b">
                                     <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
@@ -614,7 +623,7 @@
                             r,
                             score: totalScore,
                             status: statusStr,
-                            certNo: isLulus ? `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}` : ''
+                            certNo: isLulus ? `UPA-POLNES/2026/CERT-${Math.floor(1000 + Math.random() * 9000)}` : ''
                         };
 
                         const existingIdx = db[currentFolder.jurusan][prodi][kelas].findIndex(x => x.nim === nim);
@@ -627,10 +636,12 @@
                     }
                 });
 
+                // SIMPAN KE LOCALSTORAGE PERMANEN
                 saveDB(db);
                 renderFolderView();
                 renderSertifikatTable();
-                alert(`✅ Upload Berhasil! Memproses ${addedCount} data mahasiswa ke folder masing-masing.`);
+                alert(`✅ Upload Berhasil! Memproses ${addedCount} data mahasiswa ke folder masing-masing dan tersimpan secara permanen.`);
+                event.target.value = ''; // Reset file input
             };
             reader.readAsArrayBuffer(file);
         }
@@ -640,7 +651,7 @@
         }
 
         function resetDataToDefault() {
-            if (confirm("Apakah Anda yakin ingin mengembalikan data ke tampilan default?")) {
+            if (confirm("Apakah Anda yakin ingin menghapus semua data upload dan mengembalikan ke folder kosong?")) {
                 saveDB(getDefaultFolderDB());
                 currentFolder.prodi = null;
                 currentFolder.kelas = null;
