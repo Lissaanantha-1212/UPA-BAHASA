@@ -393,21 +393,62 @@
         </div>
     </footer>
 
-    <!-- SCRIPT AUTH & SPA CONTROLLER -->
+    <!-- SCRIPT AUTH & SPA CONTROLLER (MEMPERBAIKI MASALAH LOGOUT) -->
     <script src="assets/js/auth.js"></script>
     <script>
         function toggleLoginModal(show) {
             document.getElementById('login-modal').classList.toggle('hidden', !show);
         }
 
-        // FUNGSI LOGOUT SEKALI KLIK
+        // FUNGSI LOGOUT DIPERBAIKI SECARA TOTAL
         function handleLogout() {
-            if (typeof clearSession === 'function') {
-                clearSession();
-            } else {
+            if (confirm("Apakah Anda yakin ingin keluar dari akun?")) {
+                // 1. Panggil fungsi clearSession jika terdefinisi di auth.js
+                if (typeof clearSession === 'function') {
+                    clearSession();
+                }
+                
+                // 2. Hapus secara menyeluruh seluruh kemungkinan key penyimpanan sesi
                 localStorage.removeItem('user_session');
+                localStorage.removeItem('upa_current_user');
+                sessionStorage.removeItem('user_session');
+                sessionStorage.removeItem('upa_current_user');
+
+                // 3. Render ulang tampilan tombol auth di topbar
+                updateAuthUI(null);
+
+                // 4. Reload halaman secara bersih
+                window.location.reload();
             }
-            window.location.reload();
+        }
+
+        // FUNGSI UPDATE TAMPILAN SESI
+        function updateAuthUI(user) {
+            const container = document.getElementById('auth-button-container');
+            if (!container) return;
+
+            if (user && (user.username || user.name)) {
+                const displayName = user.username || user.name;
+                const displayRole = user.posisi || user.role || 'Staff';
+                const dashboardPage = (displayRole === 'Kepala') ? 'kepala-dashboard.html' : 'staff-dashboard.html';
+
+                container.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <a href="${dashboardPage}" class="text-amber-400 font-extrabold hover:underline text-[11px]">
+                            ${displayName} <span class="text-emerald-300 font-normal">[${displayRole}]</span>
+                        </a>
+                        <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-2.5 py-1 rounded-full text-[10px] font-bold transition shadow">
+                            Logout
+                        </button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button onclick="toggleLoginModal(true)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold px-3.5 py-1 rounded-full transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 text-[11px]">
+                        Masuk
+                    </button>
+                `;
+            }
         }
 
         // PENANGANAN LOGIN DENGAN LOGIKA REDIRECT
@@ -416,11 +457,14 @@
             const username = document.getElementById('login-username').value;
             const posisi = document.getElementById('login-posisi').value;
             
+            const sessionData = { username: username, posisi: posisi, isLoggedIn: true };
+
             if (typeof saveSession === 'function') {
                 saveSession(username, posisi);
-            } else {
-                localStorage.setItem('user_session', JSON.stringify({ username, posisi }));
             }
+            
+            localStorage.setItem('user_session', JSON.stringify(sessionData));
+            localStorage.setItem('upa_current_user', JSON.stringify(sessionData));
 
             if (posisi === 'Staff') {
                 window.location.href = 'staff-dashboard.html';
@@ -549,27 +593,26 @@
             }
         }
 
-        // PERIKSA STATUS SESI SAAT MEMBUAT HALAMAN
+        // PERIKSA STATUS SESI SAAT HALAMAN DIMUAT
         window.addEventListener('DOMContentLoaded', () => {
-            const user = typeof getSession === 'function' ? getSession() : JSON.parse(localStorage.getItem('user_session'));
-            const container = document.getElementById('auth-button-container');
-            
-            if (user && user.username) {
-                container.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <a href="${user.posisi === 'Staff' ? 'staff-dashboard.html' : 'kepala-dashboard.html'}" class="text-amber-400 font-extrabold hover:underline">
-                            ${user.username} [${user.posisi}]
-                        </a>
-                        <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-2.5 py-1 rounded-full text-[10px] font-bold">Logout</button>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = `
-                    <button onclick="toggleLoginModal(true)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold px-3.5 py-1 rounded-full transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 text-[11px]">
-                        Masuk
-                    </button>
-                `;
+            let user = null;
+
+            if (typeof getSession === 'function') {
+                user = getSession();
             }
+            
+            if (!user) {
+                const rawUserSession = localStorage.getItem('user_session') || localStorage.getItem('upa_current_user');
+                if (rawUserSession) {
+                    try {
+                        user = JSON.parse(rawUserSession);
+                    } catch(e) {
+                        user = null;
+                    }
+                }
+            }
+
+            updateAuthUI(user);
         });
     </script>
 </body>
