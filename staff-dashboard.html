@@ -32,31 +32,12 @@
         }
     </script>
     <style>
-        /* Sembunyikan elemen non-sertifikat saat mode Print/Cetak PDF */
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #modal-sertifikat, #modal-sertifikat * {
-                visibility: visible;
-            }
-            #modal-sertifikat {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            @page {
-                size: A4 landscape;
-                margin: 0;
-            }
+            body * { visibility: hidden; }
+            #modal-sertifikat, #modal-sertifikat * { visibility: visible; }
+            #modal-sertifikat { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: white !important; padding: 0 !important; margin: 0 !important; }
+            .no-print { display: none !important; }
+            @page { size: A4 landscape; margin: 0; }
         }
     </style>
 </head>
@@ -66,9 +47,7 @@
     <header class="bg-brand-950 text-white py-3.5 px-6 border-b border-emerald-900 shadow-md sticky top-0 z-40 no-print">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-slate-950 font-black">
-                    S
-                </div>
+                <div class="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-slate-950 font-black">S</div>
                 <div>
                     <h1 class="text-base font-bold tracking-wide leading-tight">PANEL OPERASIONAL STAFF</h1>
                     <p class="text-[10px] text-emerald-300 font-medium">UPA Bahasa Politeknik Negeri Samarinda</p>
@@ -80,7 +59,8 @@
                 <a href="index.html" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg font-semibold transition text-[11px]">
                     Lihat Web Utama ↗
                 </a>
-                <button onclick="window.location.href='index.html'" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-lg font-bold transition">
+                <!-- PROSES LOGOUT LANGSUNG 1 KALI KLIK -->
+                <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-3 py-1.5 rounded-lg font-bold transition">
                     Logout
                 </button>
             </div>
@@ -109,7 +89,7 @@
             </button>
         </div>
 
-        <!-- 1. MODUL UPLOAD EXCEL HASIL TES TOEFL (WITH FOLDER STRUCTURE) -->
+        <!-- 1. MODUL UPLOAD EXCEL HASIL TES TOEFL -->
         <div id="tab-excel" class="tab-content space-y-4">
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -124,14 +104,10 @@
                 </div>
 
                 <!-- BREADCRUMB NAVIGASI FOLDER -->
-                <div id="breadcrumb" class="flex items-center gap-2 text-xs font-semibold bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <!-- Populated Dynamically -->
-                </div>
+                <div id="breadcrumb" class="flex items-center gap-2 text-xs font-semibold bg-slate-50 p-3 rounded-xl border border-slate-200"></div>
 
                 <!-- AREA DISPLAY FOLDER / TABEL DATA -->
-                <div id="folder-view-area" class="min-h-[250px] border border-slate-100 rounded-xl p-4 bg-slate-50/50">
-                    <!-- Populated Dynamically -->
-                </div>
+                <div id="folder-view-area" class="min-h-[250px] border border-slate-100 rounded-xl p-4 bg-slate-50/50"></div>
 
                 <div class="flex justify-between items-center pt-2">
                     <button onclick="resetDataToDefault()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-3 py-2 rounded-xl text-xs transition">
@@ -163,9 +139,7 @@
                                 <th class="p-3 border-b text-center">Aksi Cetak</th>
                             </tr>
                         </thead>
-                        <tbody id="sertifikat-table-body">
-                            <!-- Populated Dynamically -->
-                        </tbody>
+                        <tbody id="sertifikat-table-body"></tbody>
                     </table>
                 </div>
             </div>
@@ -310,7 +284,6 @@
     <!-- MODAL / TEMPLATE SERTIFIKAT RESMI BER-QR CODE -->
     <div id="modal-sertifikat" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-2xl max-w-4xl w-full border-8 border-double border-amber-600 shadow-2xl relative text-center space-y-6">
-            
             <div class="absolute top-4 right-4 flex gap-2 no-print">
                 <button onclick="window.print()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1 shadow">
                     🖨️ Cetak / Download PDF
@@ -362,20 +335,28 @@
                     <p class="text-[10px] text-slate-500">NIP. 19750812 200112 1 002</p>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- SCRIPT LOGIKA WORKFLOW STAFF & PERMANENT STORAGE -->
+    <!-- SCRIPT LOGIKA PERMANENT STORAGE & ONETIME LOGOUT -->
     <script>
-        // State Navigasi Folder
         let currentFolder = {
             jurusan: 'Teknologi Informasi',
             prodi: null,
             kelas: null
         };
 
-        // Konversi Raw Score Jawaban Benar ke Scaled Score TOEFL PBT
+        // FUNGSI LOGOUT YANG BENAR: Hapus session pengguna tanpa menghapus database Excel
+        function handleLogout() {
+            localStorage.removeItem('user_session');
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('upa_user');
+            
+            // Langsung dialihkan ke web umum
+            window.location.href = 'index.html';
+        }
+
         function convertToTOEFLScore(l, s, r) {
             const tableL = [31,31,31,31,31,31,31,31,32,32,33,35,37,38,39,41,42,43,44,45,46,47,48,48,49,50,51,51,52,52,53,54,54,55,56,57,57,58,59,60,61,62,63,64,65,66,67,68];
             const tableS = [31,31,31,31,31,31,31,31,32,33,35,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,60,61,63,65,67,68];
@@ -388,7 +369,6 @@
             return Math.round(((scaledL + scaledS + scaledR) * 10) / 3);
         }
 
-        // Structure Folder Default
         function getDefaultFolderDB() {
             return {
                 "Teknologi Informasi": {
@@ -400,7 +380,6 @@
             };
         }
 
-        // Ambil DB dari LocalStorage (Jika tidak ada, baru buat default)
         function getDB() {
             const data = localStorage.getItem('upa_folder_db');
             if (data) {
@@ -415,7 +394,6 @@
             return defaultDb;
         }
 
-        // Simpan DB ke LocalStorage secara Permanen
         function saveDB(db) {
             localStorage.setItem('upa_folder_db', JSON.stringify(db));
         }
@@ -425,7 +403,6 @@
             renderSertifikatTable();
         }
 
-        // Render Navigasi & Tampilan Folder
         function renderFolderView() {
             renderBreadcrumb();
             const db = getDB();
@@ -435,7 +412,6 @@
             area.innerHTML = '';
             const jurusanData = db[currentFolder.jurusan] || {};
 
-            // LEVEL 1: Pilih Prodi
             if (!currentFolder.prodi) {
                 const prodiList = ["TI", "TRK", "TIM", "TK"];
                 let html = '<div class="grid grid-cols-2 md:grid-cols-4 gap-4">';
@@ -454,7 +430,6 @@
                 return;
             }
 
-            // LEVEL 2: Pilih Kelas
             if (currentFolder.prodi && !currentFolder.kelas) {
                 const prodiData = jurusanData[currentFolder.prodi] || {};
                 const kelases = Object.keys(prodiData);
@@ -480,7 +455,6 @@
                 return;
             }
 
-            // LEVEL 3: Tabel Data Mahasiswa per Kelas
             if (currentFolder.prodi && currentFolder.kelas) {
                 const list = jurusanData[currentFolder.prodi][currentFolder.kelas] || [];
                 let html = `
@@ -544,7 +518,6 @@
         function openKelasFolder(kelas) { currentFolder.kelas = kelas; renderFolderView(); }
         function navigateFolder(prodi, kelas) { currentFolder.prodi = prodi; currentFolder.kelas = kelas; renderFolderView(); }
 
-        // Render Tabel Sertifikat
         function renderSertifikatTable() {
             const certBody = document.getElementById('sertifikat-table-body');
             if (!certBody) return;
@@ -578,7 +551,6 @@
             });
         }
 
-        // Processing Upload File Excel / CSV
         function processExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -636,12 +608,11 @@
                     }
                 });
 
-                // SIMPAN KE LOCALSTORAGE PERMANEN
                 saveDB(db);
                 renderFolderView();
                 renderSertifikatTable();
                 alert(`✅ Upload Berhasil! Memproses ${addedCount} data mahasiswa ke folder masing-masing dan tersimpan secara permanen.`);
-                event.target.value = ''; // Reset file input
+                event.target.value = '';
             };
             reader.readAsArrayBuffer(file);
         }
