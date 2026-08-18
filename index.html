@@ -400,20 +400,28 @@
             document.getElementById('login-modal').classList.toggle('hidden', !show);
         }
 
+        // FUNGSI LOGOUT SEKALI KLIK
+        function handleLogout() {
+            if (typeof clearSession === 'function') {
+                clearSession();
+            } else {
+                localStorage.removeItem('user_session');
+            }
+            window.location.reload();
+        }
+
         // PENANGANAN LOGIN DENGAN LOGIKA REDIRECT
         function handleLoginSubmit(e) {
             e.preventDefault();
             const username = document.getElementById('login-username').value;
             const posisi = document.getElementById('login-posisi').value;
             
-            // Panggil fungsi simpan login dari auth.js jika tersedia
             if (typeof saveSession === 'function') {
                 saveSession(username, posisi);
             } else {
                 localStorage.setItem('user_session', JSON.stringify({ username, posisi }));
             }
 
-            // Redirect sesuai pilihan posisi
             if (posisi === 'Staff') {
                 window.location.href = 'staff-dashboard.html';
             } else if (posisi === 'Kepala') {
@@ -461,10 +469,7 @@
                 return;
             }
 
-            // Ambil data yang dipublish oleh staff dari localStorage
             const publishedData = JSON.parse(localStorage.getItem('pub_toefl_results') || '[]');
-            
-            // Cari data sesuai NIM
             const mhs = publishedData.find(item => item.nim.toString().toLowerCase() === nimInput.toLowerCase());
 
             container.classList.remove('hidden');
@@ -479,7 +484,6 @@
                 return;
             }
 
-            // Jika tipe pencarian adalah Sertifikat tetapi semester mahasiswa < 5
             if (type === 'sertifikat' && mhs.semester && parseInt(mhs.semester) < 5) {
                 container.innerHTML = `
                     <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl">
@@ -491,7 +495,6 @@
                 return;
             }
 
-            // Render Tampilan Skor
             if (type === 'skor') {
                 container.innerHTML = `
                     <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
@@ -523,7 +526,6 @@
                     </div>
                 `;
             } else {
-                // Render Tampilan Sertifikat
                 container.innerHTML = `
                     <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-3">
                         <div class="flex justify-between items-start border-b pb-2 border-emerald-200">
@@ -547,18 +549,25 @@
             }
         }
 
-        // Perbarui Tombol Topbar jika sudah ada sesi
+        // PERIKSA STATUS SESI SAAT MEMBUAT HALAMAN
         window.addEventListener('DOMContentLoaded', () => {
             const user = typeof getSession === 'function' ? getSession() : JSON.parse(localStorage.getItem('user_session'));
             const container = document.getElementById('auth-button-container');
-            if (user) {
+            
+            if (user && user.username) {
                 container.innerHTML = `
                     <div class="flex items-center gap-2">
                         <a href="${user.posisi === 'Staff' ? 'staff-dashboard.html' : 'kepala-dashboard.html'}" class="text-amber-400 font-extrabold hover:underline">
                             ${user.username} [${user.posisi}]
                         </a>
-                        <button onclick="localStorage.removeItem('user_session'); location.reload();" class="bg-rose-700 hover:bg-rose-800 text-white px-2.5 py-1 rounded-full text-[10px]">Logout</button>
+                        <button onclick="handleLogout()" class="bg-rose-700 hover:bg-rose-800 text-white px-2.5 py-1 rounded-full text-[10px] font-bold">Logout</button>
                     </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button onclick="toggleLoginModal(true)" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold px-3.5 py-1 rounded-full transition-all shadow-sm hover:shadow-md flex items-center gap-1.5 text-[11px]">
+                        Masuk
+                    </button>
                 `;
             }
         });

@@ -60,7 +60,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col" onload="initStaffData()">
 
     <!-- HEADER / NAVBAR STAFF -->
     <header class="bg-brand-950 text-white py-3.5 px-6 border-b border-emerald-900 shadow-md sticky top-0 z-40 no-print">
@@ -321,7 +321,6 @@
     <div id="modal-sertifikat" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white p-8 rounded-2xl max-w-4xl w-full border-8 border-double border-amber-600 shadow-2xl relative text-center space-y-6">
             
-            <!-- Tombol Tutup & Cetak (Sembunyi saat diprint) -->
             <div class="absolute top-4 right-4 flex gap-2 no-print">
                 <button onclick="window.print()" class="bg-brand-800 hover:bg-brand-900 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1 shadow">
                     🖨️ Cetak / Download PDF
@@ -331,37 +330,31 @@
                 </button>
             </div>
 
-            <!-- HEADER SERTIFIKAT -->
             <div class="border-b-2 border-amber-500 pb-4">
                 <h2 class="font-serif text-2xl font-black text-amber-800 tracking-wider">POLITEKNIK NEGERI SAMARINDA</h2>
                 <h3 class="font-semibold text-xs tracking-widest text-slate-600 uppercase mt-0.5">Unit Pelaksana Akademis (UPA) Bahasa</h3>
                 <p class="text-[10px] text-slate-400 mt-1">Jl. Cipto Mangunkusumo Kampus Gunung Lipan, Samarinda</p>
             </div>
 
-            <!-- JUDUL UTAMA -->
             <div class="space-y-1">
                 <h1 class="font-serif text-3xl font-extrabold text-slate-900 tracking-wide uppercase">Certificate of Achievement</h1>
                 <p class="text-xs text-amber-700 font-bold tracking-widest uppercase">TOEFL EQUIVALENT TEST</p>
                 <p class="text-[11px] text-slate-400 font-mono mt-1" id="cert-number">No: UPA-POLNES/2026/CERT-001</p>
             </div>
 
-            <!-- ISI NAMA MAHASISWA -->
             <div class="py-2 space-y-1">
                 <p class="text-xs text-slate-500 italic">This is to certify that</p>
                 <h2 id="cert-nama" class="font-serif text-2xl font-bold text-brand-950 underline decoration-amber-500 underline-offset-8">BUDI SANTOSO</h2>
                 <p class="text-xs text-slate-600 font-mono mt-1">NIM: <span id="cert-nim">2107026001</span></p>
             </div>
 
-            <!-- SKOR & PENJELASAN -->
             <div class="bg-amber-50/60 p-3 rounded-xl border border-amber-200 inline-block px-8">
                 <p class="text-xs text-slate-600">Has successfully achieved a total score of:</p>
                 <p id="cert-score" class="font-serif text-3xl font-black text-brand-900 my-0.5">520</p>
                 <p class="text-[10px] text-emerald-800 font-bold uppercase">Status: PASSED / LULUS</p>
             </div>
 
-            <!-- TANDA TANGAN & QR CODE KEABSAHAN -->
             <div class="flex justify-between items-end pt-4 border-t border-slate-200">
-                <!-- QR CODE VERIFIKASI -->
                 <div class="text-left space-y-1">
                     <div id="qrcode" class="p-1.5 bg-white border border-slate-300 rounded-lg inline-block"></div>
                     <p class="text-[9px] text-slate-500 font-semibold max-w-[140px] leading-tight">
@@ -369,7 +362,6 @@
                     </p>
                 </div>
 
-                <!-- TANGGAL & TTDA HEAD OF UPA BAHASA -->
                 <div class="text-center space-y-1">
                     <p class="text-xs text-slate-600">Samarinda, <span id="cert-date">18 Agustus 2026</span></p>
                     <p class="text-[11px] font-bold text-slate-800">Kepala UPA Bahasa POLNES,</p>
@@ -386,24 +378,35 @@
 
     <!-- SCRIPT LOGIKA WORKFLOW STAFF & PERMANENT STORAGE -->
     <script>
-        // Array memori utama data skor
         let currentScores = [];
 
-        // 1. Dapatkan Data Bawaan Default
+        // Konversi Raw Score Jawaban Benar ke Scaled Score TOEFL PBT
+        function convertToTOEFLScore(l, s, r) {
+            const tableL = [31,31,31,31,31,31,31,31,32,32,33,35,37,38,39,41,42,43,44,45,46,47,48,48,49,50,51,51,52,52,53,54,54,55,56,57,57,58,59,60,61,62,63,64,65,66,67,68];
+            const tableS = [31,31,31,31,31,31,31,31,32,33,35,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,60,61,63,65,67,68];
+            const tableR = [31,31,31,31,31,31,31,31,32,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,52,53,54,55,56,57,58,59,60,61,62,63,65,66,67,68];
+
+            const scaledL = tableL[Math.min(Math.max(0, l), tableL.length - 1)];
+            const scaledS = tableS[Math.min(Math.max(0, s), tableS.length - 1)];
+            const scaledR = tableR[Math.min(Math.max(0, r), tableR.length - 1)];
+
+            return Math.round(((scaledL + scaledS + scaledR) * 10) / 3);
+        }
+
         function getDefaultScores() {
             return [
-                { nim: '2107026001', nama: 'Budi Santoso', pc: 'PC-12', detail: 'L: 35 | S: 28 | R: 40', score: 520, status: 'LULUS', certNo: 'UPA-POLNES/2026/CERT-001' },
-                { nim: '2107026044', nama: 'Siti Aminah', pc: 'PC-08', detail: 'L: 20 | S: 15 | R: 22', score: 410, status: 'REMEDIAL', certNo: '' }
+                { nim: '2107026001', nama: 'Budi Santoso', pc: 'PC-12', detail: 'L: 35 | S: 28 | R: 40', score: 557, status: 'LULUS', certNo: 'UPA-POLNES/2026/CERT-001' },
+                { nim: '2107026044', nama: 'Siti Aminah', pc: 'PC-08', detail: 'L: 20 | S: 15 | R: 22', score: 440, status: 'REMEDIAL', certNo: '' }
             ];
         }
 
-        // 2. Load Data Permanen dari LocalStorage saat Halaman Dibuka
         function initStaffData() {
             const savedData = localStorage.getItem('upa_published_scores');
             if (savedData) {
                 try {
                     currentScores = JSON.parse(savedData);
                 } catch (e) {
+                    console.error("Gagal membaca LocalStorage:", e);
                     currentScores = getDefaultScores();
                 }
             } else {
@@ -412,12 +415,11 @@
             renderStaffTables();
         }
 
-        // 3. Render Tabel Upload Excel & Sertifikat secara Dinamis
         function renderStaffTables() {
             const tbody = document.getElementById('excel-preview-body');
             const certBody = document.getElementById('sertifikat-table-body');
             
-            tbody.innerHTML = '';
+            if (tbody) tbody.innerHTML = '';
             if (certBody) certBody.innerHTML = '';
 
             currentScores.forEach((item, index) => {
@@ -425,27 +427,27 @@
                 const detailText = item.detail || 'L: - | S: - | R: -';
                 const pcText = item.pc || 'PC-01';
 
-                // Tampilkan di Tabel Upload Excel Hasil Ujian
-                const rowHtml = `
-                    <tr class="border-b" data-nim="${item.nim}" data-nama="${item.nama}" data-score="${item.score}">
-                        <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
-                        <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
-                        <td class="p-3">${pcText}</td>
-                        <td class="p-3 text-center text-slate-500">${detailText}</td>
-                        <td class="p-3 text-center font-bold ${isLulus ? 'text-brand-900' : 'text-rose-700'}">${item.score}</td>
-                        <td class="p-3 text-center">
-                            <span class="${isLulus ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} font-bold px-2.5 py-1 rounded-full text-[10px]">
-                                ${isLulus ? 'LULUS (Hijau)' : 'REMEDIAL'}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-                tbody.insertAdjacentHTML('beforeend', rowHtml);
+                if (tbody) {
+                    const rowHtml = `
+                        <tr class="border-b" data-nim="${item.nim}" data-nama="${item.nama}" data-score="${item.score}">
+                            <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
+                            <td class="p-3 font-semibold text-slate-900">${item.nama}</td>
+                            <td class="p-3">${pcText}</td>
+                            <td class="p-3 text-center text-slate-500">${detailText}</td>
+                            <td class="p-3 text-center font-bold ${isLulus ? 'text-brand-900' : 'text-rose-700'}">${item.score}</td>
+                            <td class="p-3 text-center">
+                                <span class="${isLulus ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'} font-bold px-2.5 py-1 rounded-full text-[10px]">
+                                    ${isLulus ? 'LULUS' : 'REMEDIAL'}
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.insertAdjacentHTML('beforeend', rowHtml);
+                }
 
-                // Tampilkan di Tabel Sertifikat jika Mahasiswa LULUS
                 if (isLulus && certBody) {
                     const certNo = item.certNo || `UPA-POLNES/2026/CERT-${100 + index}`;
-                    item.certNo = certNo; // Pastikan nomor sertifikat disimpan
+                    item.certNo = certNo;
                     const certRow = `
                         <tr class="border-b">
                             <td class="p-3 text-slate-600 font-mono">${item.nim}</td>
@@ -464,7 +466,25 @@
             });
         }
 
-        // 4. Processing Upload File Excel / CSV & Simpan Permanen ke LocalStorage
+        function parseCSVLine(text) {
+            const result = [];
+            let entry = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
+                if (c === '"') {
+                    inQuotes = !inQuotes;
+                } else if ((c === ',' || c === ';' || c === '\t') && !inQuotes) {
+                    result.push(entry.trim());
+                    entry = '';
+                } else {
+                    entry += c;
+                }
+            }
+            result.push(entry.trim());
+            return result;
+        }
+
         function processExcelUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -484,11 +504,7 @@
                 } else {
                     const text = e.target.result;
                     const lines = text.split(/\r\n|\n/);
-                    rows = lines.map(line => {
-                        if (line.includes(';')) return line.split(';');
-                        if (line.includes('\t')) return line.split('\t');
-                        return line.split(',');
-                    });
+                    rows = lines.map(line => parseCSVLine(line));
                 }
 
                 let addedCount = 0;
@@ -496,16 +512,16 @@
                 rows.forEach((cols, idx) => {
                     if (idx === 0 || !cols || cols.length < 2) return;
 
-                    const nim = cols[0] ? cols[0].toString().trim() : '';
-                    const nama = cols[1] ? cols[1].toString().trim() : '';
-                    const pc = cols[2] && cols[2].toString().trim() !== '' ? cols[2].toString().trim() : 'PC-01';
+                    const nim = cols[0] ? cols[0].toString().replace(/^"|"$/g, '').trim() : '';
+                    const nama = cols[1] ? cols[1].toString().replace(/^"|"$/g, '').trim() : '';
+                    const pc = cols[2] && cols[2].toString().trim() !== '' ? cols[2].toString().replace(/^"|"$/g, '').trim() : 'PC-01';
                     
                     const l = parseInt(cols[3]) || 0;
                     const s = parseInt(cols[4]) || 0;
                     const r = parseInt(cols[5]) || 0;
 
                     if (nim && nama) {
-                        const totalScore = Math.round(((l + s + r) / 120) * 490 + 210);
+                        const totalScore = convertToTOEFLScore(l, s, r);
                         const isLulus = totalScore >= 450;
                         const statusStr = isLulus ? 'LULUS' : 'REMEDIAL';
 
@@ -519,7 +535,6 @@
                             certNo: isLulus ? `UPA-POLNES/2026/CERT-${Math.floor(100 + Math.random() * 900)}` : ''
                         };
 
-                        // Perbarui jika NIM sudah ada, atau tambahkan jika data baru
                         const existingIndex = currentScores.findIndex(item => item.nim === nim);
                         if (existingIndex >= 0) {
                             currentScores[existingIndex] = newData;
@@ -531,11 +546,9 @@
                     }
                 });
 
-                // SIMPAN PERMANEN KE LOCALSTORAGE
                 localStorage.setItem('upa_published_scores', JSON.stringify(currentScores));
                 renderStaffTables();
-
-                alert(`Berhasil mengimpor & menyimpan ${addedCount} data mahasiswa! Data tersimpan permanen.`);
+                alert(`Berhasil mengimpor & menyimpan ${addedCount} data mahasiswa!`);
             };
 
             if (isBinary) {
@@ -545,13 +558,11 @@
             }
         }
 
-        // 5. Publish / Re-Sync Manual ke Web Utama
         function publishToWeb() {
             localStorage.setItem('upa_published_scores', JSON.stringify(currentScores));
             alert('✅ Berhasil mempublikasikan ' + currentScores.length + ' data skor ke Web Utama!');
         }
 
-        // 6. Reset Data ke Default Awal (Jika dibutuhkan)
         function resetDataToDefault() {
             if (confirm("Apakah Anda yakin ingin mengembalikan data ke tampilan default?")) {
                 currentScores = getDefaultScores();
@@ -561,7 +572,6 @@
             }
         }
 
-        // Switch Modul Tab
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -569,34 +579,29 @@
                 btn.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
             });
 
-            document.getElementById(tabId).classList.remove('hidden');
-            const activeBtn = document.getElementById(`btn-${tabId}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
-                activeBtn.classList.add('bg-brand-800', 'text-white');
+            const targetTab = document.getElementById(tabId);
+            const targetBtn = document.getElementById('btn-' + tabId);
+
+            if (targetTab) targetTab.classList.remove('hidden');
+            if (targetBtn) {
+                targetBtn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+                targetBtn.classList.add('bg-brand-800', 'text-white');
             }
         }
 
-        // Generator Sertifikat Resmi dengan QR Code
-        function generateSertifikat(nim, nama, score, certNo, dateStr) {
+        function generateSertifikat(nim, nama, score, certNo, date) {
             document.getElementById('cert-nim').innerText = nim;
-            document.getElementById('cert-nama').innerText = nama.toUpperCase();
+            document.getElementById('cert-nama').innerText = nama;
             document.getElementById('cert-score').innerText = score;
             document.getElementById('cert-number').innerText = `No: ${certNo}`;
-            document.getElementById('cert-date').innerText = dateStr;
+            document.getElementById('cert-date').innerText = date;
 
             const qrContainer = document.getElementById('qrcode');
             qrContainer.innerHTML = '';
-
-            const verifyUrl = `${window.location.origin}/verify.html?cert=${encodeURIComponent(certNo)}&nim=${encodeURIComponent(nim)}`;
-            
             new QRCode(qrContainer, {
-                text: verifyUrl,
+                text: `https://upa-bahasa.polnes.ac.id/verify?cert=${certNo}&nim=${nim}`,
                 width: 80,
-                height: 80,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
+                height: 80
             });
 
             document.getElementById('modal-sertifikat').classList.remove('hidden');
@@ -606,79 +611,59 @@
             document.getElementById('modal-sertifikat').classList.add('hidden');
         }
 
-        // ACC Pendaftaran
         function accPendaftaran(id) {
             const badge = document.getElementById(`badge-acc-${id}`);
-            const btn = document.getElementById(`btn-acc-${id}`);
             if (badge) {
-                badge.className = "bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]";
-                badge.innerText = "ACC / Terjadwal";
+                badge.className = 'bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]';
+                badge.innerText = 'Disetujui / ACC';
             }
-            if (btn) {
-                btn.className = "bg-slate-400 text-white font-bold px-3 py-1.5 rounded-lg text-[11px] cursor-not-allowed";
-                btn.innerText = "Sudah ACC";
-                btn.disabled = true;
-            }
-            alert("Pendaftaran berhasil disetujui & jadwal dikonfirmasi!");
+            alert('Pengajuan berhasil di-ACC!');
         }
 
-        // Send WhatsApp Schedule
-        function sendWAJadwal(nama, phone, id) {
+        function sendWAJadwal(nama, wa, id) {
             const jadwal = document.getElementById(`jadwal-${id}`)?.value || '';
             const meja = document.getElementById(`meja-${id}`)?.value || '';
-            
-            const message = `Halo ${nama},\n\nPengajuan ujian/kursus Anda di UPA Bahasa POLNES telah DISETUJUI.\n\n📅 Jadwal: ${jadwal}\n📍 Lokasi/Meja: ${meja}\n\nHarap hadir 15 menit sebelum sesi dimulai. Terima kasih!`;
-            
-            window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+            const msg = `Halo ${nama}, pendaftaran tes TOEFL Anda di UPA Bahasa POLNES telah di-ACC.\nJadwal: ${jadwal}\nLokasi: ${meja}`;
+            window.open(`https://wa.me/${wa.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // Update Complaint Tracking Status
         function updateStatusLaporan(id, status) {
             const tag = document.getElementById(`status-tag-${id}`);
             if (tag) {
                 if (status === 'Selesai') {
-                    tag.className = "bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]";
-                    tag.innerText = "Selesai Ditangani";
+                    tag.className = 'bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]';
                 } else {
-                    tag.className = "bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-[10px]";
-                    tag.innerText = "Sedang Diproses Staff";
+                    tag.className = 'bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full text-[10px]';
                 }
+                tag.innerText = status;
             }
-            alert(`Status keluhan #${id} diperbarui menjadi: ${status}`);
         }
 
-        // Send WhatsApp Complaint Details
-        function sendWALaporan(nama, phone, id) {
-            const message = `Halo ${nama},\n\nTindak lanjut laporan kendala Anda di UPA Bahasa POLNES telah diproses.\n\nSilakan cek status terbaru secara berkala di portal web utama. Terima kasih!`;
-            
-            window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+        function sendWALaporan(nama, wa, id) {
+            const msg = `Halo ${nama}, laporan kendala Anda mengenai layanan UPA Bahasa POLNES telah kami proses. Terima kasih over masukan Anda.`;
+            window.open(`https://wa.me/${wa.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // Preview Image Berita
         function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = document.getElementById('img-preview');
+                    const container = document.getElementById('preview-container');
                     img.src = e.target.result;
-                    document.getElementById('preview-container').classList.remove('hidden');
+                    container.classList.remove('hidden');
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
-        // Publish Berita
-        function publishBerita(e) {
-            e.preventDefault();
-            const judul = document.getElementById('berita-judul').value;
-            alert(`Berita "${judul}" berhasil diterbitkan ke Web Utama!`);
-            e.target.reset();
+        function publishBerita(event) {
+            event.preventDefault();
+            alert('Berita berhasil diterbitkan ke Halaman Utama!');
+            event.target.reset();
             document.getElementById('preview-container').classList.add('hidden');
         }
-
-        // Jalankan Inisialisasi Data Otomatis Saat Halaman Selesai Dimuat
-        window.addEventListener('DOMContentLoaded', initStaffData);
     </script>
 </body>
 </html>
